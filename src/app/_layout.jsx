@@ -1,8 +1,41 @@
-import { Stack, Tabs } from "expo-router";
+import { Stack } from "expo-router";
 import LogoutBtn from "../components/LogoutBtn";
 import PushNotificationBtn from "../components/PushNotificationBtn";
+import { useState, useEffect } from "react";
+import auth from "@react-native-firebase/auth";
+import { Redirect, router, useSegments } from "expo-router";
 
 export default function RootLayout() {
+  const segments = useSegments();
+  // Set an initializing state whilst Firebase connects
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState();
+
+  // Handle user state changes
+  function onAuthStateChanged(user) {
+    setUser(user);
+    if (initializing) setInitializing(false);
+  }
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, []);
+
+  useEffect(() => {
+    if (initializing) return;
+
+    const inAuthGroup = segments[0] === "(tabs)";
+    if (user) {
+      if (user.email === "admin@mail.com") {
+        router.replace("/admin");
+      } else {
+        router.replace("/homeUser");
+      }
+    } else {
+      router.replace("/");
+    }
+  }, [user, initializing]);
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="index" options={{ title: "Login" }} />

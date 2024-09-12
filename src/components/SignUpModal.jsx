@@ -13,6 +13,8 @@ import {
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Divider, TextInput } from "react-native-paper";
+import auth from "@react-native-firebase/auth";
+
 const { width, height } = Dimensions.get("window");
 
 function SignUpModal({ isModalVisibile, toggleModal }) {
@@ -29,6 +31,24 @@ function SignUpModal({ isModalVisibile, toggleModal }) {
     toggleModal(isModalVisibile);
   };
 
+  const signUp = async () => {
+    setLoading(true);
+    try {
+      const userCredential = await auth().createUserWithEmailAndPassword(
+        infoUser.email,
+        infoUser.password
+      );
+      await userCredential.user.updateProfile({
+        displayName: infoUser.fullName,
+      });
+      alert("Signed In");
+    } catch (error) {
+      alert(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = () => {
     if (
       (infoUser.email === "") | (infoUser.password === "") ||
@@ -38,19 +58,7 @@ function SignUpModal({ isModalVisibile, toggleModal }) {
     } else if (!isValid) {
       Alert.alert("Error", "Invalid email format");
     } else {
-      setLoading(true);
-
-      setTimeout(() => {
-        setInfoUser((prev) => ({
-          ...prev,
-          fullName: "",
-          email: "",
-          password: "",
-        }));
-
-        toggleModal(isModalVisibile);
-        setLoading(false);
-      }, 3000);
+      signUp();
     }
   };
   const validateEmail = (text) => {

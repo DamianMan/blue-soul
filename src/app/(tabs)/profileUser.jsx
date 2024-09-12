@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,19 +8,27 @@ import {
 } from "react-native";
 import { Button, TextInput, Checkbox, Surface } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-
+import AntDesign from "@expo/vector-icons/AntDesign";
+import auth from "@react-native-firebase/auth";
+import EditPAsswordModal from "../../components/EditPasswordModal";
 const { width, height } = Dimensions.get("window");
 
 function addNewUser(props) {
+  const user = auth().currentUser;
+
   const [isValidEmail, setIsValidEmail] = useState(true);
+  const [modalPassword, setModalPassword] = useState(false);
+
   const validateEmail = (text) => {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     setIsValidEmail(emailPattern.test(text));
   };
 
   const [infoGroup, setInfoGroup] = useState({
-    fullName: "",
-    email: "",
+    fullName: user?.displayName || "",
+    address: "",
+    email: user.email || "",
+    newPassord: "",
     city: "",
     phone: "",
     id: false,
@@ -31,6 +39,23 @@ function addNewUser(props) {
   const handleEmail = (text) => {
     validateEmail(text);
     setInfoGroup({ ...infoGroup, email: text });
+  };
+
+  const updatePassword = async () => {
+    try {
+      if (user) {
+        await user.updatePassword(infoGroup.newPassord);
+        alert("Password updated");
+      } else {
+        alert("No user authenticated!");
+      }
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+  const handleOpenModal = () => {
+    setModalPassword(!modalPassword);
   };
 
   return (
@@ -65,15 +90,13 @@ function addNewUser(props) {
           keyboardType="default" // Sets keyboard to default
           textContentType="none"
         />
-
         <TextInput
-          value={infoGroup.email}
+          value={infoGroup.address}
           mode="outlined"
           textColor="#ff5f00"
           activeOutlineColor="#121481"
-          label="Email"
-          error={!isValidEmail}
-          onChangeText={handleEmail}
+          label="Address"
+          onChangeText={(text) => setInfoGroup({ ...infoGroup, address: text })}
           style={styles.userInput}
         />
 
@@ -84,6 +107,16 @@ function addNewUser(props) {
           activeOutlineColor="#121481"
           label="City"
           onChangeText={(text) => setInfoGroup({ ...infoGroup, city: text })}
+          style={styles.userInput}
+        />
+        <TextInput
+          value={infoGroup.email}
+          mode="outlined"
+          textColor="#ff5f00"
+          activeOutlineColor="#121481"
+          label="Email"
+          error={!isValidEmail}
+          onChangeText={handleEmail}
           style={styles.userInput}
         />
         <TextInput
@@ -152,6 +185,21 @@ function addNewUser(props) {
             mode="elevated"
             labelStyle={{ color: "#ffff", fontSize: 15 }}
             icon={({ size, color }) => (
+              <AntDesign name="edit" size={30} color="#fff" /> // Custom icon color
+            )}
+            style={styles.editPAsswordBtn}
+            onPress={() => setModalPassword(!modalPassword)}
+          >
+            Edit Password
+          </Button>
+          <EditPAsswordModal
+            modalVisible={modalPassword}
+            setModalVisible={handleOpenModal}
+          />
+          <Button
+            mode="elevated"
+            labelStyle={{ color: "#ffff", fontSize: 15 }}
+            icon={({ size, color }) => (
               <Icon name="database-plus" size={30} color="#fff" /> // Custom icon color
             )}
             style={styles.submitBtn}
@@ -196,6 +244,16 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
     elevation: 3,
+    marginVertical: 3,
+  },
+  editPAsswordBtn: {
+    backgroundColor: "orangered",
+    elevation: 5,
+    textShadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    elevation: 3,
+    marginVertical: 3,
   },
   userInput: {
     width: (width * 90) / 100,

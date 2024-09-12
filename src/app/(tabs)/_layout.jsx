@@ -6,7 +6,10 @@ import Logout from "../../components/LogoutBtn";
 import LogoutBtn from "../../components/LogoutBtn";
 import { BlurView } from "expo-blur";
 
+import auth from "@react-native-firebase/auth";
+
 export default function TabsLayout() {
+  const user = auth().currentUser;
   return (
     <Tabs
       screenOptions={{
@@ -38,7 +41,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="profileUser"
         options={{
-          title: "Profile",
+          title: user?.displayName || "Profile",
           headerStyle: {
             backgroundColor: "lightblue",
           },

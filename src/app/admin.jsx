@@ -9,6 +9,7 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { useHeaderHeight } from "@react-navigation/elements";
 import TaskItem from "../components/TaskItem";
+import auth from "@react-native-firebase/auth";
 const Tasks = [
   {
     name: "Add New Group",
@@ -36,7 +37,8 @@ const Tasks = [
 const { width, height } = Dimensions.get("window");
 
 function AdminPanel(props) {
-  const headerHeight = useHeaderHeight();
+  const user = auth().currentUser;
+  console.log("USER:", user);
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -51,6 +53,9 @@ function AdminPanel(props) {
           style={styles.background}
         />
       </ImageBackground>
+      <View>
+        <Text>Hello {user?.email}!</Text>
+      </View>
 
       <FlatList
         data={Tasks}

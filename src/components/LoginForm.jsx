@@ -1,24 +1,27 @@
 import { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Alert,
-  FlatList,
-  KeyboardAvoidingView,
-  Dimensions,
-} from "react-native";
-import { Button, Divider, TextInput } from "react-native-paper";
+import { StyleSheet, View, Alert, Dimensions } from "react-native";
+import { Button, TextInput } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { Link, router } from "expo-router";
-
+import { router } from "expo-router";
 const { width } = Dimensions.get("window");
+import auth from "@react-native-firebase/auth";
 
 export default function LoginForm(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isHide, setIsHide] = useState(true);
   const [isValid, setIsValid] = useState(true);
+
+  const [loading, setLoading] = useState(false);
+
+  const signIn = async () => {
+    try {
+      await auth().signInWithEmailAndPassword(email, password);
+      alert("Signed In");
+    } catch (error) {
+      alert(error);
+    }
+  };
 
   const validateEmail = (text) => {
     // Basic email validation regex pattern
@@ -40,25 +43,14 @@ export default function LoginForm(props) {
     } else if (!isValid) {
       Alert.alert("Error", "Invalid email format");
     } else {
-      // Alert.alert("Success", "All field filled correctly");
-      if (email === "admin@mail.com" && password !== "") {
-        router.navigate("/admin");
-      } else {
-        router.navigate("/homeUser");
-      }
+      signIn();
+      setEmail("");
+      setPassword("");
     }
   };
 
   return (
     <View style={styles.container}>
-      {/* <View style={styles.welcome}>
-        <Text style={styles.textPrimary}>Welcome To Our App!</Text>
-        <Text style={styles.textSecondary}>
-          Please LOGIN with the PASSWORD you got from the Blue Soul Staff.
-        </Text>
-        <Divider style={styles.customLine} />
-      </View> */}
-
       <View style={styles.centered}>
         <Button
           mode="contained"
