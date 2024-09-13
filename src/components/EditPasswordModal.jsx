@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Modal, StyleSheet, Text, View, Dimensions } from "react-native";
 import { Button, TextInput } from "react-native-paper";
+import AntDesign from "@expo/vector-icons/AntDesign";
 import auth from "@react-native-firebase/auth";
 
 const { width } = Dimensions.get("window");
@@ -11,17 +12,25 @@ function EditPAsswordModal({ modalVisible, setModalVisible }) {
   const [password, setPassword] = useState("");
   const [isHide, setIsHide] = useState(true);
 
-  const handleClose = async () => {
-    try {
-      if (user) {
-        await user.updatePassword(password);
-        alert("Password Updated!");
-      } else {
-        alert("User not authenticated!");
+  const handleSubmit = async () => {
+    if (password === "") {
+      alert("Please fill the field");
+    } else {
+      try {
+        if (user) {
+          await user.updatePassword(password);
+          alert("Password Updated!");
+        } else {
+          alert("User not authenticated!");
+        }
+      } catch (error) {
+        alert(error);
       }
-    } catch (error) {
-      alert(error);
+      setModalVisible();
     }
+  };
+
+  const handleClose = () => {
     setModalVisible();
   };
   return (
@@ -30,7 +39,7 @@ function EditPAsswordModal({ modalVisible, setModalVisible }) {
         animationType="fade"
         transparent={true}
         visible={modalVisible}
-        onRequestClose={handleClose}
+        onRequestClose={handleSubmit}
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
@@ -49,12 +58,16 @@ function EditPAsswordModal({ modalVisible, setModalVisible }) {
               secureTextEntry={isHide}
               onChangeText={(text) => setPassword(text)}
             />
-            <Button
-              style={[styles.button, styles.buttonClose]}
-              onPress={handleClose}
+            <View
+              style={{ justifyContent: "space-between", flexDirection: "row" }}
             >
-              <Text style={styles.textStyle}>Submit</Text>
-            </Button>
+              <Button style={styles.buttonSubmit} onPress={handleSubmit}>
+                <Text style={styles.textStyle}>Submit</Text>
+              </Button>
+              <Button style={styles.buttonClose} onPress={handleClose}>
+                <Text style={styles.textStyle}>Close</Text>
+              </Button>
+            </View>
           </View>
         </View>
       </Modal>
@@ -89,7 +102,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
 
-  buttonClose: {
+  buttonSubmit: {
     backgroundColor: "#3572EF",
     elevation: 5,
     textShadowColor: "#000",
@@ -97,6 +110,17 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     elevation: 3,
     marginVertical: 8,
+    marginHorizontal: 10,
+  },
+  buttonClose: {
+    backgroundColor: "red",
+    elevation: 5,
+    textShadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    elevation: 3,
+    marginVertical: 8,
+    marginHorizontal: 10,
   },
   textStyle: {
     color: "white",
@@ -106,6 +130,7 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: "center",
+    color: "darkblue",
   },
 });
 

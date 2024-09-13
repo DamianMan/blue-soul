@@ -4,6 +4,7 @@ import PushNotificationBtn from "../components/PushNotificationBtn";
 import { useState, useEffect } from "react";
 import auth from "@react-native-firebase/auth";
 import { Redirect, router, useSegments } from "expo-router";
+import { Image } from "react-native";
 
 export default function RootLayout() {
   const segments = useSegments();
@@ -113,6 +114,75 @@ export default function RootLayout() {
         options={{
           title: "Profile User",
           headerRight: () => <LogoutBtn />,
+        }}
+      />
+      <Stack.Screen
+        name="sports"
+        options={{
+          title: "Sports",
+          headerShown: true,
+          headerRight: () => <LogoutBtn />,
+          headerBackTitleVisible: false,
+          headerTitle: (props) => (
+            <Image
+              source={require("../../assets/logo.png")}
+              resizeMode="contain"
+              style={{ width: 50, height: 50 }}
+            />
+          ),
+          headerStyle: {
+            backgroundColor: "lightblue",
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+        }}
+      />
+      <Stack.Screen
+        name="activities"
+        options={{
+          title: "Activities",
+          headerShown: true,
+          headerRight: () => <LogoutBtn />,
+          headerBackTitleVisible: false,
+          headerTitle: (props) => (
+            <Image
+              source={require("../../assets/logo.png")}
+              resizeMode="contain"
+              style={{ width: 50, height: 50 }}
+            />
+          ),
+          headerStyle: {
+            backgroundColor: "lightblue",
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+        }}
+      />
+      <Stack.Screen
+        name="foodDrink"
+        options={{
+          title: "Food & Drink",
+          headerShown: true,
+          headerRight: () => <LogoutBtn />,
+          headerBackTitleVisible: false,
+          headerTitle: (props) => (
+            <Image
+              source={require("../../assets/logo.png")}
+              resizeMode="contain"
+              style={{ width: 50, height: 50 }}
+            />
+          ),
+          headerStyle: {
+            backgroundColor: "lightblue",
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
         }}
       />
     </Stack>

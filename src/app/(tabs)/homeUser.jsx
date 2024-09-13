@@ -5,13 +5,41 @@ import {
   Dimensions,
   ScrollView,
   ImageBackground,
+  SafeAreaView,
+  SectionList,
 } from "react-native";
 import auth from "@react-native-firebase/auth";
 import CustomCarousel from "../../components/CustomCarousel";
-import { BlurView } from "expo-blur";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { shadow } from "react-native-paper";
+import Animated, {
+  interpolate,
+  useAnimatedRef,
+  useAnimatedStyle,
+  useScrollViewOffset,
+} from "react-native-reanimated";
+import InfoUserCardItem from "../../components/InfoUserCardItem";
 const { width } = Dimensions.get("window");
+
+const HeightIMG = 300;
+const dataInfoUser = [
+  {
+    title: "Sports",
+    url: "sports",
+    image:
+      "https://images.unsplash.com/photo-1581545048011-564bf4a743ab?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fHdhdGVyJTIwc3BvcnRzfGVufDB8fDB8fHww",
+  },
+  {
+    title: "Activities",
+    url: "activities",
+    image:
+      "https://images.unsplash.com/photo-1644633539216-f0042ac2d839?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fGFjdGl2aXRpZXN8ZW58MHx8MHx8fDA%3D",
+  },
+  {
+    title: "Food & Drink",
+    url: "foodDrink",
+    image:
+      "https://plus.unsplash.com/premium_photo-1677000666761-ff476a65c8ba?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDR8fHxlbnwwfHx8fHw%3D",
+  },
+];
 
 const dataSports = [
   {
@@ -67,40 +95,73 @@ const dataStudies = [
   },
 ];
 
-const MyCarousel = () => {
+export default function MyCarousel() {
   const user = auth().currentUser;
+  const scrollRef = useAnimatedRef();
+
+  const scrollOffset = useScrollViewOffset(scrollRef);
+  const imageAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateY: interpolate(
+            scrollOffset.value,
+            [-HeightIMG, 0, HeightIMG],
+            [-HeightIMG / 2, 0, HeightIMG * 0.75]
+          ),
+        },
+        {
+          scale: interpolate(
+            scrollOffset.value,
+            [-HeightIMG, 0, HeightIMG],
+            [2, 1, 1]
+          ),
+        },
+      ],
+    };
+  });
   return (
-    <ScrollView style={styles.container}>
-      <ImageBackground
-        style={styles.image}
+    <Animated.ScrollView
+      style={styles.container}
+      ref={scrollRef}
+      scrollEventThrottle={16}
+    >
+      <Animated.Image
+        style={[styles.image, imageAnimatedStyle]}
         resizeMode="cover"
         source={{
           uri: "https://images.unsplash.com/photo-1725272123537-105e02c214d8?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDE0fHx8ZW58MHx8fHx8",
         }}
-      >
+      />
+      <View style={{ backgroundColor: "ivory", flex: 1 }}>
         <View>
           <Text style={styles.introText}>
             Hello <Text style={styles.textName}>{user?.displayName}</Text>,
-            Welcome To Blue Soul App
+            Welcome To <Text style={styles.textName}>Blue Soul</Text> App
           </Text>
         </View>
-      </ImageBackground>
-      <View>
-        <Text style={styles.introTextSub}>
-          Here you can find everything: from sport, activities to food and
-          drinks to pick during your days here with us! Have Fun!
-        </Text>
+        <View style={styles.viewBackground}>
+          <Text style={styles.introTextSub}>
+            Here you can find everything: from sport 🏄🏼‍♂️, activities 🚴🏻 to food
+            🍝 and drinks 🥤 you will have during your days here with us! Have
+            Fun 🤩!
+          </Text>
+        </View>
+        {dataInfoUser.map((item) => (
+          <InfoUserCardItem
+            key={item.title}
+            src={item.image}
+            title={item.title}
+            url={item.url}
+            text={
+              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna."
+            }
+          />
+        ))}
       </View>
-
-      <View style={styles.carousleContainer}>
-        <CustomCarousel data={dataActivities} />
-      </View>
-      <View style={styles.carousleContainer}>
-        <CustomCarousel data={dataStudies} />
-      </View>
-    </ScrollView>
+    </Animated.ScrollView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
@@ -112,18 +173,33 @@ const styles = StyleSheet.create({
     fontSize: 30,
     letterSpacing: 1,
   },
+  viewBackground: {
+    backgroundColor: "#fff",
+    borderRadius: 14,
+    marginHorizontal: 20,
+    marginVertical: 20,
+    shadowColor: "orangered",
+    shadowOffset: {
+      width: 0,
+      height: 9,
+    },
+    shadowOpacity: 0.48,
+    shadowRadius: 11.95,
+
+    elevation: 18,
+  },
   textName: {
     color: "orangered",
   },
   image: {
     width,
-    height: 300,
+    height: HeightIMG,
     opacity: 0.8,
   },
   introTextSub: {
-    color: "#0B2F9F",
+    color: "steelblue",
     fontSize: 16,
-    letterSpacing: 2,
+    letterSpacing: 1,
     paddingHorizontal: 20,
     paddingVertical: 10,
     shadowColor: "#fff",
@@ -185,5 +261,3 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
 });
-
-export default MyCarousel;
