@@ -45,33 +45,42 @@ app.get("/api/getStudents", async (req, res) => {
 app.post("/api/signUpUser", async (req, res) => {
   const { fullName, email, password } = req.body;
   console.log(req.body);
-  const isInGroup = await Schools.findOne({ tokenGroup: password });
-  console.log(isInGroup);
 
-  if (isInGroup) {
-    try {
-      const newUser = new Students({
-        fullName: fullName,
-        email: email,
-        password: password,
-        tokenGroup: password,
-      });
-      await newUser.save();
-      res.json({
-        message: "User Signed Up and Logged In",
-        status: "Success",
-        isIn: true,
-      });
-    } catch (error) {
-      console.error(error);
-      res.json({ message: "Error Saving User", status: "Alert", isIn: false });
-    }
+  const alreadyUserIn = await Students.findOne({ email: email });
+  const isInGroup = await Schools.findOne({ tokenGroup: password });
+  console.log("User Already In:", alreadyUserIn);
+  if (alreadyUserIn) {
+    res.json({ isIn: false });
   } else {
-    res.json({
-      message: "User Not In Any Group!",
-      status: "Alert",
-      isIn: false,
-    });
+    if (isInGroup) {
+      try {
+        const newUser = new Students({
+          fullName: fullName,
+          email: email,
+          password: password,
+          tokenGroup: password,
+        });
+        await newUser.save();
+        res.json({
+          message: "User Signed Up",
+          status: "Success",
+          isIn: true,
+        });
+      } catch (error) {
+        console.error(error);
+        res.json({
+          message: "Error Saving User",
+          status: "Alert",
+          isIn: false,
+        });
+      }
+    } else {
+      res.json({
+        message: "User Not In Any Group!",
+        status: "Alert",
+        isIn: false,
+      });
+    }
   }
 });
 

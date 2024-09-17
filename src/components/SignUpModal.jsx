@@ -33,13 +33,21 @@ function SignUpModal({ isModalVisibile, toggleModal }) {
   };
 
   const firebaseSign = async () => {
-    const userCredential = await auth().createUserWithEmailAndPassword(
-      infoUser.email,
-      infoUser.password
-    );
-    await userCredential.user.updateProfile({
-      displayName: infoUser.fullName,
-    });
+    try {
+      await auth()
+        .createUserWithEmailAndPassword(infoUser.email, infoUser.password)
+        .then((credential) => {
+          credential.user.updateProfile({
+            displayName: infoUser.fullName,
+          });
+          auth().signOut();
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    } catch (err) {
+      alert(err);
+    }
   };
   const signUp = async () => {
     const { fullName, email, password } = infoUser;
@@ -51,12 +59,14 @@ function SignUpModal({ isModalVisibile, toggleModal }) {
           { headers: { "Content-Type": "application/json" } }
         )
         .then((res) => {
-          Alert.alert(res.data.status, res.data.message);
           if (res.data.isIn) {
             firebaseSign();
+            Alert.alert(res.data.status, res.data.message);
+          } else {
+            alert("The email address is already in use by another account.");
           }
         })
-        .catch((err) => alert(err.data.message));
+        .catch((err) => Alert.alert("Error passowrd/email", err.data.message));
     } catch (error) {
       alert(error);
     }
@@ -72,6 +82,7 @@ function SignUpModal({ isModalVisibile, toggleModal }) {
       Alert.alert("Error", "Invalid email format");
     } else {
       signUp();
+      toggleModal(isModalVisibile);
     }
   };
   const validateEmail = (text) => {
