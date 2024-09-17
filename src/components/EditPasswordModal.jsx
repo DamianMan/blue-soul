@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Modal, StyleSheet, Text, View, Dimensions } from "react-native";
+import { Modal, StyleSheet, Text, View, Dimensions, Alert } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import auth from "@react-native-firebase/auth";
+import axios from "axios";
 
 const { width } = Dimensions.get("window");
 
@@ -13,13 +14,35 @@ function EditPAsswordModal({ modalVisible, setModalVisible }) {
   const [isHide, setIsHide] = useState(true);
 
   const handleSubmit = async () => {
+    const email = user.email;
     if (password === "") {
       alert("Please fill the field");
     } else {
       try {
         if (user) {
           await user.updatePassword(password);
-          alert("Password Updated!");
+          await axios
+            .post(
+              "http://localhost:3000/api/editPassword",
+              {
+                password,
+                email,
+              },
+              {
+                headers: { "Content-Type": "application/json" },
+              }
+            )
+            .then((response) => {
+              setPassword("");
+              Alert.alert(response.data.status, response.data.message);
+              setIsHide(true);
+            })
+            .catch((err) => {
+              setPassword("");
+              setIsHide(true);
+
+              Alert.alert("Alert", err);
+            });
         } else {
           alert("User not authenticated!");
         }

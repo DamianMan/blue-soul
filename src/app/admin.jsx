@@ -38,7 +38,6 @@ const { width, height } = Dimensions.get("window");
 
 function AdminPanel(props) {
   const user = auth().currentUser;
-  console.log("USER:", user);
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -53,9 +52,6 @@ function AdminPanel(props) {
           style={styles.background}
         />
       </ImageBackground>
-      <View>
-        <Text>Hello {user?.email}!</Text>
-      </View>
 
       <FlatList
         data={Tasks}

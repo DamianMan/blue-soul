@@ -17,6 +17,7 @@ import Animated, {
   useScrollViewOffset,
 } from "react-native-reanimated";
 import InfoUserCardItem from "../../components/InfoUserCardItem";
+
 const { width } = Dimensions.get("window");
 
 const HeightIMG = 300;

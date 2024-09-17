@@ -14,6 +14,7 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Divider, TextInput } from "react-native-paper";
 import auth from "@react-native-firebase/auth";
+import axios from "axios";
 
 const { width, height } = Dimensions.get("window");
 
@@ -31,21 +32,33 @@ function SignUpModal({ isModalVisibile, toggleModal }) {
     toggleModal(isModalVisibile);
   };
 
+  const firebaseSign = async () => {
+    const userCredential = await auth().createUserWithEmailAndPassword(
+      infoUser.email,
+      infoUser.password
+    );
+    await userCredential.user.updateProfile({
+      displayName: infoUser.fullName,
+    });
+  };
   const signUp = async () => {
-    setLoading(true);
+    const { fullName, email, password } = infoUser;
     try {
-      const userCredential = await auth().createUserWithEmailAndPassword(
-        infoUser.email,
-        infoUser.password
-      );
-      await userCredential.user.updateProfile({
-        displayName: infoUser.fullName,
-      });
-      alert("Signed In");
+      await axios
+        .post(
+          "http://localhost:3000/api/signUpUser",
+          { fullName, email, password },
+          { headers: { "Content-Type": "application/json" } }
+        )
+        .then((res) => {
+          Alert.alert(res.data.status, res.data.message);
+          if (res.data.isIn) {
+            firebaseSign();
+          }
+        })
+        .catch((err) => alert(err.data.message));
     } catch (error) {
       alert(error);
-    } finally {
-      setLoading(false);
     }
   };
 

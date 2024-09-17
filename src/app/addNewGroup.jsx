@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Alert, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Alert,
+  Dimensions,
+  ActivityIndicator,
+} from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -8,8 +15,11 @@ import { v4 as uuidv4 } from "uuid";
 const { width } = Dimensions.get("window");
 import auth from "@react-native-firebase/auth";
 import * as Clipboard from "expo-clipboard";
+import axios from "axios";
 
 function addNewGroup(props) {
+  const user = auth().currentUser;
+
   const [isValidEmail, setIsValidEmail] = useState(true);
   const validateEmail = (text) => {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -20,7 +30,6 @@ function addNewGroup(props) {
     name: "",
     fullName: "",
     email: "",
-    password: "",
     token: "",
     city: "",
     phone: "",
@@ -35,11 +44,19 @@ function addNewGroup(props) {
     setLoading(true);
 
     try {
-      await auth().createUserWithEmailAndPassword(
-        infoGroup.email,
-        infoGroup.token
-      );
-      alert("Check your email");
+      await auth()
+        .createUserWithEmailAndPassword(infoGroup.email, infoGroup.token)
+        .then((cred) => {
+          cred.user.updateProfile({
+            displayName: infoGroup.fullName,
+          });
+          auth().signOut();
+        })
+        .catch((error) => {
+          console.error("Error creating user:", error);
+        });
+      // Update the user's profile with the display name
+      // await auth().signOut();
     } catch (error) {
       alert(error);
     }
@@ -51,16 +68,54 @@ function addNewGroup(props) {
     setInfoGroup({ ...infoGroup, token: newToken });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    const { name, fullName, email, token, city, phone } = infoGroup;
+    setLoading(true);
     if (infoGroup.token === "" || infoGroup.email === "") {
       Alert.alert("Error", "Please fill all field");
     } else if (!isValidEmail) {
       Alert.alert("Error", "Invalid email format");
     } else {
-      Alert.alert("Success", "All data stored to db");
-    }
+      try {
+        if (user) {
+          await axios
+            .post(
+              "http://localhost:3000/api/postGroup",
+              {
+                name,
+                fullName,
+                email,
+                token,
+                city,
+                phone,
+              },
+              {
+                headers: { "Content-Type": "application/json" },
+              }
+            )
+            .then((res) => {
+              Alert.alert("Success", res.data.message);
+              setInfoGroup((prev) => ({
+                ...prev,
+                name: "",
+                fullName: "",
+                email: "",
+                token: "",
+                city: "",
+                phone: "",
+              }));
+              signUp();
 
-    signUp();
+              setLoading(false);
+            })
+            .catch((err) => alert(err));
+        } else {
+          alert("No User Authenticated");
+        }
+      } catch (error) {
+        alert(error);
+      }
+    }
   };
 
   const handleEmail = (text) => {
@@ -72,108 +127,101 @@ function addNewGroup(props) {
       <Text style={{ color: "#121481", fontSize: 18 }}>
         Please fill all the fields with the info group
       </Text>
-      <View style={styles.form}>
-        <TextInput
-          value={infoGroup.name}
-          mode="outlined"
-          textColor="#ff5f00"
-          activeOutlineColor="#121481"
-          autoCapitalize="none"
-          label="Group Name"
-          onChangeText={(text) => setInfoGroup({ ...infoGroup, name: text })}
-          style={styles.userInput}
-        />
-        <TextInput
-          value={infoGroup.fullName}
-          mode="outlined"
-          textColor="#ff5f00"
-          activeOutlineColor="#121481"
-          label="Full Name Teacher In Charge"
-          autoCapitalize="none"
-          onChangeText={(text) =>
-            setInfoGroup({ ...infoGroup, fullName: text })
-          }
-          style={styles.userInput}
-        />
-        <TextInput
-          value={infoGroup.email}
-          mode="outlined"
-          autoCapitalize="none"
-          textColor="#ff5f00"
-          activeOutlineColor="#121481"
-          label="Email"
-          error={!isValidEmail}
-          onChangeText={handleEmail}
-          style={styles.userInput}
-        />
-        <TextInput
-          value={infoGroup.password}
-          mode="outlined"
-          autoCapitalize="none"
-          textColor="#ff5f00"
-          activeOutlineColor="#121481"
-          label="Password"
-          onChangeText={(text) =>
-            setInfoGroup({ ...infoGroup, password: text })
-          }
-          style={styles.userInput}
-        />
-        <TextInput
-          value={infoGroup.city}
-          mode="outlined"
-          textColor="#ff5f00"
-          activeOutlineColor="#121481"
-          label="City"
-          onChangeText={(text) => setInfoGroup({ ...infoGroup, city: text })}
-          style={styles.userInput}
-        />
-        <TextInput
-          value={infoGroup.phone}
-          autoCapitalize="none"
-          mode="outlined"
-          textColor="#ff5f00"
-          activeOutlineColor="#121481"
-          label="Phone numer"
-          placeholder="+49 69 1234 5678"
-          onChangeText={(text) => setInfoGroup({ ...infoGroup, phone: text })}
-          style={styles.userInput}
-        />
-        {infoGroup.token === "" ? (
-          <Button
-            icon={
-              infoGroup.token === ""
-                ? () => <Icon name="barcode" size={30} color={"#121481"} />
-                : null
+      {!loading ? (
+        <View style={styles.form}>
+          <TextInput
+            value={infoGroup.name}
+            mode="outlined"
+            textColor="#ff5f00"
+            activeOutlineColor="#121481"
+            autoCapitalize="none"
+            label="Group Name"
+            onChangeText={(text) => setInfoGroup({ ...infoGroup, name: text })}
+            style={styles.userInput}
+          />
+          <TextInput
+            value={infoGroup.fullName}
+            mode="outlined"
+            textColor="#ff5f00"
+            activeOutlineColor="#121481"
+            label="Full Name Teacher In Charge"
+            autoCapitalize="none"
+            onChangeText={(text) =>
+              setInfoGroup({ ...infoGroup, fullName: text })
             }
-            mode="contained-total"
-            labelStyle={{
-              color: "#121481",
-              fontSize: 14,
-            }}
-            onPress={handleToken}
-            style={styles.generateBtn}
-          >
-            {infoGroup.token === ""
-              ? "Press to generate group code"
-              : infoGroup.token}
-          </Button>
-        ) : (
-          <Button
-            icon={() => (
-              <MaterialIcons name="content-copy" size={24} color="#121481" />
-            )}
-            mode="contained-total"
-            labelStyle={{
-              color: "#121481",
-              fontSize: 14,
-            }}
-            style={styles.generateBtn}
-            onPress={copyToClipboard}
-          >
-            <Text>{infoGroup.token}</Text>
-          </Button>
-        )}
-      </View>
+            style={styles.userInput}
+          />
+          <TextInput
+            value={infoGroup.email}
+            mode="outlined"
+            autoCapitalize="none"
+            textColor="#ff5f00"
+            activeOutlineColor="#121481"
+            label="Email"
+            error={!isValidEmail}
+            onChangeText={handleEmail}
+            style={styles.userInput}
+          />
+
+          <TextInput
+            value={infoGroup.city}
+            mode="outlined"
+            textColor="#ff5f00"
+            activeOutlineColor="#121481"
+            label="City"
+            onChangeText={(text) => setInfoGroup({ ...infoGroup, city: text })}
+            style={styles.userInput}
+          />
+          <TextInput
+            value={infoGroup.phone}
+            autoCapitalize="none"
+            mode="outlined"
+            textColor="#ff5f00"
+            activeOutlineColor="#121481"
+            label="Phone numer"
+            placeholder="+49 69 1234 5678"
+            onChangeText={(text) => setInfoGroup({ ...infoGroup, phone: text })}
+            style={styles.userInput}
+          />
+          {infoGroup.token === "" ? (
+            <Button
+              icon={
+                infoGroup.token === ""
+                  ? () => <Icon name="barcode" size={30} color={"#121481"} />
+                  : null
+              }
+              mode="contained-total"
+              labelStyle={{
+                color: "#121481",
+                fontSize: 14,
+              }}
+              onPress={handleToken}
+              style={styles.generateBtn}
+            >
+              {infoGroup.token === ""
+                ? "Press to generate group code"
+                : infoGroup.token}
+            </Button>
+          ) : (
+            <Button
+              icon={() => (
+                <MaterialIcons name="content-copy" size={24} color="#121481" />
+              )}
+              mode="contained-total"
+              labelStyle={{
+                color: "#121481",
+                fontSize: 14,
+              }}
+              style={styles.generateBtn}
+              onPress={copyToClipboard}
+            >
+              <Text>{infoGroup.token}</Text>
+            </Button>
+          )}
+        </View>
+      ) : (
+        <ActivityIndicator />
+      )}
 
       <View
         style={{
