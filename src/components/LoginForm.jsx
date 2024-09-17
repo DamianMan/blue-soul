@@ -17,7 +17,6 @@ export default function LoginForm(props) {
   const signIn = async () => {
     try {
       await auth().signInWithEmailAndPassword(email, password);
-      alert("Signed In");
     } catch (error) {
       alert(error);
     }

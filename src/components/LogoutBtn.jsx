@@ -8,7 +8,6 @@ function LogoutBtn(props) {
   const signOut = async () => {
     try {
       await auth().signOut();
-      alert("Signed Out!");
     } catch (error) {
       alert(error);
     }
