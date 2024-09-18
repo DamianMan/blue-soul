@@ -1,12 +1,132 @@
-import React from "react";
-import { View, Text } from "react-native";
+import React, { useContext, useState } from "react";
+import {
+  View,
+  ScrollView,
+  Text,
+  Dimensions,
+  StyleSheet,
+  ActivityIndicator,
+  Image,
+  FlatList,
+} from "react-native";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import TeacherCardItem from "../components/TeacherCardItem";
+import { ContextData } from "../context/ContextDataProvider";
+import CustomCarousel from "../components/CustomCarousel";
+import { Divider } from "react-native-paper";
+import StudentChipItem from "../components/StudentChipItem";
+
+const { width, height } = Dimensions.get("window");
 
 function checkEditGroup(props) {
+  const { groups, students } = useContext(ContextData);
+  const [group, setGroup] = useState();
+  const [student, setStudent] = useState();
+
+  const handlePress = (token) => {
+    const currentGroup = groups.find((item) => item.tokenGroup === token);
+    if (currentGroup) {
+      setGroup(currentGroup);
+    } else {
+      alert("No Group Found!");
+    }
+    const currentStudents = students.filter(
+      (item) => item.tokenGroup === token
+    );
+    if (currentStudents) {
+      console.log("Current Students", currentStudents);
+      setStudent(currentStudents);
+    } else {
+      alert("No Students Found");
+    }
+  };
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Check/Edit Group</Text>
-    </View>
+    <ScrollView style={styles.container}>
+      <Image
+        style={styles.image}
+        resizeMode="cover"
+        source={{
+          uri: "https://images.unsplash.com/photo-1669647561467-891414e9b140?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDF8fHxlbnwwfHx8fHw%3D",
+        }}
+      />
+      <Text
+        style={[
+          styles.titleText,
+          { letterSpacing: 0, padding: 10, marginTop: 20, fontSize: 18 },
+        ]}
+      >
+        Tap On The City To Check The Group
+      </Text>
+      <MaterialCommunityIcons
+        name="gesture-tap"
+        size={50}
+        color="#3FA2F6"
+        style={{ alignSelf: "center" }}
+      />
+
+      <CustomCarousel data={groups} handlePress={handlePress} />
+
+      {group && (
+        <View>
+          <Text style={styles.titleText}>TEACHER</Text>
+          <TeacherCardItem
+            teacher={group.fullNameTeacher}
+            email={group.email}
+            phone={group.phone}
+            city={group.city}
+          />
+        </View>
+      )}
+      {student && (
+        <View>
+          <Divider style={styles.divider} />
+          <Text style={[styles.titleText, { paddingBottom: 20 }]}>
+            STUDENTS
+          </Text>
+          {student.map((item) => (
+            <StudentChipItem
+              key={item.tokenGroup + item.fullName}
+              data={item}
+            />
+          ))}
+        </View>
+      )}
+    </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "ivory",
+  },
+  image: {
+    height: height / 3,
+    borderBottomStartRadius: 40,
+    borderBottomEndRadius: 40,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
+  },
+  divider: {
+    marginHorizontal: 20,
+    height: 1,
+    borderRadius: 10,
+    backgroundColor: "#3FA2F6",
+    marginVertical: 30,
+  },
+  titleText: {
+    textAlign: "center",
+    fontSize: 20,
+    color: "midnightblue",
+    letterSpacing: 1,
+  },
+});
 
 export default checkEditGroup;

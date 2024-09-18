@@ -75,6 +75,7 @@ export default AdminPanel;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "ivory",
   },
   background: {
     position: "absolute",

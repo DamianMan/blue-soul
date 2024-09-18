@@ -9,7 +9,6 @@ import {
   SectionList,
 } from "react-native";
 import auth from "@react-native-firebase/auth";
-import CustomCarousel from "../../components/CustomCarousel";
 import Animated, {
   interpolate,
   useAnimatedRef,
@@ -17,6 +16,8 @@ import Animated, {
   useScrollViewOffset,
 } from "react-native-reanimated";
 import InfoUserCardItem from "../../components/InfoUserCardItem";
+import { useContext } from "react";
+import { ContextData } from "../../context/ContextDataProvider";
 
 const { width } = Dimensions.get("window");
 
@@ -97,6 +98,7 @@ const dataStudies = [
 ];
 
 export default function MyCarousel() {
+  const { services } = useContext(ContextData);
   const user = auth().currentUser;
   const scrollRef = useAnimatedRef();
 
@@ -148,15 +150,14 @@ export default function MyCarousel() {
             Fun 🤩!
           </Text>
         </View>
-        {dataInfoUser.map((item) => (
+        {services.map((item) => (
           <InfoUserCardItem
-            key={item.title}
-            src={item.image}
-            title={item.title}
-            url={item.url}
-            text={
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna."
-            }
+            key={item.name}
+            src={item.images[0]}
+            title={item.name}
+            nameActivity={item.url}
+            text={item.subTitle}
+            description={item.description}
           />
         ))}
       </View>

@@ -5,15 +5,31 @@ import {
   StyleSheet,
   Dimensions,
   ImageBackground,
+  Pressable,
 } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 import { BlurView } from "expo-blur";
 
 const { width } = Dimensions.get("window");
 
-const CustomCarousel = ({ data }) => {
+const COLORS = [
+  "cornflowerblue",
+  "darkcyan",
+  "cadetblue",
+  "lemonchiffon",
+  "lightblue",
+  "lightsalmon",
+  "mediumaquamarine",
+];
+
+const getRandomColor = () => {
+  let randomColor = Math.floor(Math.random() * COLORS.length);
+  return COLORS[randomColor];
+};
+
+const CustomCarousel = ({ data, handlePress }) => {
   return (
-    <View style={{ flex: 1 }}>
+    <View>
       <Carousel
         style={styles.carousel}
         width={width}
@@ -24,12 +40,13 @@ const CustomCarousel = ({ data }) => {
         mode="parallax"
         withAnimation={{ type: "spring", config: 10000 }}
         renderItem={({ item, index }) => (
-          <View
+          <Pressable
             key={index}
             style={{
               justifyContent: "center",
               borderRadius: 30,
             }}
+            onPress={() => handlePress(item.tokenGroup)}
           >
             <ImageBackground
               resizeMode="stretch"
@@ -40,14 +57,20 @@ const CustomCarousel = ({ data }) => {
               }}
               imageStyle={{ borderRadius: 30 }}
               source={{
-                uri: item.image,
+                uri: "https://img.freepik.com/free-vector/watercolor-painted-malaga-skyline_52683-71499.jpg?ga=GA1.1.609292962.1726606020&semt=ais_hybrid",
               }}
             >
-              <BlurView intensity={100} style={styles.blurContainer}>
-                <Text style={styles.textCarousel}>{item.title}</Text>
+              <BlurView
+                intensity={30}
+                style={[
+                  styles.blurContainer,
+                  { backgroundColor: `${getRandomColor()}` },
+                ]}
+              >
+                <Text style={styles.textCarousel}>{item.nameGroup}</Text>
               </BlurView>
             </ImageBackground>
-          </View>
+          </Pressable>
         )}
       />
     </View>
@@ -57,6 +80,15 @@ const CustomCarousel = ({ data }) => {
 const styles = StyleSheet.create({
   carousel: {
     marginVertical: 30,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
   },
 
   blurContainer: {
@@ -66,13 +98,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     overflow: "hidden",
     borderRadius: 20,
-    width: (width * 95) / 100,
+    width: width,
+    opacity: 0.6,
   },
   textCarousel: {
     textAlign: "center",
     fontSize: 30,
     position: "absolute",
     alignSelf: "center",
+    color: "#141E46",
+    letterSpacing: 2,
   },
 });
 
