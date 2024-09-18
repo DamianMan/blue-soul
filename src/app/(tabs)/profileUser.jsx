@@ -19,9 +19,9 @@ import { ContextData } from "../../context/ContextDataProvider";
 import axios from "axios";
 
 function profileUser(props) {
-  const { students } = useContext(ContextData);
+  const { users } = useContext(ContextData);
   let user = auth().currentUser;
-  let currentUser = students.find(
+  let currentUser = users.find(
     (stud) => stud.email === (user ? user.email : "")
   );
 
@@ -67,7 +67,7 @@ function profileUser(props) {
     try {
       await axios
         .post(
-          "http://localhost:3000/api/postUser",
+          "http://localhost:3000/api/updateUser",
           {
             fullName: user?.displayName,
             address,

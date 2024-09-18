@@ -6,7 +6,7 @@ import {
   Dimensions,
   StyleSheet,
   ActivityIndicator,
-  Image,
+  ImageBackground,
   FlatList,
 } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -16,12 +16,12 @@ import CustomCarousel from "../components/CustomCarousel";
 import { Divider } from "react-native-paper";
 import StudentChipItem from "../components/StudentChipItem";
 
-const { width, height } = Dimensions.get("window");
+const { height } = Dimensions.get("window");
 
 function checkEditGroup(props) {
-  const { groups, students } = useContext(ContextData);
+  const { groups, users } = useContext(ContextData);
   const [group, setGroup] = useState();
-  const [student, setStudent] = useState();
+  const [user, setUser] = useState();
 
   const handlePress = (token) => {
     const currentGroup = groups.find((item) => item.tokenGroup === token);
@@ -30,19 +30,17 @@ function checkEditGroup(props) {
     } else {
       alert("No Group Found!");
     }
-    const currentStudents = students.filter(
-      (item) => item.tokenGroup === token
-    );
-    if (currentStudents) {
-      console.log("Current Students", currentStudents);
-      setStudent(currentStudents);
+    const currentUsers = users.filter((item) => item.tokenGroup === token);
+    if (currentUsers) {
+      setUser(currentUsers);
     } else {
-      alert("No Students Found");
+      alert("No Users Found");
     }
   };
   return (
     <ScrollView style={styles.container}>
-      <Image
+      <ImageBackground
+        imageStyle={styles.image}
         style={styles.image}
         resizeMode="cover"
         source={{
@@ -68,7 +66,9 @@ function checkEditGroup(props) {
 
       {group && (
         <View>
-          <Text style={styles.titleText}>TEACHER</Text>
+          <Text style={[styles.titleText, { color: "orangered" }]}>
+            TEACHER
+          </Text>
           <TeacherCardItem
             teacher={group.fullNameTeacher}
             email={group.email}
@@ -77,18 +77,21 @@ function checkEditGroup(props) {
           />
         </View>
       )}
-      {student && (
+      {user && (
         <View>
           <Divider style={styles.divider} />
           <Text style={[styles.titleText, { paddingBottom: 20 }]}>
             STUDENTS
           </Text>
-          {student.map((item) => (
-            <StudentChipItem
-              key={item.tokenGroup + item.fullName}
-              data={item}
-            />
-          ))}
+          {user.map(
+            (item) =>
+              item.role === "Student" && (
+                <StudentChipItem
+                  key={item.tokenGroup + item.fullName}
+                  data={item}
+                />
+              )
+          )}
         </View>
       )}
     </ScrollView>
@@ -109,8 +112,8 @@ const styles = StyleSheet.create({
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    shadowOpacity: 0.55,
+    shadowRadius: 2.84,
 
     elevation: 5,
   },

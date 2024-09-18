@@ -7,7 +7,6 @@ import {
   Dimensions,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { useHeaderHeight } from "@react-navigation/elements";
 import TaskItem from "../components/TaskItem";
 import auth from "@react-native-firebase/auth";
 const Tasks = [
@@ -34,10 +33,9 @@ const Tasks = [
   },
 ];
 
-const { width, height } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 
 function AdminPanel(props) {
-  const user = auth().currentUser;
   return (
     <View style={styles.container}>
       <ImageBackground

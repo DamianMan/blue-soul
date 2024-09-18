@@ -6,9 +6,11 @@ import {
   Text,
   Pressable,
   View,
-  FlatList,
+  Dimensions,
 } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import StudenInfoListItem from "./StudenInfoListItem";
+const { width } = Dimensions.get("window");
 function StudentModalInfo({ modalVisible, setModalVisible, data }) {
   return (
     <View style={styles.centeredView}>
@@ -20,6 +22,7 @@ function StudentModalInfo({ modalVisible, setModalVisible, data }) {
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
+            <Text style={styles.modalText}>Info Student</Text>
             <Pressable
               style={{ position: "absolute", right: 10, top: 5 }}
               onPress={setModalVisible}
@@ -32,18 +35,7 @@ function StudentModalInfo({ modalVisible, setModalVisible, data }) {
                 />
               </Text>
             </Pressable>
-            <FlatList
-              data={data}
-              keyExtractor={(item) => item.tokenGroup + item.fullName}
-              renderItem={(item) => {
-                <View>
-                  <Text style={styles.modalText}>{item.fullNAme}</Text>
-                  <Text style={styles.modalText}>{item.email}</Text>
-                  <Text style={styles.modalText}>{item.phone}</Text>
-                  <Text style={styles.modalText}>{item.city}</Text>
-                </View>;
-              }}
-            />
+            <StudenInfoListItem data={data} />
           </View>
         </View>
       </Modal>
@@ -59,9 +51,10 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 20,
-    backgroundColor: "white",
+    width: (width * 80) / 100,
+    backgroundColor: "snow",
     borderRadius: 20,
-    padding: 55,
+    padding: 35,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -92,6 +85,8 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: "center",
+    color: "orangered",
+    fontSize: 20,
   },
 });
 

@@ -63,7 +63,7 @@ function SignUpModal({ isModalVisibile, toggleModal }) {
             firebaseSign();
             Alert.alert(res.data.status, res.data.message);
           } else {
-            alert("The email address is already in use by another account.");
+            alert(res.data.message);
           }
         })
         .catch((err) => Alert.alert("Error passowrd/email", err.data.message));

@@ -1,6 +1,5 @@
 import React from "react";
 import { View, Text, Pressable } from "react-native";
-import { router } from "expo-router";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import auth from "@react-native-firebase/auth";
 

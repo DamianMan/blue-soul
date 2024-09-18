@@ -4,25 +4,25 @@ import axios from "axios";
 const ContextData = createContext();
 
 function ContextDataProvider({ children }) {
-  const [students, setStudents] = useState([]);
+  const [users, setUsers] = useState([]);
   const [services, setServices] = useState([]);
   const [groups, setGroups] = useState([]);
 
   useEffect(() => {
-    const getStudents = async () => {
+    const getUsers = async () => {
       try {
-        // Get Students
+        // Get Users
         await axios
-          .get("http://localhost:3000/api/getStudents")
+          .get("http://localhost:3000/api/getUsers")
           .then((res) => {
-            setStudents(res.data);
+            setUsers(res.data);
           })
           .catch((err) => console.log("Error In Response:", err));
       } catch (error) {
         console.warn("Error in Request:", err.data);
       }
     };
-    getStudents();
+    getUsers();
 
     // Get Services
     const getServices = async () => {
@@ -59,7 +59,7 @@ function ContextDataProvider({ children }) {
     getGroups();
   }, []);
 
-  const appValues = { students, services, groups };
+  const appValues = { users, services, groups };
   return (
     <ContextData.Provider value={appValues}>{children}</ContextData.Provider>
   );

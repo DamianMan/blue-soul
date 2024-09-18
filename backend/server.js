@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const Students = require("./models/Students");
+const Users = require("./models/Users");
 const Schools = require("./models/Schools");
 const Services = require("./models/Services");
 const mongoose = require("mongoose");
@@ -84,12 +84,12 @@ const port = 3000;
 //   newRecord.save();
 // });
 
-// Get All Students
+// Get All Users
 
-app.get("/api/getStudents", async (req, res) => {
+app.get("/api/getUsers", async (req, res) => {
   try {
-    const allStudents = await Students.find();
-    res.json(allStudents);
+    const allUsers = await Users.find();
+    res.json(allUsers);
   } catch (error) {
     res.json(error);
   }
@@ -110,8 +110,8 @@ app.get("/api/getServices", async (req, res) => {
 
 app.get("/api/getAllGroups", async (req, res) => {
   try {
-    const allStudents = await Schools.find();
-    res.json(allStudents);
+    const allGroups = await Schools.find();
+    res.json(allGroups);
   } catch (error) {
     res.json(error);
   }
@@ -133,19 +133,24 @@ app.post("/api/signUpUser", async (req, res) => {
   const { fullName, email, password } = req.body;
   console.log(req.body);
 
-  const alreadyUserIn = await Students.findOne({ email: email });
+  const alreadyUserIn = await Users.findOne({ email: email });
   const isInGroup = await Schools.findOne({ tokenGroup: password });
   console.log("User Already In:", alreadyUserIn);
   if (alreadyUserIn) {
-    res.json({ isIn: false });
+    res.json({
+      message: "User Not In Any Group!",
+      status: "Alert",
+      isIn: false,
+    });
   } else {
     if (isInGroup) {
       try {
-        const newUser = new Students({
+        const newUser = new Users({
           fullName: fullName,
           email: email,
           password: password,
           tokenGroup: password,
+          role: "Student",
         });
         await newUser.save();
         res.json({
@@ -171,16 +176,16 @@ app.post("/api/signUpUser", async (req, res) => {
   }
 });
 
-// Post User in DB
-app.post("/api/postUser", async (req, res) => {
+// Update User from Profile Screen
+app.post("/api/updateUser", async (req, res) => {
   const { fullName, address, email, city, phone, id, passport, numDocument } =
     req.body;
 
-  const currentStudent = await Students.findOne({ email });
+  const currentStudent = await Users.findOne({ email });
   if (currentStudent) {
     const query = { email };
 
-    await Students.findOneAndUpdate(query, {
+    await Users.findOneAndUpdate(query, {
       address,
       city,
       phone,
@@ -202,7 +207,7 @@ app.post("/api/editPassword", async (req, res) => {
   const { password, email } = req.body;
   console.log(req.body);
 
-  const currentUser = await Students.findOne({ email });
+  const currentUser = await Users.findOne({ email });
   console.log("current user:", currentUser);
 
   if (currentUser) {
@@ -211,7 +216,7 @@ app.post("/api/editPassword", async (req, res) => {
     };
     // const hashPassword = await bcrypt.hash(password, saltRounds);
 
-    await Students.findOneAndUpdate(query, {
+    await Users.findOneAndUpdate(query, {
       password: password,
     });
 
@@ -221,7 +226,7 @@ app.post("/api/editPassword", async (req, res) => {
   }
 });
 
-// Post Group
+// Post Group From Admin
 app.post("/api/postGroup", async (req, res) => {
   const { name, fullName, email, token, city, phone } = req.body;
   // Check if token is provided
@@ -240,7 +245,6 @@ app.post("/api/postGroup", async (req, res) => {
       tokenGroup: token,
       password: token,
       city: city,
-
       phone: phone,
     });
     console.log(" NEW GROUP:", newSchool);
@@ -249,7 +253,7 @@ app.post("/api/postGroup", async (req, res) => {
 
     console.log("TOKEN:", token);
 
-    const studentUser = new Students({
+    const studentUser = new Users({
       fullName: fullName,
       email: email,
       password: token,
@@ -258,6 +262,7 @@ app.post("/api/postGroup", async (req, res) => {
       isId: false,
       isPassport: false,
       tokenGroup: token,
+      role: "Teacher",
     });
 
     await studentUser.save();
