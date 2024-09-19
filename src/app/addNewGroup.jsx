@@ -124,7 +124,7 @@ function addNewGroup(props) {
   };
   return (
     <View style={styles.container}>
-      <Text style={{ color: "#121481", fontSize: 18 }}>
+      <Text style={{ color: "#121481", fontSize: 18, paddingBottom: 10 }}>
         Please fill all the fields with the info group
       </Text>
       {!loading ? (
@@ -255,6 +255,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingTop: 40,
+    backgroundColor: "ivory",
   },
   copiedText: {
     marginTop: 10,
@@ -264,8 +265,17 @@ const styles = StyleSheet.create({
   userInput: {
     width: (width * 90) / 100,
     borderRadius: 10,
-    backgroundColor: "transparent",
-    borderRadius: 10,
+    backgroundColor: "#fff",
+    shadowColor: "#3572EF",
+    shadowOffset: {
+      width: 4,
+      height: 4,
+    },
+    shadowOpacity: 0.7,
+    shadowRadius: 2.65,
+
+    elevation: 8,
+    marginBottom: 5,
   },
   submitBtn: {
     backgroundColor: "#3572EF",

@@ -272,6 +272,49 @@ app.post("/api/postGroup", async (req, res) => {
     res.json({ message: "Group already in database" });
   }
 });
+
+// Edit Service From Admin
+app.post("/api/editService", async (req, res) => {
+  const { id, name, subtitle, description, images } = req.body;
+  try {
+    const query = {
+      _id: id,
+    };
+    await Services.findOneAndUpdate(query, {
+      name,
+      subTitle: subtitle,
+      description,
+      images,
+    });
+    res.json({ message: "Service Updated Successfully", status: "Succes" });
+  } catch (error) {
+    res.json({ message: "Service Not Found", status: "Error" });
+  }
+});
+
+// Delete Image From Service
+app.post("/api/deleteImage", async (req, res) => {
+  const { idService, imageUrl } = req.body;
+
+  try {
+    const query = {
+      _id: idService,
+    };
+    await Services.findOneAndUpdate(
+      query,
+      {
+        // Use $pull to remove the imageUrl from the images array
+        $pull: { images: imageUrl },
+      },
+      {
+        new: true, // Return the updated document
+      }
+    );
+    res.json({ message: "Image Deleted Succesfully", status: "Success" });
+  } catch (error) {
+    res.json({ message: "Image Not Found", status: "Error" });
+  }
+});
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });

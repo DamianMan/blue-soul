@@ -9,21 +9,6 @@ function ContextDataProvider({ children }) {
   const [groups, setGroups] = useState([]);
 
   useEffect(() => {
-    const getUsers = async () => {
-      try {
-        // Get Users
-        await axios
-          .get("http://localhost:3000/api/getUsers")
-          .then((res) => {
-            setUsers(res.data);
-          })
-          .catch((err) => console.log("Error In Response:", err));
-      } catch (error) {
-        console.warn("Error in Request:", err.data);
-      }
-    };
-    getUsers();
-
     // Get Services
     const getServices = async () => {
       try {
@@ -40,26 +25,62 @@ function ContextDataProvider({ children }) {
       }
     };
     getServices();
-
-    // Get All Groups
-    const getGroups = async () => {
-      try {
-        await axios
-          .get("http://localhost:3000/api/getAllGroups")
-          .then((res) => {
-            setGroups(res.data);
-          })
-          .catch((err) => {
-            console.log("Error Responding Data:", err);
-          });
-      } catch (err) {
-        console.log("Error Request:", err);
-      }
-    };
-    getGroups();
   }, []);
 
-  const appValues = { users, services, groups };
+  // Get All Groups
+  const getGroups = async () => {
+    try {
+      await axios
+        .get("http://localhost:3000/api/getAllGroups")
+        .then((res) => {
+          setGroups(res.data);
+        })
+        .catch((err) => {
+          console.log("Error Responding Data:", err);
+        });
+    } catch (err) {
+      console.log("Error Request:", err);
+    }
+  };
+  // Get All Users
+
+  const getUsers = async () => {
+    try {
+      await axios
+        .get("http://localhost:3000/api/getUsers")
+        .then((res) => {
+          setUsers(res.data);
+        })
+        .catch((err) => console.log("Error In Response:", err));
+    } catch (error) {
+      console.warn("Error in Request:", err.data);
+    }
+  };
+
+  // Get Services
+  const getServices = async () => {
+    try {
+      await axios
+        .get("http://localhost:3000/api/getServices")
+        .then((res) => {
+          setServices(res.data);
+        })
+        .catch((err) => {
+          console.log("Error Responding Data:", err);
+        });
+    } catch (err) {
+      console.log("Error Request:", err);
+    }
+  };
+
+  const appValues = {
+    users,
+    services,
+    groups,
+    getGroups,
+    getUsers,
+    getServices,
+  };
   return (
     <ContextData.Provider value={appValues}>{children}</ContextData.Provider>
   );

@@ -62,6 +62,7 @@ function SignUpModal({ isModalVisibile, toggleModal }) {
           if (res.data.isIn) {
             firebaseSign();
             Alert.alert(res.data.status, res.data.message);
+            toggleModal(isModalVisibile);
           } else {
             alert(res.data.message);
           }
@@ -82,7 +83,6 @@ function SignUpModal({ isModalVisibile, toggleModal }) {
       Alert.alert("Error", "Invalid email format");
     } else {
       signUp();
-      toggleModal(isModalVisibile);
     }
   };
   const validateEmail = (text) => {

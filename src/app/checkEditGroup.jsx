@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   ScrollView,
@@ -19,9 +19,18 @@ import StudentChipItem from "../components/StudentChipItem";
 const { height } = Dimensions.get("window");
 
 function checkEditGroup(props) {
-  const { groups, users } = useContext(ContextData);
+  const { getUsers, getGroups, users, groups } = useContext(ContextData);
+  const [loading, setLoading] = useState(false);
   const [group, setGroup] = useState();
   const [user, setUser] = useState();
+
+  // Get All Groups
+  useEffect(() => {
+    setLoading(true);
+    getUsers();
+    getGroups();
+    setLoading(false);
+  }, []);
 
   const handlePress = (token) => {
     const currentGroup = groups.find((item) => item.tokenGroup === token);
@@ -53,7 +62,7 @@ function checkEditGroup(props) {
           { letterSpacing: 0, padding: 10, marginTop: 20, fontSize: 18 },
         ]}
       >
-        Tap On The City To Check The Group
+        Tap On The <Text style={styles.group}>Group</Text> To Check And Edit
       </Text>
       <MaterialCommunityIcons
         name="gesture-tap"
@@ -62,7 +71,11 @@ function checkEditGroup(props) {
         style={{ alignSelf: "center" }}
       />
 
-      <CustomCarousel data={groups} handlePress={handlePress} />
+      {loading ? (
+        <ActivityIndicator size={"large"} />
+      ) : (
+        <CustomCarousel data={groups} handlePress={handlePress} />
+      )}
 
       {group && (
         <View>
@@ -116,6 +129,10 @@ const styles = StyleSheet.create({
     shadowRadius: 2.84,
 
     elevation: 5,
+  },
+  group: {
+    fontSize: 20,
+    color: "orangered",
   },
   divider: {
     marginHorizontal: 20,

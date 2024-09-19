@@ -7,6 +7,7 @@ import LogoutBtn from "../components/LogoutBtn";
 function nameServiceDetail(props) {
   const params = useLocalSearchParams();
   const { services } = useContext(ContextData);
+
   const currentService = services.find(
     (item) => item.url === params.nameActivity
   );
