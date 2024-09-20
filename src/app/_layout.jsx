@@ -98,7 +98,7 @@ export default function RootLayout() {
         <Stack.Screen
           name="editActivities"
           options={{
-            title: "Activities",
+            title: "Services",
             headerShown: true,
             headerRight: () => <LogoutBtn />,
             headerStyle: {

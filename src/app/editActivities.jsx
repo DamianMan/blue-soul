@@ -16,6 +16,7 @@ import { Button, Divider, FAB, TextInput } from "react-native-paper";
 import FabActivitiesItem from "../components/FabActivitiesItem";
 import UploadImageItem from "../components/UploadImageItem";
 import axios from "axios";
+import ServiceActivityItem from "../components/ServiceActivityItem";
 
 const { height, width } = Dimensions.get("window");
 function editActivities(props) {
@@ -27,6 +28,12 @@ function editActivities(props) {
   const [subtitle, setSubtitle] = useState("");
   const [description, setDescription] = useState("");
   const [images, setImages] = useState("");
+  const [activities, setActivities] = useState(false);
+  const [newActivity, setNewActivity] = useState("");
+  const [food, SetFood] = useState(false);
+  const [newFood, setNewFood] = useState("");
+  const [drinks, setDrinks] = useState(false);
+  const [newDrinks, setNewDrinks] = useState("");
 
   useEffect(() => {
     getServices();
@@ -35,12 +42,33 @@ function editActivities(props) {
   const handlePressFAB = (id) => {
     const currentActivity = services.find((item) => item.url === id);
     if (currentActivity) {
+      console.log(currentActivity);
       setDisplay(true);
       setName(currentActivity.name);
       setSubtitle(currentActivity.subTitle);
       setDescription(currentActivity.description);
       setImages(currentActivity.images);
       setId(currentActivity._id);
+      if (currentActivity.namesActivities) {
+        if (currentActivity.namesActivities.length > 0) {
+          setActivities(currentActivity.namesActivities);
+        } else {
+          setActivities(false);
+        }
+      }
+      if (currentActivity.foods && currentActivity.drinks) {
+        if (
+          currentActivity.foods.length > 0 &&
+          currentActivity.drinks.length > 0
+        ) {
+          setDrinks(currentActivity.drinks);
+          SetFood(currentActivity.foods);
+        } else {
+          setDrinks(false);
+          SetFood(false);
+        }
+      }
+
       setPressed(true);
     }
   };
@@ -50,7 +78,16 @@ function editActivities(props) {
       await axios
         .post(
           "http://localhost:3000/api/editService",
-          { id, name, subtitle, description, images },
+          {
+            id,
+            name,
+            subtitle,
+            description,
+            images,
+            newFood,
+            newDrinks,
+            newActivity,
+          },
           { headers: { "Content-Type": "application/json" } }
         )
         .then((res) => Alert.alert(res.data.status, res.data.message))
@@ -77,6 +114,26 @@ function editActivities(props) {
         .catch((err) => Alert.alert(err.data.status, err.data.message));
     } catch (error) {
       console.log("Error Request:", error);
+    }
+  };
+
+  const handleDeleteNameService = async (
+    idService,
+    newActivity,
+    food,
+    drink
+  ) => {
+    try {
+      await axios
+        .post(
+          "http://localhost:3000/api/deleteNameService",
+          { idService, newActivity, food, drink },
+          { headers: { "Content-Type": "application/json" } }
+        )
+        .then((res) => Alert.alert(res.data.status, res.data.message))
+        .catch((err) => Alert.alert(err.data.status, err.data.message));
+    } catch (err) {
+      Alert.alert("Error Request", err);
     }
   };
 
@@ -110,7 +167,7 @@ function editActivities(props) {
             { letterSpacing: 0, padding: 10, marginTop: 20, fontSize: 18 },
           ]}
         >
-          Tap On The <Text style={styles.activity}>Activity</Text> You Want To
+          Tap On The <Text style={styles.activity}>Service</Text> You Want To
           Edit
         </Text>
         <MaterialCommunityIcons
@@ -133,8 +190,8 @@ function editActivities(props) {
             hanldePress={handlePressFAB}
           />
         ))}
-        <Divider style={styles.divider} />
       </View>
+
       {display && (
         <View style={styles.activityView}>
           <Text style={styles.activityTitle}>{name}</Text>
@@ -170,13 +227,8 @@ function editActivities(props) {
             multiline={true}
             style={styles.userInput}
           />
-          <View
-            style={{
-              marginLeft: 10,
-              paddingVertical: 20,
-              paddingHorizontal: 10,
-            }}
-          >
+          <View style={styles.listHorizontal}>
+            <Text style={styles.imagesTitle}>Images For {name}</Text>
             <FlatList
               horizontal
               data={images}
@@ -186,6 +238,103 @@ function editActivities(props) {
           </View>
 
           <UploadImageItem uploadImage={uploadImage} />
+          <View
+            style={[
+              styles.listHorizontal,
+              { marginLeft: 0, paddingHorizontal: 5 },
+            ]}
+          >
+            {activities && (
+              <View style={styles.namesServiceView}>
+                <Text style={styles.titleNamesActivity}>For {name}</Text>
+
+                <FlatList
+                  horizontal
+                  data={activities}
+                  renderItem={({ item }) => (
+                    <ServiceActivityItem
+                      handleDelete={handleDeleteNameService}
+                      id={id}
+                      newActivity={item}
+                      name={item}
+                    />
+                  )}
+                  keyExtractor={(item) => item}
+                />
+                <TextInput
+                  value={newActivity}
+                  label={`New ${name} To Add`}
+                  textColor="#ff5f00"
+                  activeOutlineColor="#121481"
+                  autoCapitalize="none"
+                  onChangeText={(text) => setNewActivity(text)}
+                  mode="outlined"
+                  multiline={true}
+                  style={styles.userInput}
+                />
+              </View>
+            )}
+            {food && (
+              <View style={styles.namesServiceView}>
+                <Text style={styles.titleNamesActivity}>For Food</Text>
+
+                <FlatList
+                  horizontal
+                  data={food}
+                  renderItem={({ item }) => (
+                    <ServiceActivityItem
+                      handleDelete={handleDeleteNameService}
+                      id={id}
+                      food={item}
+                      name={item}
+                    />
+                  )}
+                  keyExtractor={(item) => item}
+                />
+                <TextInput
+                  value={newFood}
+                  label={`New Food To Add`}
+                  textColor="#ff5f00"
+                  activeOutlineColor="#121481"
+                  autoCapitalize="none"
+                  onChangeText={(text) => setNewFood(text)}
+                  mode="outlined"
+                  multiline={true}
+                  style={styles.userInput}
+                />
+              </View>
+            )}
+            {drinks && (
+              <View style={styles.namesServiceView}>
+                <Text style={styles.titleNamesActivity}>For Drinks</Text>
+
+                <FlatList
+                  horizontal
+                  data={drinks}
+                  renderItem={({ item }) => (
+                    <ServiceActivityItem
+                      handleDelete={handleDeleteNameService}
+                      id={id}
+                      drink={item}
+                      name={item}
+                    />
+                  )}
+                  keyExtractor={(item) => item}
+                />
+                <TextInput
+                  value={newDrinks}
+                  label={`New Drink To Add`}
+                  textColor="#ff5f00"
+                  activeOutlineColor="#121481"
+                  autoCapitalize="none"
+                  onChangeText={(text) => setNewDrinks(text)}
+                  mode="outlined"
+                  multiline={true}
+                  style={styles.userInput}
+                />
+              </View>
+            )}
+          </View>
           <Button
             mode="elevated"
             labelStyle={{ color: "#ffff", fontSize: 15 }}
@@ -232,6 +381,15 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     marginHorizontal: 20,
   },
+  listHorizontal: {
+    marginLeft: 10,
+    paddingVertical: 20,
+    paddingHorizontal: 10,
+  },
+  namesServiceView: {
+    marginBottom: 20,
+  },
+  titleNamesActivity: { marginLeft: 25, color: "#121481" },
   activityTitle: {
     fontSize: 22,
     color: "#3FA2F6",
@@ -247,6 +405,19 @@ const styles = StyleSheet.create({
   },
   activityView: {
     paddingVertical: 20,
+    marginTop: 20,
+    backgroundColor: "#DDF2FD",
+    borderTopLeftRadius: 50,
+    borderTopRightRadius: 50,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.57,
+    shadowRadius: 4.65,
+
+    elevation: 6,
   },
   titleText: {
     textAlign: "center",
@@ -276,6 +447,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     borderRadius: 5,
   },
+  imagesTitle: { color: "#121481", paddingLeft: 5 },
 });
 
 export default editActivities;

@@ -25,7 +25,7 @@ const Tasks = [
       "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDExfHx8ZW58MHx8fHx8",
   },
   {
-    name: "Edit Activities",
+    name: "Edit Services",
     url: "editActivities",
     icon: "list-alt",
     image:

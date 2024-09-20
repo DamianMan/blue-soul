@@ -274,19 +274,88 @@ app.post("/api/postGroup", async (req, res) => {
 });
 
 // Edit Service From Admin
+
 app.post("/api/editService", async (req, res) => {
-  const { id, name, subtitle, description, images } = req.body;
+  const {
+    id,
+    name,
+    subtitle,
+    description,
+    images,
+    newActivity,
+    newFood,
+    newDrinks,
+  } = req.body;
+  const query = {
+    _id: id,
+  };
+  console.log(newActivity, newFood, newDrinks);
   try {
-    const query = {
-      _id: id,
-    };
-    await Services.findOneAndUpdate(query, {
-      name,
-      subTitle: subtitle,
-      description,
-      images,
-    });
-    res.json({ message: "Service Updated Successfully", status: "Succes" });
+    if (newActivity !== "") {
+      await Services.findOneAndUpdate(
+        query,
+        {
+          $set: {
+            name,
+            subTitle: subtitle,
+            description,
+            images,
+          },
+          $push: { namesActivities: newActivity },
+        },
+        { new: true }
+      );
+      res.json({ message: "Service Updated Successfully", status: "Succes" });
+    } else if (newFood !== "" && newDrinks !== "") {
+      console.log("Triggered Food");
+      await Services.findOneAndUpdate(
+        query,
+        {
+          $set: {
+            name,
+            subTitle: subtitle,
+            description,
+            images,
+          },
+          $push: { foods: newFood, drinks: newDrinks },
+        },
+        { new: true }
+      );
+      res.json({ message: "Service Updated Successfully", status: "Succes" });
+    } else if (newDrinks !== "") {
+      console.log("Triggered Drink");
+      await Services.findOneAndUpdate(
+        query,
+        {
+          $set: {
+            name,
+            subTitle: subtitle,
+            description,
+            images,
+          },
+          $push: { drinks: newDrinks },
+        },
+        { new: true }
+      );
+      res.json({ message: "Service Updated Successfully", status: "Succes" });
+    } else if (newFood !== "") {
+      await Services.findOneAndUpdate(
+        query,
+        {
+          $set: {
+            name,
+            subTitle: subtitle,
+            description,
+            images,
+          },
+          $push: { foods: newFood },
+        },
+        { new: true }
+      );
+      res.json({ message: "Service Updated Successfully", status: "Succes" });
+    } else {
+      res.json({ message: "Service Not Updated", status: "Error" });
+    }
   } catch (error) {
     res.json({ message: "Service Not Found", status: "Error" });
   }
@@ -295,7 +364,6 @@ app.post("/api/editService", async (req, res) => {
 // Delete Image From Service
 app.post("/api/deleteImage", async (req, res) => {
   const { idService, imageUrl } = req.body;
-
   try {
     const query = {
       _id: idService,
@@ -313,6 +381,60 @@ app.post("/api/deleteImage", async (req, res) => {
     res.json({ message: "Image Deleted Succesfully", status: "Success" });
   } catch (error) {
     res.json({ message: "Image Not Found", status: "Error" });
+  }
+});
+
+// Delete Name Service From Admin
+app.post("/api/deleteNameService", async (req, res) => {
+  const { idService, newActivity, food, drink } = req.body;
+  try {
+    const currentService = await Services.findOne({ _id: idService });
+    if (
+      currentService.namesActivities.length > 0 &&
+      newActivity !== undefined
+    ) {
+      const query = {
+        _id: idService,
+      };
+      await Service.findOneAndUpdate(
+        query,
+        {
+          $pull: { namesActivities: newActivity },
+        },
+        { new: true }
+      );
+      res.json({
+        message: "Item Activity Deleted Succesfully",
+        status: "Succes",
+      });
+    } else if (currentService.foods.length > 0 && food !== undefined) {
+      const query = {
+        _id: idService,
+      };
+      await Service.findOneAndUpdate(
+        query,
+        {
+          $pull: { foods: food },
+        },
+        { new: true }
+      );
+      res.json({ message: "Item Food Deleted Succesfully", status: "Succes" });
+    } else if (currentService.drinks.length > 0 && drink !== undefined) {
+      const query = {
+        _id: idService,
+      };
+      await Service.findOneAndUpdate(
+        query,
+        {
+          $pull: { drinks: drink },
+        },
+        { new: true }
+      );
+      console.log("Drink Triggered!");
+      res.json({ message: "Item Drink Deleted Succesfully", status: "Succes" });
+    }
+  } catch (error) {
+    res.json({ message: "No Service Found", status: "Error" });
   }
 });
 app.listen(port, () => {

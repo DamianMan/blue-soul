@@ -10,6 +10,15 @@ const ServicesSchema = new mongoose.Schema({
   description: {
     type: String,
   },
+  namesActivities: {
+    type: Array,
+  },
+  foods: {
+    type: Array,
+  },
+  drinks: {
+    type: Array,
+  },
   images: {
     type: Array,
   },
