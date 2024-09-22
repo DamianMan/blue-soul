@@ -18,7 +18,7 @@ function ContextDataProvider({ children }) {
             setServices(res.data);
           })
           .catch((err) => {
-            console.log("Error Responding Data:", err);
+            console.log("Error Responding Getting Services:", err);
           });
       } catch (err) {
         console.log("Error Request:", err);

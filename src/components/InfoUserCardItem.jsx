@@ -10,22 +10,15 @@ function InfoUserCardItem({ src, title, text, nameActivity }) {
   return (
     <Link href={`${nameActivity}`} asChild>
       <Pressable style={styles.card}>
-        <Card
-          style={{
-            width: (width * 90) / 100,
-            backgroundColor: "#fff",
-            shadowColor: "darkblue",
-            shadowOffset: {
-              width: 0,
-              height: 7,
-            },
-            shadowOpacity: 0.41,
-            shadowRadius: 9.11,
-
-            elevation: 14,
-          }}
-        >
-          <Card.Content style={{ marginBottom: 10 }}>
+        <Card style={styles.cardStyle}>
+          <Card.Content
+            style={{
+              margin: 15,
+              marginBottom: 8,
+              backgroundColor: "aliceblue",
+              borderRadius: 10,
+            }}
+          >
             <Text
               variant="titleLarge"
               style={{ color: "darkblue", letterSpacing: 1 }}
@@ -63,15 +56,29 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginVertical: 30,
   },
+  cardStyle: {
+    width: (width * 90) / 100,
+    backgroundColor: "skyblue",
+    shadowColor: "darkblue",
+    shadowOffset: {
+      width: 0,
+      height: 7,
+    },
+    shadowOpacity: 0.41,
+    shadowRadius: 9.11,
+
+    elevation: 14,
+  },
   image: {
     height: 200,
     resizeMode: "cover",
   },
   text: {
-    color: "steelblue",
+    color: "royalblue",
 
     fontWeight: "lighter",
     letterSpacing: 1,
+    paddingBottom: 10,
   },
 });
 

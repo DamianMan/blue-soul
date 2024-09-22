@@ -100,6 +100,7 @@ app.get("/api/getUsers", async (req, res) => {
 app.get("/api/getServices", async (req, res) => {
   try {
     const allServices = await Services.find();
+    console.log(allServices);
     res.json(allServices);
   } catch (error) {
     res.json(error);
