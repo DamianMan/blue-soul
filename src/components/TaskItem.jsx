@@ -34,8 +34,7 @@ function TaskItem({ text, img, icon, url }) {
             (icon === "list-alt" && "orangered")
           }
           style={{
-            paddingRight: 25,
-            paddingLeft: 5,
+            paddingHorizontal: 15,
             shadowColor: "#000",
             shadowOffset: {
               width: 0,
@@ -59,7 +58,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
-    backgroundColor: "#F3F7EC",
+    backgroundColor: "#fff",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -75,7 +74,7 @@ const styles = StyleSheet.create({
     height: 100,
   },
   imageBackground: {
-    width: "100%", // Ensure it takes the full width of the parent Pressable
+    width: (width * 80) / 100, // Ensure it takes the full width of the parent Pressable
     height: 100, // Set a specific height
     justifyContent: "center", // Center text vertically
     alignItems: "center", // Center text horizontally

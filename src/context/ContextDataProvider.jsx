@@ -18,7 +18,7 @@ function ContextDataProvider({ children }) {
             setServices(res.data);
           })
           .catch((err) => {
-            console.log("Error Responding Getting Services:", err);
+            console.log("Error Responding Getting Services:", err.message);
           });
       } catch (err) {
         console.log("Error Request:", err);
@@ -36,7 +36,7 @@ function ContextDataProvider({ children }) {
           setGroups(res.data);
         })
         .catch((err) => {
-          console.log("Error Responding Data:", err);
+          console.log("Error Responding All Groups:", err);
         });
     } catch (err) {
       console.log("Error Request:", err);
@@ -51,7 +51,7 @@ function ContextDataProvider({ children }) {
         .then((res) => {
           setUsers(res.data);
         })
-        .catch((err) => console.log("Error In Response:", err));
+        .catch((err) => console.log("Error Getting Response All Users:", err));
     } catch (error) {
       console.warn("Error in Request:", err.data);
     }

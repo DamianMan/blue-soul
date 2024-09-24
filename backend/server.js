@@ -139,7 +139,7 @@ app.post("/api/signUpUser", async (req, res) => {
   console.log("User Already In:", alreadyUserIn);
   if (alreadyUserIn) {
     res.json({
-      message: "User Not In Any Group!",
+      message: "User Already Registered!",
       status: "Alert",
       isIn: false,
     });
@@ -437,6 +437,11 @@ app.post("/api/deleteNameService", async (req, res) => {
   } catch (error) {
     res.json({ message: "No Service Found", status: "Error" });
   }
+});
+
+// Sent Notifications
+app.post("/api/sendNotifications", async (req, res) => {
+  res.json(req.body);
 });
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

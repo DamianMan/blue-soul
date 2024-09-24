@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "BlueSoul-App",
-    "slug": "BlueSoul-App",
+    "slug": "blue-soul-app",
     "scheme": "BlueSoul-App",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -43,6 +43,12 @@
       ],
       "@react-native-firebase/app",
       "@react-native-firebase/auth"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "720f0423-e117-420e-b7d6-e7be3a11f842"
+      }
+    },
+    "owner": "damianomanzillo"
   }
 }

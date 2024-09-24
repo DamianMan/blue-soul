@@ -110,6 +110,21 @@ export default function RootLayout() {
             },
           }}
         />
+        <Stack.Screen
+          name="pushNotifications"
+          options={{
+            title: "Notifications",
+            headerShown: true,
+            headerRight: () => <LogoutBtn />,
+            headerStyle: {
+              backgroundColor: "steelblue",
+            },
+            headerTintColor: "#fff",
+            headerTitleStyle: {
+              fontWeight: "bold",
+            },
+          }}
+        />
 
         <Stack.Screen
           name="profileUser"

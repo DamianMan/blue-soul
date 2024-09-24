@@ -19,7 +19,11 @@ import { ContextData } from "../../context/ContextDataProvider";
 import axios from "axios";
 
 function profileUser(props) {
-  const { users } = useContext(ContextData);
+  const { users, getUsers } = useContext(ContextData);
+
+  useEffect(() => {
+    getUsers();
+  }, []);
   let user = auth().currentUser;
   let currentUser = users.find(
     (stud) => stud.email === (user ? user.email : "")
@@ -95,7 +99,7 @@ function profileUser(props) {
   };
 
   return (
-    <ScrollView>
+    <ScrollView contentContainerStyle={{ flex: 1 }}>
       <ImageBackground
         source={{
           uri: "https://images.unsplash.com/photo-1516149893016-813d9a01d5d3?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
