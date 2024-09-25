@@ -45,6 +45,15 @@ const CustomCarousel = ({ data, handlePress }) => {
             style={{
               justifyContent: "center",
               borderRadius: 30,
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 1.84,
+
+              elevation: 5,
             }}
             onPress={() => handlePress(item.tokenGroup)}
           >
@@ -88,7 +97,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
 
-    elevation: 5,
+    elevation: 10,
   },
 
   blurContainer: {

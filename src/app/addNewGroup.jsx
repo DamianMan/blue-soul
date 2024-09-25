@@ -80,7 +80,7 @@ function addNewGroup(props) {
         if (user) {
           await axios
             .post(
-              "http://localhost:3000/api/postGroup",
+              "http://192.168.1.54:3000/api/postGroup",
               {
                 name,
                 fullName,
@@ -124,7 +124,15 @@ function addNewGroup(props) {
   };
   return (
     <View style={styles.container}>
-      <Text style={{ color: "#121481", fontSize: 18, paddingBottom: 10 }}>
+      <Text
+        style={{
+          color: "#121481",
+          fontSize: 18,
+          paddingBottom: 10,
+          textAlign: "left",
+          paddingRight: 20,
+        }}
+      >
         Please fill all the fields with the info group
       </Text>
       {!loading ? (
@@ -268,22 +276,21 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     shadowColor: "#3572EF",
     shadowOffset: {
-      width: 4,
-      height: 4,
+      width: 3,
+      height: 2,
     },
-    shadowOpacity: 0.7,
-    shadowRadius: 2.65,
+    shadowOpacity: 0.4,
+    shadowRadius: 1.65,
 
-    elevation: 8,
+    elevation: 2,
     marginBottom: 5,
   },
   submitBtn: {
     backgroundColor: "#3572EF",
-    elevation: 5,
-    textShadowColor: "#000",
+    elevation: 10,
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    elevation: 3,
+    shadowOpacity: 0.6,
     marginTop: "auto",
   },
   generateBtn: {

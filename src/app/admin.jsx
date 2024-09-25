@@ -33,7 +33,7 @@ const Tasks = [
   },
 ];
 
-const { width } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 
 function AdminPanel(props) {
   return (
@@ -50,7 +50,6 @@ function AdminPanel(props) {
           style={styles.background}
         />
       </ImageBackground>
-
       <FlatList
         data={Tasks}
         renderItem={({ item }) => (
@@ -80,19 +79,19 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     top: 0,
-    height: 300,
+    height: height / 3,
     zIndex: -10,
   },
   flat: {
     marginHorizontal: 10,
-    paddingTop: 40,
+    marginVertical: 40,
   },
   logoutBtn: {
     marginBottom: 30,
     backgroundColor: "red",
   },
   logoImage: {
-    height: 300,
+    height: height / 3,
     backgroundColor: "#F3F7EC",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 3 },

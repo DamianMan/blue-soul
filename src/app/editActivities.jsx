@@ -106,7 +106,7 @@ function editActivities(props) {
     try {
       await axios
         .post(
-          "http://localhost:3000/api/deleteImage",
+          "http://192.168.1.54:3000/api/deleteImage",
           { idService, imageUrl },
           { headers: { "Content-Type": "application/json" } }
         )
@@ -126,7 +126,7 @@ function editActivities(props) {
     try {
       await axios
         .post(
-          "http://localhost:3000/api/deleteNameService",
+          "http://192.168.1.54:3000/api/deleteNameService",
           { idService, newActivity, food, drink },
           { headers: { "Content-Type": "application/json" } }
         )
@@ -355,6 +355,9 @@ const styles = StyleSheet.create({
     height: height / 3,
     borderBottomStartRadius: 40,
     borderBottomEndRadius: 40,
+    borderBottomRightRadius: 40, // Example of rounding On Andorid
+    borderBottomLeftRadius: 40, // Example of rounding On Andorid
+
     shadowColor: "#000",
     shadowOffset: {
       width: 0,

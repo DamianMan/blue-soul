@@ -23,7 +23,6 @@ export default function App() {
             toggleModal={toggleModal}
           />
         )}
-        <StatusBar style="auto" />
         <Text style={styles.primary}>
           Don't you have an account?
           <Text style={styles.link} onPress={toggleModal}>

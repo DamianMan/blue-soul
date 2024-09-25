@@ -21,7 +21,11 @@ function TaskItem({ text, img, icon, url }) {
           source={{ uri: img }}
           resizeMode="cover"
         >
-          <BlurView intensity={8} style={styles.blurContainer}>
+          <BlurView
+            intensity={8}
+            style={styles.blurContainer}
+            experimentalBlurMethod={true}
+          >
             <Text style={styles.text}>{text}</Text>
           </BlurView>
         </ImageBackground>
@@ -67,7 +71,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4.65,
 
-    elevation: 8,
+    elevation: 3,
     padding: 10,
     borderRadius: 10,
     marginVertical: 10,
@@ -84,20 +88,22 @@ const styles = StyleSheet.create({
   text: {
     color: "#E85C0D",
     fontWeight: "bold",
-    fontSize: 33,
-    shadowColor: "#000",
-    shadowOffset: {
+    textShadowColor: "#000",
+    textShadowColor: "#000",
+    textShadowOffset: {
       width: 0,
-      height: 4,
+      height: 3,
     },
-    shadowOpacity: 0.9,
-    shadowRadius: 0.8,
+    textShadowOpacity: 0.6,
+    textShadowRadius: 0.8,
+    fontSize: 33,
+
     borderRadius: 10,
   },
   blurContainer: {
-    padding: 10,
+    padding: 5,
     borderRadius: 20,
-    width: (width * 90) / 100,
+    width: (width * 80) / 100,
     justifyContent: "center", // Center text vertically
     alignItems: "center", // Center text horizontally
   },

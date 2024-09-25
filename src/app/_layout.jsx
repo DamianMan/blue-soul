@@ -46,6 +46,7 @@ export default function RootLayout() {
           name="admin"
           options={{
             title: "Admin Panel",
+            headerTitleAlign: "center",
             headerShown: true,
             headerStyle: {
               backgroundColor: "steelblue",
@@ -69,6 +70,8 @@ export default function RootLayout() {
           name="addNewGroup"
           options={{
             title: "Add Group",
+            headerTitleAlign: "center",
+
             headerShown: true,
             headerRight: () => <LogoutBtn />,
             headerStyle: {
@@ -84,6 +87,8 @@ export default function RootLayout() {
           name="checkEditGroup"
           options={{
             title: "Group",
+            headerTitleAlign: "center",
+
             headerShown: true,
             headerStyle: {
               backgroundColor: "steelblue",
@@ -99,6 +104,8 @@ export default function RootLayout() {
           name="editActivities"
           options={{
             title: "Services",
+            headerTitleAlign: "center",
+
             headerShown: true,
             headerRight: () => <LogoutBtn />,
             headerStyle: {
@@ -114,6 +121,8 @@ export default function RootLayout() {
           name="pushNotifications"
           options={{
             title: "Notifications",
+            headerTitleAlign: "center",
+
             headerShown: true,
             headerRight: () => <LogoutBtn />,
             headerStyle: {

@@ -87,6 +87,7 @@ function checkEditGroup(props) {
             email={group.email}
             phone={group.phone}
             city={group.city}
+            token={group.tokenGroup}
           />
         </View>
       )}
@@ -120,6 +121,8 @@ const styles = StyleSheet.create({
     height: height / 3,
     borderBottomStartRadius: 40,
     borderBottomEndRadius: 40,
+    borderBottomRightRadius: 40, // Example of rounding On Andorid
+    borderBottomLeftRadius: 40, // Example of rounding On Andorid
     shadowColor: "#000",
     shadowOffset: {
       width: 0,

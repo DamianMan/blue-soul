@@ -23,7 +23,7 @@ function EditPAsswordModal({ modalVisible, setModalVisible }) {
           await user.updatePassword(password);
           await axios
             .post(
-              "http://localhost:3000/api/editPassword",
+              "http://192.168.1.54:3000/api/editPassword",
               {
                 password,
                 email,

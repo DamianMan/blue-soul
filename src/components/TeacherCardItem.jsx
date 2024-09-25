@@ -1,9 +1,14 @@
 import { Avatar, Chip } from "react-native-paper";
 import { View, StyleSheet, Dimensions, Text } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import * as Clipboard from "expo-clipboard";
 const { width } = Dimensions.get("window");
 
-function TeacherCardItem({ teacher, email, phone, city }) {
+function TeacherCardItem({ teacher, email, phone, city, token }) {
+  const copyToClipboard = async () => {
+    await Clipboard.setStringAsync(token);
+  };
+
   return (
     <View style={styles.teacherView}>
       <View
@@ -85,6 +90,22 @@ function TeacherCardItem({ teacher, email, phone, city }) {
           onPress={() => console.log("Pressed")}
         >
           <Text style={styles.chipText}>{city}</Text>
+        </Chip>
+        <Chip
+          mode="outlined"
+          elevated="true"
+          icon={() => (
+            <MaterialCommunityIcons
+              name="barcode"
+              size={24}
+              color="aliceblue"
+              style={{ marginRight: 30 }}
+            />
+          )}
+          style={styles.chip}
+          onPress={copyToClipboard}
+        >
+          <Text style={styles.chipText}>Click To Copy Group Token</Text>
         </Chip>
       </View>
     </View>

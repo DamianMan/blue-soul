@@ -16,6 +16,7 @@ function ContextDataProvider({ children }) {
           .get("http://localhost:3000/api/getServices")
           .then((res) => {
             setServices(res.data);
+            console.log("Services loaded");
           })
           .catch((err) => {
             console.log("Error Responding Getting Services:", err.message);
@@ -25,6 +26,41 @@ function ContextDataProvider({ children }) {
       }
     };
     getServices();
+    // Get All Groups
+    const getGroups = async () => {
+      try {
+        await axios
+          .get("http://localhost:3000/api/getAllGroups")
+          .then((res) => {
+            setGroups(res.data);
+            console.log("Groups loaded");
+          })
+          .catch((err) => {
+            console.log("Error Responding All Groups:", err);
+          });
+      } catch (err) {
+        console.log("Error Request:", err);
+      }
+    };
+    getGroups();
+    // Get All Users
+
+    const getUsers = async () => {
+      try {
+        await axios
+          .get("http://localhost:3000/api/getUsers")
+          .then((res) => {
+            setUsers(res.data);
+            console.log("User loaded");
+          })
+          .catch((err) =>
+            console.log("Error Getting Response All Users:", err)
+          );
+      } catch (error) {
+        console.warn("Error in Request:", err.data);
+      }
+    };
+    getUsers();
   }, []);
 
   // Get All Groups
@@ -47,7 +83,7 @@ function ContextDataProvider({ children }) {
   const getUsers = async () => {
     try {
       await axios
-        .get("http://localhost:3000/api/getUsers")
+        .get("http://192.168.1.54:3000/api/getUsers")
         .then((res) => {
           setUsers(res.data);
         })
@@ -61,7 +97,7 @@ function ContextDataProvider({ children }) {
   const getServices = async () => {
     try {
       await axios
-        .get("http://localhost:3000/api/getServices")
+        .get("http://192.168.1.54:3000/api/getServices")
         .then((res) => {
           setServices(res.data);
         })

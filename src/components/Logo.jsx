@@ -5,23 +5,26 @@ import {
   Image,
   ImageBackground,
   Dimensions,
+  Platform,
 } from "react-native";
 const { width, height } = Dimensions.get("window");
 
 function Logo(props) {
   return (
-    <ImageBackground
-      source={require("../../assets/bluesoul-logo.png")}
-      style={[styles.background, width]}
-    >
+    <>
+      <ImageBackground
+        resizeMode="cover"
+        source={require("../../assets/bluesoul-logo.png")}
+        style={[styles.background, width]}
+      />
       <View style={styles.container}>
-        <Image
+        <ImageBackground
           style={styles.tinyLogo}
           source={require("../../assets/bluesoul-logo.png")}
-          resizeMode="contain"
+          resizeMode="cover"
         />
       </View>
-    </ImageBackground>
+    </>
   );
 }
 
@@ -35,18 +38,32 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.8,
-    width: width,
+    marginVertical: 40,
   },
   background: {
-    justifyContent: "center", // Center content vertically
-    alignItems: "center", // Center content horizontally
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.8,
+    position: "absolute",
+    top: 0,
+    right: 0,
+    left: 0,
+    bottom: 0,
+    height: height / 2,
+
+    opacity: 0.7,
   },
 
   tinyLogo: {
-    width: (width * 77) / 100,
-    height: (height * 45) / 100,
+    overflow: "hidden",
+    width: (width * 85) / 100,
+    height: (height * 35) / 100,
+
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
   },
 });
