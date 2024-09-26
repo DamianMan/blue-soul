@@ -89,6 +89,7 @@ export default function LoginForm(props) {
           mode="outlined"
           textColor="#ff5f00"
           activeOutlineColor="#121481"
+          autoCapitalize="none"
           onChangeText={handlePassword}
           style={styles.userInput}
         />

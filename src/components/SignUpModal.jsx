@@ -9,6 +9,7 @@ import {
   ImageBackground,
   Dimensions,
   ActivityIndicator,
+  Platform,
 } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -231,7 +232,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 10,
     elevation: 2,
-    marginVertical: 70,
+
+    marginVertical: Platform.OS === "android" ? 30 : 50,
   },
   buttonOpen: {
     backgroundColor: "#F194FF",

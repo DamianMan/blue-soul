@@ -55,15 +55,15 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     width: (width * 85) / 100,
     height: (height * 35) / 100,
-
+    borderRadius: 10,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    shadowOpacity: 0.95,
+    shadowRadius: 0.84,
 
-    elevation: 5,
+    elevation: 20,
   },
 });

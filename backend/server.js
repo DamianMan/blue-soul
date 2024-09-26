@@ -7,6 +7,7 @@ const Services = require("./models/Services");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const Service = require("./models/Services");
+const axios = require("axios");
 
 require("dotenv").config({ path: "../.env" });
 
@@ -100,7 +101,6 @@ app.get("/api/getUsers", async (req, res) => {
 app.get("/api/getServices", async (req, res) => {
   try {
     const allServices = await Services.find();
-    console.log(allServices);
     res.json(allServices);
   } catch (error) {
     res.json(error);
@@ -439,9 +439,88 @@ app.post("/api/deleteNameService", async (req, res) => {
   }
 });
 
+// Post User Device Push Token
+app.post("/api/postToken", async (req, res) => {
+  const { token, userEmail } = req.body;
+  const currentUser = await Users.findOne({ email: userEmail });
+  if (currentUser.length > 0) {
+    try {
+      const query = {
+        email: userEmail,
+      };
+      await Users.findOneAndUpdate(query, { pushToken: token });
+      res.json({
+        message: `Push Token Added to ${currentUser.fullName}`,
+        status: "Success",
+      });
+    } catch (error) {
+      res.json({ message: error, status: "Error" });
+    }
+  } else {
+    res.json({ message: "User Not Found!", status: "Error" });
+  }
+});
+
 // Sent Notifications
 app.post("/api/sendNotifications", async (req, res) => {
-  res.json(req.body);
+  const { message, title, groupToken, notification } = req.body;
+  const usersFilteredPerGroup = await Users.find({ tokenGroup: groupToken });
+  const numOfUSers = usersFilteredPerGroup.filter(
+    (item) => item.pushToken !== undefined
+  ).length;
+  console.log("User for notification", numOfUSers);
+  if (numOfUSers > 0) {
+    if (usersFilteredPerGroup.length > 0) {
+      usersFilteredPerGroup.forEach(async (item) => {
+        if (item.pushToken) {
+          const body = {
+            to: item.pushToken, // The device push token
+            sound: "default",
+            title: title,
+            body: message,
+            data: { notification }, // Custom data
+          };
+
+          try {
+            const response = await axios.post(
+              "https://exp.host/--/api/v2/push/send",
+              body,
+              {
+                headers: {
+                  Accept: "application/json",
+                  "Accept-Encoding": "gzip, deflate",
+                  "Content-Type": "application/json",
+                },
+              }
+            );
+            console.log("Notification sent!", response.data);
+            res.json({
+              message: "Push Notification Sent Succesfully!",
+              status: "Success",
+              notification: true,
+            });
+          } catch (error) {
+            res.json({
+              message: "Push Notification Not Sent!",
+              status: "Error",
+            });
+
+            console.error(
+              "Error sending notification:",
+              error.response ? error.response.data : error.message
+            );
+          }
+        }
+      });
+    }
+  } else {
+    res.json({
+      message:
+        "No Users for Notification or Wrong Group Token. Please Check Users/Groups.",
+      status: "Error",
+      notification: false,
+    });
+  }
 });
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

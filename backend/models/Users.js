@@ -37,6 +37,7 @@ const userModel = new mongoose.Schema(
       type: String,
     },
     role: { type: String },
+    pushToken: { type: String },
   },
   { timestamps: true }
 );
