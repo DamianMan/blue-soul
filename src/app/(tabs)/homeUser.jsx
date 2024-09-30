@@ -38,8 +38,7 @@ export default function MyCarousel() {
   const [notification, setNotification] = useState(undefined > undefined);
   const notificationListener = useRef();
   const responseListener = useRef();
-  const { getNotificationStatus } = useContext(ContextData);
-
+  const { getNotificationStatus, isNotification } = useContext(ContextData);
   useEffect(() => {
     registerForPushNotificationsAsync().then(
       (token) => token && setExpoPushToken(token)
@@ -58,6 +57,7 @@ export default function MyCarousel() {
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
         console.log(response.notification.request.content.data);
+        // Active Status when notification is open and the function set the value to true.
         getNotificationStatus(
           response.notification.request.content.data.notification
         );

@@ -20,8 +20,7 @@ import { ContextData } from "../context/ContextDataProvider";
 const { width, height } = Dimensions.get("window");
 
 function pushNotifications(props) {
-  const { notification, getNotificationStatus } = useContext(ContextData);
-  console.log("Notif Status:", notification);
+  const { isNotification, getNotificationStatus } = useContext(ContextData);
   const [title, setTitle] = useState("");
   const [groupToken, setGroupToken] = useState("");
   const [message, setMessage] = useState("");
@@ -31,13 +30,14 @@ function pushNotifications(props) {
       await axios
         .post(
           "http://localhost:3000/api/sendNotifications",
-          { title, groupToken, message, notification },
+          { title, groupToken, message, isNotification },
           { headers: { "Content-Type": "application/json" } }
         )
         .then((res) => {
           Alert.alert(res.data.status, res.data.message);
 
-          getNotificationStatus(res.data.notification);
+          console.log("Notif Status:", res.data.notification);
+
           setMessage("");
           setTitle("");
           setGroupToken("");

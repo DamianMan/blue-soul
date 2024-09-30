@@ -7,7 +7,7 @@ function ContextDataProvider({ children }) {
   const [users, setUsers] = useState([]);
   const [services, setServices] = useState([]);
   const [groups, setGroups] = useState([]);
-  const [notification, setNotfication] = useState(false);
+  const [isNotification, setIsNotfication] = useState(false);
 
   useEffect(() => {
     // Get Services
@@ -112,7 +112,7 @@ function ContextDataProvider({ children }) {
 
   // Set Notification Status
   const getNotificationStatus = (notif) => {
-    setNotfication(notif);
+    setIsNotfication(notif);
   };
 
   const appValues = {
@@ -123,7 +123,7 @@ function ContextDataProvider({ children }) {
     getUsers,
     getServices,
     getNotificationStatus,
-    notification,
+    isNotification,
   };
   return (
     <ContextData.Provider value={appValues}>{children}</ContextData.Provider>

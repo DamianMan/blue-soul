@@ -11,10 +11,18 @@ const { width, height } = Dimensions.get("window");
 
 function Logo(props) {
   return (
-    <>
+    <View
+      style={{
+        justifyContent: "center",
+        alignItems: "center",
+        width,
+      }}
+    >
       <ImageBackground
         resizeMode="cover"
-        source={require("../../assets/bluesoul-logo.png")}
+        source={{
+          uri: "https://images.unsplash.com/photo-1545986467-13cfe33c156e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDE4fHx8ZW58MHx8fHx8",
+        }}
         style={[styles.background, width]}
       />
       <View style={styles.container}>
@@ -22,9 +30,18 @@ function Logo(props) {
           style={styles.tinyLogo}
           source={require("../../assets/bluesoul-logo.png")}
           resizeMode="cover"
-        />
+        >
+          <ImageBackground
+            style={{
+              width: width / 2,
+              height: height / 2,
+            }}
+            source={require("../../assets/logo.png")}
+            resizeMode="contain"
+          />
+        </ImageBackground>
       </View>
-    </>
+    </View>
   );
 }
 
@@ -48,7 +65,14 @@ const styles = StyleSheet.create({
     bottom: 0,
     height: height / 2,
 
-    opacity: 0.7,
+    opacity: 0.8,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.65,
+    shadowRadius: 3.84,
   },
 
   tinyLogo: {

@@ -463,7 +463,7 @@ app.post("/api/postToken", async (req, res) => {
 
 // Sent Notifications
 app.post("/api/sendNotifications", async (req, res) => {
-  const { message, title, groupToken, notification } = req.body;
+  const { message, title, groupToken, isNotification } = req.body;
   const usersFilteredPerGroup = await Users.find({ tokenGroup: groupToken });
   const numOfUSers = usersFilteredPerGroup.filter(
     (item) => item.pushToken !== undefined
@@ -478,7 +478,7 @@ app.post("/api/sendNotifications", async (req, res) => {
             sound: "default",
             title: title,
             body: message,
-            data: { notification }, // Custom data
+            data: { isNotification }, // Custom data
           };
 
           try {

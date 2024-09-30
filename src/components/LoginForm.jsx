@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { StyleSheet, View, Alert, Dimensions } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Alert,
+  Dimensions,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { router } from "expo-router";
@@ -49,7 +56,10 @@ export default function LoginForm(props) {
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
       <View style={styles.centered}>
         <Button
           mode="contained"
@@ -94,7 +104,7 @@ export default function LoginForm(props) {
           style={styles.userInput}
         />
       </View>
-      <View style={styles.centered}>
+      <View style={{ paddingTop: 20 }}>
         <Button
           mode="elevated"
           labelStyle={{ color: "#ffff", fontSize: 15 }}
@@ -107,12 +117,13 @@ export default function LoginForm(props) {
           {email === "admin@mail.com" ? "Get Admin Panel" : "Login"}
         </Button>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -127,7 +138,7 @@ const styles = StyleSheet.create({
   centered: {
     justifyContent: "center",
     alignItems: "center",
-    paddingTop: 25,
+    paddingTop: 5,
   },
   lefted: {
     justifyContent: "flex-start",
@@ -154,8 +165,6 @@ const styles = StyleSheet.create({
     textShadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.4,
-    justifyContent: "center",
-    alignItems: "center",
   },
 
   customLine: {
@@ -168,7 +177,6 @@ const styles = StyleSheet.create({
   },
   submitBtn: {
     backgroundColor: "#050C9C",
-    marginVertical: 10,
     borderRadius: 3,
   },
 });
