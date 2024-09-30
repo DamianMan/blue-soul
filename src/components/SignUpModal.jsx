@@ -10,6 +10,8 @@ import {
   Dimensions,
   ActivityIndicator,
   Platform,
+  KeyboardAvoidingView,
+  ScrollView,
 } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -96,16 +98,16 @@ function SignUpModal({ isModalVisibile, toggleModal }) {
     validateEmail(text);
   };
   return (
-    <View style={styles.centeredView}>
-      <Modal
-        animationType="slide"
-        presentationStyle="fullScreen"
-        visible={isModalVisibile}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          handleToggle();
-        }}
-      >
+    <Modal
+      animationType="slide"
+      presentationStyle="fullScreen"
+      visible={isModalVisibile}
+      onRequestClose={() => {
+        Alert.alert("Modal has been closed.");
+        handleToggle();
+      }}
+    >
+      <View style={styles.centeredView}>
         <ImageBackground
           resizeMode="cover"
           style={styles.background}
@@ -117,72 +119,77 @@ function SignUpModal({ isModalVisibile, toggleModal }) {
           <MaterialCommunityIcons name="close-box" size={24} color="red" />
         </Pressable>
         {!loading ? (
-          <View style={styles.centeredView}>
-            <FontAwesome
-              name="user-circle-o"
-              size={24}
-              color="orangered"
-              style={{ alignSelf: "center" }}
-            />
-
-            <Text style={styles.modalText}>Registration User</Text>
-            <Divider />
-            <View style={styles.formContainer}>
-              <View style={{ paddingVertical: 40, paddingHorizontal: 10 }}>
-                <TextInput
-                  label="Full Name"
-                  autoCapitalize="none"
-                  value={infoUser}
-                  textColor="#ff5f00"
-                  activeOutlineColor="#121481"
-                  style={styles.userInput}
-                  mode="outlined"
-                  onChangeText={(text) =>
-                    setInfoUser((prev) => ({ ...prev, fullName: text }))
-                  }
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={{ flex: 1 }}
+          >
+            <ScrollView contentContainerStyle={styles.formContainer}>
+              <View style={styles.centeredView}>
+                <FontAwesome
+                  name="user-circle-o"
+                  size={24}
+                  color="orangered"
+                  style={{ alignSelf: "center" }}
                 />
 
-                <TextInput
-                  label="Email"
-                  autoCapitalize="none"
-                  keyboardType="email-address"
-                  value={infoUser}
-                  textColor="#ff5f00"
-                  error={!isValid}
-                  activeOutlineColor="#121481"
-                  style={styles.userInput}
-                  mode="outlined"
-                  onChangeText={handleEmail}
-                />
-                <TextInput
-                  label="Password"
-                  autoCapitalize="none"
-                  value={infoUser}
-                  textColor="#ff5f00"
-                  activeOutlineColor="#121481"
-                  style={styles.userInput}
-                  mode="outlined"
-                  right={
-                    <TextInput.Icon
-                      icon="eye"
-                      onPress={() => setIsHide(!isHide)}
-                    />
-                  }
-                  secureTextEntry={isHide}
-                  onChangeText={(text) =>
-                    setInfoUser((prev) => ({ ...prev, password: text }))
-                  }
-                />
+                <Text style={styles.modalText}>Registration User</Text>
+                <Divider />
+
+                <View style={{ paddingVertical: 40, paddingHorizontal: 10 }}>
+                  <TextInput
+                    label="Full Name"
+                    autoCapitalize="none"
+                    value={infoUser}
+                    textColor="#ff5f00"
+                    activeOutlineColor="#121481"
+                    style={styles.userInput}
+                    mode="outlined"
+                    onChangeText={(text) =>
+                      setInfoUser((prev) => ({ ...prev, fullName: text }))
+                    }
+                  />
+
+                  <TextInput
+                    label="Email"
+                    autoCapitalize="none"
+                    keyboardType="email-address"
+                    value={infoUser}
+                    textColor="#ff5f00"
+                    error={!isValid}
+                    activeOutlineColor="#121481"
+                    style={styles.userInput}
+                    mode="outlined"
+                    onChangeText={handleEmail}
+                  />
+                  <TextInput
+                    label="Password"
+                    autoCapitalize="none"
+                    value={infoUser}
+                    textColor="#ff5f00"
+                    activeOutlineColor="#121481"
+                    style={styles.userInput}
+                    mode="outlined"
+                    right={
+                      <TextInput.Icon
+                        icon="eye"
+                        onPress={() => setIsHide(!isHide)}
+                      />
+                    }
+                    secureTextEntry={isHide}
+                    onChangeText={(text) =>
+                      setInfoUser((prev) => ({ ...prev, password: text }))
+                    }
+                  />
+                </View>
+                <Pressable
+                  style={[styles.button, styles.buttonSubmit]}
+                  onPress={handleSubmit}
+                >
+                  <Text style={styles.textStyle}>Sign Up</Text>
+                </Pressable>
               </View>
-            </View>
-
-            <Pressable
-              style={[styles.button, styles.buttonSubmit]}
-              onPress={handleSubmit}
-            >
-              <Text style={styles.textStyle}>Submit</Text>
-            </Pressable>
-          </View>
+            </ScrollView>
+          </KeyboardAvoidingView>
         ) : (
           <View
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
@@ -190,20 +197,19 @@ function SignUpModal({ isModalVisibile, toggleModal }) {
             <ActivityIndicator color={"#0000ff"} size={"large"} />
           </View>
         )}
-      </Modal>
-    </View>
+      </View>
+    </Modal>
   );
 }
 
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
-    paddingTop: 30,
-    marginHorizontal: 20,
+    backgroundColor: "ivory",
   },
   background: {
     width: width,
-    height: (height * 40) / 100,
+    height: height / 3,
   },
   userInput: {
     width: (width * 90) / 100,
@@ -215,7 +221,6 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 20,
-    backgroundColor: "white",
     borderRadius: 20,
     padding: 35,
     alignItems: "center",
@@ -232,8 +237,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 10,
     elevation: 2,
-
-    marginVertical: Platform.OS === "android" ? 30 : 50,
   },
   buttonOpen: {
     backgroundColor: "#F194FF",
@@ -243,6 +246,7 @@ const styles = StyleSheet.create({
   },
   buttonSubmit: {
     backgroundColor: "#2196F3",
+    marginHorizontal: 20,
   },
   textStyle: {
     color: "white",
