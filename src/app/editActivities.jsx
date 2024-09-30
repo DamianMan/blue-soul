@@ -9,6 +9,8 @@ import {
   FlatList,
   Pressable,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { ContextData } from "../context/ContextDataProvider";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -106,7 +108,7 @@ function editActivities(props) {
     try {
       await axios
         .post(
-          "http://192.168.1.54:3000/api/deleteImage",
+          "http://localhost:3000/api/deleteImage",
           { idService, imageUrl },
           { headers: { "Content-Type": "application/json" } }
         )
@@ -126,7 +128,7 @@ function editActivities(props) {
     try {
       await axios
         .post(
-          "http://192.168.1.54:3000/api/deleteNameService",
+          "http://localhost:3000/api/deleteNameService",
           { idService, newActivity, food, drink },
           { headers: { "Content-Type": "application/json" } }
         )
@@ -151,202 +153,208 @@ function editActivities(props) {
     );
   };
   return (
-    <ScrollView style={styles.container}>
-      <ImageBackground
-        style={styles.image}
-        imageStyle={styles.image}
-        resizeMode="cover"
-        source={{
-          uri: "https://images.unsplash.com/photo-1677688013109-61dda1cfc53f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDF8fHxlbnwwfHx8fHw%3D",
-        }}
-      />
-      <View>
-        <Text
-          style={[
-            styles.titleText,
-            { letterSpacing: 0, padding: 10, marginTop: 20, fontSize: 18 },
-          ]}
-        >
-          Tap On The <Text style={styles.activity}>Service</Text> You Want To
-          Edit
-        </Text>
-        <MaterialCommunityIcons
-          name="gesture-tap"
-          size={50}
-          color="#3FA2F6"
-          style={{ alignSelf: "center" }}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
+    >
+      <ScrollView keyboardShouldPersistTaps="handled">
+        <ImageBackground
+          style={styles.image}
+          imageStyle={styles.image}
+          resizeMode="cover"
+          source={{
+            uri: "https://images.unsplash.com/photo-1677688013109-61dda1cfc53f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDF8fHxlbnwwfHx8fHw%3D",
+          }}
         />
-      </View>
-      <View
-        style={{
-          margin: 20,
-        }}
-      >
-        {services.map((item) => (
-          <FabActivitiesItem
-            key={item.url}
-            name={item.name}
-            url={item.url}
-            hanldePress={handlePressFAB}
-          />
-        ))}
-      </View>
-
-      {display && (
-        <View style={styles.activityView}>
-          <Text style={styles.activityTitle}>{name}</Text>
-          <TextInput
-            value={name}
-            label={"Name"}
-            textColor="#ff5f00"
-            activeOutlineColor="#121481"
-            autoCapitalize="none"
-            onChangeText={(text) => setName(text)}
-            mode="outlined"
-            style={styles.userInput}
-          />
-          <TextInput
-            value={subtitle}
-            label={"Subtitle"}
-            textColor="#ff5f00"
-            activeOutlineColor="#121481"
-            autoCapitalize="none"
-            onChangeText={(text) => setSubtitle(text)}
-            mode="outlined"
-            multiline={true}
-            style={styles.userInput}
-          />
-          <TextInput
-            value={description}
-            label={"Description"}
-            textColor="#ff5f00"
-            activeOutlineColor="#121481"
-            autoCapitalize="none"
-            onChangeText={(text) => setDescription(text)}
-            mode="outlined"
-            multiline={true}
-            style={styles.userInput}
-          />
-          <View style={styles.listHorizontal}>
-            <Text style={styles.imagesTitle}>Images For {name}</Text>
-            <FlatList
-              horizontal
-              data={images}
-              renderItem={({ item }) => <ItemImage url={item} id={id} />}
-              keyExtractor={(item) => item}
-            />
-          </View>
-
-          <UploadImageItem uploadImage={uploadImage} />
-          <View
+        <View>
+          <Text
             style={[
-              styles.listHorizontal,
-              { marginLeft: 0, paddingHorizontal: 5 },
+              styles.titleText,
+              { letterSpacing: 0, padding: 10, marginTop: 20, fontSize: 18 },
             ]}
           >
-            {activities && (
-              <View style={styles.namesServiceView}>
-                <Text style={styles.titleNamesActivity}>For {name}</Text>
-
-                <FlatList
-                  horizontal
-                  data={activities}
-                  renderItem={({ item }) => (
-                    <ServiceActivityItem
-                      handleDelete={handleDeleteNameService}
-                      id={id}
-                      newActivity={item}
-                      name={item}
-                    />
-                  )}
-                  keyExtractor={(item) => item}
-                />
-                <TextInput
-                  value={newActivity}
-                  label={`New ${name} To Add`}
-                  textColor="#ff5f00"
-                  activeOutlineColor="#121481"
-                  autoCapitalize="none"
-                  onChangeText={(text) => setNewActivity(text)}
-                  mode="outlined"
-                  multiline={true}
-                  style={styles.userInput}
-                />
-              </View>
-            )}
-            {food && (
-              <View style={styles.namesServiceView}>
-                <Text style={styles.titleNamesActivity}>For Food</Text>
-
-                <FlatList
-                  horizontal
-                  data={food}
-                  renderItem={({ item }) => (
-                    <ServiceActivityItem
-                      handleDelete={handleDeleteNameService}
-                      id={id}
-                      food={item}
-                      name={item}
-                    />
-                  )}
-                  keyExtractor={(item) => item}
-                />
-                <TextInput
-                  value={newFood}
-                  label={`New Food To Add`}
-                  textColor="#ff5f00"
-                  activeOutlineColor="#121481"
-                  autoCapitalize="none"
-                  onChangeText={(text) => setNewFood(text)}
-                  mode="outlined"
-                  multiline={true}
-                  style={styles.userInput}
-                />
-              </View>
-            )}
-            {drinks && (
-              <View style={styles.namesServiceView}>
-                <Text style={styles.titleNamesActivity}>For Drinks</Text>
-
-                <FlatList
-                  horizontal
-                  data={drinks}
-                  renderItem={({ item }) => (
-                    <ServiceActivityItem
-                      handleDelete={handleDeleteNameService}
-                      id={id}
-                      drink={item}
-                      name={item}
-                    />
-                  )}
-                  keyExtractor={(item) => item}
-                />
-                <TextInput
-                  value={newDrinks}
-                  label={`New Drink To Add`}
-                  textColor="#ff5f00"
-                  activeOutlineColor="#121481"
-                  autoCapitalize="none"
-                  onChangeText={(text) => setNewDrinks(text)}
-                  mode="outlined"
-                  multiline={true}
-                  style={styles.userInput}
-                />
-              </View>
-            )}
-          </View>
-          <Button
-            mode="elevated"
-            labelStyle={{ color: "#ffff", fontSize: 15 }}
-            icon={"database"}
-            style={styles.submitBtn}
-            onPress={handleSubmit}
-          >
-            Submit {name}
-          </Button>
+            Tap On The <Text style={styles.activity}>Service</Text> You Want To
+            Edit
+          </Text>
+          <MaterialCommunityIcons
+            name="gesture-tap"
+            size={50}
+            color="#3FA2F6"
+            style={{ alignSelf: "center" }}
+          />
         </View>
-      )}
-    </ScrollView>
+        <View
+          style={{
+            margin: 20,
+          }}
+        >
+          {services.map((item) => (
+            <FabActivitiesItem
+              key={item.url}
+              name={item.name}
+              url={item.url}
+              hanldePress={handlePressFAB}
+            />
+          ))}
+        </View>
+
+        {display && (
+          <View style={styles.activityView}>
+            <Text style={styles.activityTitle}>{name}</Text>
+            <TextInput
+              value={name}
+              label={"Name"}
+              textColor="#ff5f00"
+              activeOutlineColor="#121481"
+              autoCapitalize="none"
+              onChangeText={(text) => setName(text)}
+              mode="outlined"
+              style={styles.userInput}
+            />
+            <TextInput
+              value={subtitle}
+              label={"Subtitle"}
+              textColor="#ff5f00"
+              activeOutlineColor="#121481"
+              autoCapitalize="none"
+              onChangeText={(text) => setSubtitle(text)}
+              mode="outlined"
+              multiline={true}
+              style={styles.userInput}
+            />
+            <TextInput
+              value={description}
+              label={"Description"}
+              textColor="#ff5f00"
+              activeOutlineColor="#121481"
+              autoCapitalize="none"
+              onChangeText={(text) => setDescription(text)}
+              mode="outlined"
+              multiline={true}
+              style={styles.userInput}
+            />
+            <View style={styles.listHorizontal}>
+              <Text style={styles.imagesTitle}>Images For {name}</Text>
+              <FlatList
+                horizontal
+                data={images}
+                renderItem={({ item }) => <ItemImage url={item} id={id} />}
+                keyExtractor={(item) => item}
+              />
+            </View>
+
+            <UploadImageItem uploadImage={uploadImage} />
+            <View
+              style={[
+                styles.listHorizontal,
+                { marginLeft: 0, paddingHorizontal: 5 },
+              ]}
+            >
+              {activities && (
+                <View style={styles.namesServiceView}>
+                  <Text style={styles.titleNamesActivity}>For {name}</Text>
+
+                  <FlatList
+                    horizontal
+                    data={activities}
+                    renderItem={({ item }) => (
+                      <ServiceActivityItem
+                        handleDelete={handleDeleteNameService}
+                        id={id}
+                        newActivity={item}
+                        name={item}
+                      />
+                    )}
+                    keyExtractor={(item) => item}
+                  />
+                  <TextInput
+                    value={newActivity}
+                    label={`New ${name} To Add`}
+                    textColor="#ff5f00"
+                    activeOutlineColor="#121481"
+                    autoCapitalize="none"
+                    onChangeText={(text) => setNewActivity(text)}
+                    mode="outlined"
+                    multiline={true}
+                    style={styles.userInput}
+                  />
+                </View>
+              )}
+              {food && (
+                <View style={styles.namesServiceView}>
+                  <Text style={styles.titleNamesActivity}>For Food</Text>
+
+                  <FlatList
+                    horizontal
+                    data={food}
+                    renderItem={({ item }) => (
+                      <ServiceActivityItem
+                        handleDelete={handleDeleteNameService}
+                        id={id}
+                        food={item}
+                        name={item}
+                      />
+                    )}
+                    keyExtractor={(item) => item}
+                  />
+                  <TextInput
+                    value={newFood}
+                    label={`New Food To Add`}
+                    textColor="#ff5f00"
+                    activeOutlineColor="#121481"
+                    autoCapitalize="none"
+                    onChangeText={(text) => setNewFood(text)}
+                    mode="outlined"
+                    multiline={true}
+                    style={styles.userInput}
+                  />
+                </View>
+              )}
+              {drinks && (
+                <View style={styles.namesServiceView}>
+                  <Text style={styles.titleNamesActivity}>For Drinks</Text>
+
+                  <FlatList
+                    horizontal
+                    data={drinks}
+                    renderItem={({ item }) => (
+                      <ServiceActivityItem
+                        handleDelete={handleDeleteNameService}
+                        id={id}
+                        drink={item}
+                        name={item}
+                      />
+                    )}
+                    keyExtractor={(item) => item}
+                  />
+                  <TextInput
+                    value={newDrinks}
+                    label={`New Drink To Add`}
+                    textColor="#ff5f00"
+                    activeOutlineColor="#121481"
+                    autoCapitalize="none"
+                    onChangeText={(text) => setNewDrinks(text)}
+                    mode="outlined"
+                    multiline={true}
+                    style={styles.userInput}
+                  />
+                </View>
+              )}
+            </View>
+            <Button
+              mode="elevated"
+              labelStyle={{ color: "#ffff", fontSize: 15 }}
+              icon={"database"}
+              style={styles.submitBtn}
+              onPress={handleSubmit}
+            >
+              Submit {name}
+            </Button>
+          </View>
+        )}
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 const styles = StyleSheet.create({

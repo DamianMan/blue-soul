@@ -13,7 +13,13 @@ function StudentChipItem({ data }) {
   };
 
   return (
-    <View style={{ justifyContent: "center", alignItems: "center" }}>
+    <View
+      style={{
+        justifyContent: "center",
+        alignItems: "center",
+        marginVertical: 5,
+      }}
+    >
       <Pressable onPress={toggleModal} style={styles.chip}>
         <View style={{ flexDirection: "row" }}>
           <MaterialCommunityIcons

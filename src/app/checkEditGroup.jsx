@@ -42,6 +42,7 @@ function checkEditGroup(props) {
     const currentUsers = users.filter((item) => item.tokenGroup === token);
     if (currentUsers) {
       setUser(currentUsers);
+      console.log("Users:", currentUsers);
     } else {
       alert("No Users Found");
     }
@@ -92,7 +93,7 @@ function checkEditGroup(props) {
         </View>
       )}
       {user && (
-        <View>
+        <View style={{ paddingVertical: 30 }}>
           <Divider style={styles.divider} />
           <Text style={[styles.titleText, { paddingBottom: 20 }]}>
             STUDENTS
