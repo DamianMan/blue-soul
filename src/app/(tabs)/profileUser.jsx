@@ -8,6 +8,8 @@ import {
   ScrollView,
   ActivityIndicator,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { Button, TextInput, Checkbox, Surface } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -68,7 +70,7 @@ function profileUser(props) {
     try {
       await axios
         .post(
-          "http://192.168.1.54:3000/api/updateUser",
+          "http://localhost:3000/api/updateUser",
           {
             fullName: user?.displayName,
             address,
@@ -96,181 +98,186 @@ function profileUser(props) {
   };
 
   return (
-    <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
-      <ImageBackground
-        source={{
-          uri: "https://images.unsplash.com/photo-1516149893016-813d9a01d5d3?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        }}
-        style={styles.background}
-        resizeMode="cover"
-      ></ImageBackground>
-      {!loading ? (
-        <View style={{ flex: 1 }}>
-          <View
-            style={{
-              justifyContent: "flex-start",
-              alignItems: "flex-start",
-              padding: 20,
-            }}
-          >
-            <Text style={styles.title}>Registration</Text>
-            <Text style={styles.subtitle}>
-              Fill all the fields with your personal info.
-            </Text>
-            <Text style={styles.subtitle}>
-              You can edit them whenever you want
-            </Text>
-          </View>
-          <View style={styles.form}>
-            <TextInput
-              value={infoGroup.fullName}
-              mode="outlined"
-              textColor="#ff5f00"
-              activeOutlineColor="#121481"
-              label="Full Name"
-              onChangeText={(text) =>
-                setInfoGroup({ ...infoGroup, fullName: text })
-              }
-              style={styles.userInput}
-              autoCorrect={false} // Disables auto-correct
-              autoCapitalize="none" // Disables auto-capitalization
-              keyboardType="default" // Sets keyboard to default
-              textContentType="none"
-            />
-            <TextInput
-              value={infoGroup.address}
-              mode="outlined"
-              textColor="#ff5f00"
-              activeOutlineColor="#121481"
-              label="Address"
-              autoCapitalize="none" // Disables auto-capitalization
-              onChangeText={(text) =>
-                setInfoGroup({ ...infoGroup, address: text })
-              }
-              style={styles.userInput}
-            />
-
-            <TextInput
-              value={infoGroup.city}
-              mode="outlined"
-              textColor="#ff5f00"
-              activeOutlineColor="#121481"
-              autoCapitalize="none" // Disables auto-capitalization
-              label="City"
-              onChangeText={(text) =>
-                setInfoGroup({ ...infoGroup, city: text })
-              }
-              style={styles.userInput}
-            />
-            <TextInput
-              value={infoGroup.email}
-              mode="outlined"
-              textColor="#ff5f00"
-              activeOutlineColor="#121481"
-              autoCapitalize="none" // Disables auto-capitalization
-              label="Email"
-              error={!isValidEmail}
-              onChangeText={handleEmail}
-              style={styles.userInput}
-            />
-            <TextInput
-              value={infoGroup.phone}
-              mode="outlined"
-              textColor="#ff5f00"
-              activeOutlineColor="#121481"
-              label="Phone numer"
-              placeholder="+49 69 1234 5678"
-              onChangeText={(text) =>
-                setInfoGroup({ ...infoGroup, phone: text })
-              }
-              style={styles.userInput}
-            />
-            <Surface elevation={5} style={[styles.surface, { marginTop: 5 }]}>
-              <Checkbox.Item
-                color="lime"
-                label="ID"
-                status={infoGroup.id ? "checked" : "unchecked"}
-                onPress={() =>
-                  setInfoGroup((prev) => ({
-                    ...prev,
-                    id: !prev.id,
-                    passport: false,
-                  }))
-                }
-              />
-            </Surface>
-            <Surface elevation={5} style={styles.surface}>
-              <Checkbox.Item
-                color="lime"
-                label="Passport"
-                status={infoGroup.passport ? "checked" : "unchecked"}
-                onPress={() =>
-                  setInfoGroup((prev) => ({
-                    ...prev,
-                    passport: !prev.passport,
-                    id: false,
-                  }))
-                }
-              />
-            </Surface>
-
-            {(infoGroup.id || infoGroup.passport) && (
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+    >
+      <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
+        <ImageBackground
+          source={{
+            uri: "https://images.unsplash.com/photo-1516149893016-813d9a01d5d3?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          }}
+          style={styles.background}
+          resizeMode="cover"
+        ></ImageBackground>
+        {!loading ? (
+          <View style={{ flex: 1 }}>
+            <View
+              style={{
+                justifyContent: "flex-start",
+                alignItems: "flex-start",
+                padding: 20,
+              }}
+            >
+              <Text style={styles.title}>Registration</Text>
+              <Text style={styles.subtitle}>
+                Fill all the fields with your personal info.
+              </Text>
+              <Text style={styles.subtitle}>
+                You can edit them whenever you want
+              </Text>
+            </View>
+            <View style={styles.form}>
               <TextInput
-                value={infoGroup.numDocument}
+                value={infoGroup.fullName}
+                mode="outlined"
+                textColor="#ff5f00"
+                activeOutlineColor="#121481"
+                label="Full Name"
+                onChangeText={(text) =>
+                  setInfoGroup({ ...infoGroup, fullName: text })
+                }
+                style={styles.userInput}
+                autoCorrect={false} // Disables auto-correct
+                autoCapitalize="none" // Disables auto-capitalization
+                keyboardType="default" // Sets keyboard to default
+                textContentType="none"
+              />
+              <TextInput
+                value={infoGroup.address}
+                mode="outlined"
+                textColor="#ff5f00"
+                activeOutlineColor="#121481"
+                label="Address"
+                autoCapitalize="none" // Disables auto-capitalization
+                onChangeText={(text) =>
+                  setInfoGroup({ ...infoGroup, address: text })
+                }
+                style={styles.userInput}
+              />
+
+              <TextInput
+                value={infoGroup.city}
                 mode="outlined"
                 textColor="#ff5f00"
                 activeOutlineColor="#121481"
                 autoCapitalize="none" // Disables auto-capitalization
-                label={`Numer ${
-                  (infoGroup.id && "ID") || (infoGroup.passport && "Passport")
-                }`}
+                label="City"
                 onChangeText={(text) =>
-                  setInfoGroup({ ...infoGroup, numDocument: text })
+                  setInfoGroup({ ...infoGroup, city: text })
                 }
                 style={styles.userInput}
               />
-            )}
-
-            <View
-              style={{
-                width: width,
-                paddingHorizontal: 20,
-                paddingTop: 30,
-              }}
-            >
-              <Button
-                mode="elevated"
-                labelStyle={{ color: "#ffff", fontSize: 15 }}
-                icon={({ size, color }) => (
-                  <AntDesign name="edit" size={30} color="#fff" /> // Custom icon color
-                )}
-                style={styles.editPAsswordBtn}
-                onPress={() => setModalPassword(!modalPassword)}
-              >
-                Edit Password
-              </Button>
-              <EditPAsswordModal
-                modalVisible={modalPassword}
-                setModalVisible={handleOpenModal}
+              <TextInput
+                value={infoGroup.email}
+                mode="outlined"
+                textColor="#ff5f00"
+                activeOutlineColor="#121481"
+                autoCapitalize="none" // Disables auto-capitalization
+                label="Email"
+                error={!isValidEmail}
+                onChangeText={handleEmail}
+                style={styles.userInput}
               />
-              <Button
-                mode="elevated"
-                labelStyle={{ color: "#ffff", fontSize: 15 }}
-                icon={({ size, color }) => (
-                  <Icon name="database-plus" size={30} color="#fff" /> // Custom icon color
-                )}
-                style={styles.submitBtn}
-                onPress={handleSubmit}
+              <TextInput
+                value={infoGroup.phone}
+                mode="outlined"
+                textColor="#ff5f00"
+                activeOutlineColor="#121481"
+                label="Phone numer"
+                placeholder="+49 69 1234 5678"
+                onChangeText={(text) =>
+                  setInfoGroup({ ...infoGroup, phone: text })
+                }
+                style={styles.userInput}
+              />
+              <Surface elevation={5} style={[styles.surface, { marginTop: 5 }]}>
+                <Checkbox.Item
+                  color="lime"
+                  label="ID"
+                  status={infoGroup.id ? "checked" : "unchecked"}
+                  onPress={() =>
+                    setInfoGroup((prev) => ({
+                      ...prev,
+                      id: !prev.id,
+                      passport: false,
+                    }))
+                  }
+                />
+              </Surface>
+              <Surface elevation={5} style={styles.surface}>
+                <Checkbox.Item
+                  color="lime"
+                  label="Passport"
+                  status={infoGroup.passport ? "checked" : "unchecked"}
+                  onPress={() =>
+                    setInfoGroup((prev) => ({
+                      ...prev,
+                      passport: !prev.passport,
+                      id: false,
+                    }))
+                  }
+                />
+              </Surface>
+
+              {(infoGroup.id || infoGroup.passport) && (
+                <TextInput
+                  value={infoGroup.numDocument}
+                  mode="outlined"
+                  textColor="#ff5f00"
+                  activeOutlineColor="#121481"
+                  autoCapitalize="none" // Disables auto-capitalization
+                  label={`Numer ${
+                    (infoGroup.id && "ID") || (infoGroup.passport && "Passport")
+                  }`}
+                  onChangeText={(text) =>
+                    setInfoGroup({ ...infoGroup, numDocument: text })
+                  }
+                  style={styles.userInput}
+                />
+              )}
+
+              <View
+                style={{
+                  width: width,
+                  paddingHorizontal: 20,
+                  paddingTop: 30,
+                }}
               >
-                Submit
-              </Button>
+                <Button
+                  mode="elevated"
+                  labelStyle={{ color: "#ffff", fontSize: 15 }}
+                  icon={({ size, color }) => (
+                    <AntDesign name="edit" size={30} color="#fff" /> // Custom icon color
+                  )}
+                  style={styles.editPAsswordBtn}
+                  onPress={() => setModalPassword(!modalPassword)}
+                >
+                  Edit Password
+                </Button>
+                <EditPAsswordModal
+                  modalVisible={modalPassword}
+                  setModalVisible={handleOpenModal}
+                />
+                <Button
+                  mode="elevated"
+                  labelStyle={{ color: "#ffff", fontSize: 15 }}
+                  icon={({ size, color }) => (
+                    <Icon name="database-plus" size={30} color="#fff" /> // Custom icon color
+                  )}
+                  style={styles.submitBtn}
+                  onPress={handleSubmit}
+                >
+                  Submit
+                </Button>
+              </View>
             </View>
           </View>
-        </View>
-      ) : (
-        <ActivityIndicator />
-      )}
-    </ScrollView>
+        ) : (
+          <ActivityIndicator />
+        )}
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 

@@ -28,13 +28,8 @@ export default function App() {
       <PaperProvider>
         <Logo />
         <LoginForm />
-        {isModalVisibile && (
-          <SignUpModal
-            isModalVisibile={isModalVisibile}
-            toggleModal={toggleModal}
-          />
-        )}
-        <View style={{ alignItems: "center" }}>
+
+        <View style={{ alignItems: "center", paddingBottom: 30 }}>
           <Text style={styles.primary}>
             Don't you have an account?
             <Text style={styles.link} onPress={toggleModal}>
@@ -43,9 +38,15 @@ export default function App() {
             </Text>
           </Text>
         </View>
-        <View style={{ paddingBottom: 40 }}>
+        <View style={{ justifyContent: "center", alignItems: "center" }}>
           <SocialView />
         </View>
+        {isModalVisibile && (
+          <SignUpModal
+            isModalVisibile={isModalVisibile}
+            toggleModal={toggleModal}
+          />
+        )}
       </PaperProvider>
     </View>
   );

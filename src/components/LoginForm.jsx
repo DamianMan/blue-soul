@@ -60,7 +60,7 @@ export default function LoginForm(props) {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
-      <View style={styles.centered}>
+      <View>
         <Button
           mode="contained"
           icon={({ size, color }) => (

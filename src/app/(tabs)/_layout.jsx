@@ -31,6 +31,7 @@ export default function TabsLayout() {
               style={{ width: 50, height: 50 }}
             />
           ),
+          headerTitleAlign: "center", // Center the logo
 
           headerRight: () => <Logout />,
           tabBarIcon: ({ color }) => (

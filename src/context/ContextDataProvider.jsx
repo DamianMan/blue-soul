@@ -14,7 +14,7 @@ function ContextDataProvider({ children }) {
     const getServices = async () => {
       try {
         await axios
-          .get("http://localhost:3000/api/getServices")
+          .get("http://192.168.1.54:3000/api/getServices")
           .then((res) => {
             setServices(res.data);
             console.log("Services loaded");
@@ -31,7 +31,7 @@ function ContextDataProvider({ children }) {
     const getGroups = async () => {
       try {
         await axios
-          .get("http://localhost:3000/api/getAllGroups")
+          .get("http://192.168.1.54:3000/api/getAllGroups")
           .then((res) => {
             setGroups(res.data);
             console.log("Groups loaded");
@@ -49,7 +49,7 @@ function ContextDataProvider({ children }) {
     const getUsers = async () => {
       try {
         await axios
-          .get("http://localhost:3000/api/getUsers")
+          .get("http://192.168.1.54:3000/api/getUsers")
           .then((res) => {
             setUsers(res.data);
             console.log("User loaded");
@@ -68,7 +68,7 @@ function ContextDataProvider({ children }) {
   const getGroups = async () => {
     try {
       await axios
-        .get("http://localhost:3000/api/getAllGroups")
+        .get("http://192.168.1.54:3000/api/getAllGroups")
         .then((res) => {
           setGroups(res.data);
         })
@@ -84,7 +84,7 @@ function ContextDataProvider({ children }) {
   const getUsers = async () => {
     try {
       await axios
-        .get("http://localhost:3000/api/getUsers")
+        .get("http://192.168.1.54:3000/api/getUsers")
         .then((res) => {
           setUsers(res.data);
         })
@@ -98,7 +98,7 @@ function ContextDataProvider({ children }) {
   const getServices = async () => {
     try {
       await axios
-        .get("http://localhost:3000/api/getServices")
+        .get("http://192.168.1.54:3000/api/getServices")
         .then((res) => {
           setServices(res.data);
         })

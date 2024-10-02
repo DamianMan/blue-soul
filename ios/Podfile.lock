@@ -13,7 +13,7 @@ PODS:
     - ExpoModulesCore
   - EXNotifications (0.28.17):
     - ExpoModulesCore
-  - Expo (51.0.31):
+  - Expo (51.0.32):
     - ExpoModulesCore
   - expo-dev-client (4.0.26):
     - EXManifests
@@ -232,7 +232,7 @@ PODS:
     - ExpoModulesCore
   - ExpoFileSystem (17.0.1):
     - ExpoModulesCore
-  - ExpoFont (12.0.9):
+  - ExpoFont (12.0.10):
     - ExpoModulesCore
   - ExpoHead (3.5.23):
     - ExpoModulesCore
@@ -242,7 +242,7 @@ PODS:
     - ExpoModulesCore
   - ExpoLinearGradient (13.0.2):
     - ExpoModulesCore
-  - ExpoModulesCore (1.12.23):
+  - ExpoModulesCore (1.12.24):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1906,7 +1906,7 @@ SPEC CHECKSUMS:
   EXJSONUtils: 30c17fd9cc364d722c0946a550dfbf1be92ef6a4
   EXManifests: c1fab4c3237675e7b0299ea8df0bcb14baca4f42
   EXNotifications: 1177f1f3acba90ac409ac70d011dc00c75049635
-  Expo: 4773e11951abd0f666f67023f0cb1d48c3e8a32b
+  Expo: 33132a667698a3259a4e6c0af1b4936388e5fa33
   expo-dev-client: 4f9100af6be210a360aa67f42649881251aa362a
   expo-dev-launcher: fe4f2c0a0aa627449eeaec5f9f11e04090f97c40
   expo-dev-menu: 5b14897ecce3a8cf9e9cf9109344c2c192a3766a
@@ -1916,12 +1916,12 @@ SPEC CHECKSUMS:
   ExpoClipboard: 23d203f5d4843699fbc45be1cc4fe1fbd811a6fa
   ExpoDevice: fc94f0e42ecdfd897e7590f2874fc64dfa7e9b1c
   ExpoFileSystem: 80bfe850b1f9922c16905822ecbf97acd711dc51
-  ExpoFont: e7f2275c10ca8573c991e007329ad6bf98086485
+  ExpoFont: 00756e6c796d8f7ee8d211e29c8b619e75cbf238
   ExpoHead: fcb28a68ed4ba28f177394d2dfb8a0a8824cd103
   ExpoImagePicker: 12a420923383ae38dccb069847218f27a3b87816
   ExpoKeepAwake: 3b8815d9dd1d419ee474df004021c69fdd316d08
   ExpoLinearGradient: 8cec4a09426d8934c433e83cb36262d72c667fce
-  ExpoModulesCore: e3c518e094990b3ad960edbd19c291f2a1b56b0a
+  ExpoModulesCore: db3e31e694684f08223d713e89f7648c6d3e04d0
   EXSplashScreen: d8b3c547b9b18a41d80c6f6b274c4c26664febd4
   EXUpdatesInterface: 996527fd7d1a5d271eb523258d603f8f92038f24
   FBLazyVector: ac12dc084d1c8ec4cc4d7b3cf1b0ebda6dab85af

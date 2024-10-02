@@ -53,6 +53,8 @@ function nameServiceDetail(props) {
               style={{ width: 50, height: 50 }}
             />
           ),
+          headerTitleAlign: "center", // Center the logo
+
           headerStyle: {
             backgroundColor: "lightblue",
           },
@@ -163,7 +165,7 @@ function nameServiceDetail(props) {
       </View>
       <Divider style={{ margin: 20 }} />
       <View>
-        <Text style={styles.sectionText}>What You Have From Us</Text>
+        <Text style={styles.sectionText}>What You Will Have From Us</Text>
       </View>
       <View style={styles.secondContainer}>
         <Text
@@ -209,18 +211,8 @@ function nameServiceDetail(props) {
 const styles = StyleSheet.create({
   container: {
     marginTop: height / 3.5,
-    borderRadius: 20,
-    backgroundColor: "transparent",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.57,
-    shadowRadius: 4.65,
 
-    elevation: 6,
-    paddingVertical: 30,
+    marginBottom: 30,
   },
   secondContainer: {
     paddingTop: 20,
@@ -276,6 +268,7 @@ const styles = StyleSheet.create({
   bgImage: {
     paddingVertical: 18,
     marginHorizontal: 20,
+    marginVertical: 20,
     borderRadius: 16,
     backgroundColor: "aliceblue",
     shadowColor: "blue",
@@ -290,10 +283,12 @@ const styles = StyleSheet.create({
   },
   sportsName: {
     marginHorizontal: 20,
+    marginVertical: 1,
   },
 
   namesActivities: {
     paddingVertical: 20,
+    marginVertical: 1,
   },
   title: {
     fontSize: 42,
