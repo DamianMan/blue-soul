@@ -127,6 +127,7 @@ function nameServiceDetail(props) {
         <FlatList
           style={styles.imagesList}
           horizontal
+          showsHorizontalScrollIndicator={false} // Hide the horizontal scroll bar
           data={currentService.images}
           renderItem={({ item }) => (
             <ImageItem url={item} style={styles.imageContainer} />
@@ -145,6 +146,7 @@ function nameServiceDetail(props) {
         <FlatList
           horizontal
           style={styles.namesActivities}
+          showsHorizontalScrollIndicator={false} // Hide the horizontal scroll bar
           data={
             params.nameActivity !== "foodDrink"
               ? currentService.namesActivities

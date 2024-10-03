@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import LoginForm from "../components/LoginForm";
 import Logo from "../components/Logo";
-import { PaperProvider } from "react-native-paper";
+import { PaperProvider, Divider } from "react-native-paper";
 import SocialView from "../components/SocialView";
 import { useState } from "react";
 import SignUpModal from "../components/SignUpModal";
@@ -26,21 +26,41 @@ export default function App() {
   return (
     <View style={styles.container}>
       <PaperProvider>
-        <Logo />
-        <LoginForm />
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : height}
+          style={{ flex: 1 }}
+        >
+          <ScrollView>
+            <Logo />
 
-        <View style={{ alignItems: "center", paddingBottom: 30 }}>
-          <Text style={styles.primary}>
-            Don't you have an account?
-            <Text style={styles.link} onPress={toggleModal}>
-              {" "}
-              Please Sign Up.
+            <LoginForm />
+
+            <Text style={styles.primary}>
+              Don't you have an account?
+              <Text style={styles.link} onPress={toggleModal}>
+                {" "}
+                Please Sign Up.
+              </Text>
             </Text>
-          </Text>
-        </View>
-        <View style={{ justifyContent: "center", alignItems: "center" }}>
-          <SocialView />
-        </View>
+            <Divider
+              style={{
+                backgroundColor: "lightseagreen",
+                marginHorizontal: 30,
+                marginBottom: Platform.OS === "ios" && 20,
+              }}
+            />
+
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <SocialView />
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+
         {isModalVisibile && (
           <SignUpModal
             isModalVisibile={isModalVisibile}
@@ -62,6 +82,8 @@ const styles = StyleSheet.create({
   primary: {
     fontSize: 16,
     color: "#121481",
+    textAlign: "center",
+    paddingVertical: 30,
   },
   link: {
     fontSize: 16,

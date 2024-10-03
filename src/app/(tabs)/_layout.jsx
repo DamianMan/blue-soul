@@ -14,13 +14,14 @@ export default function TabsLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: "#002379",
+        tabBarInactiveTintColor: "aliceblue",
       }}
     >
       <Tabs.Screen
         name="homeUser"
         options={{
           title: "Home Page",
-          tabBarStyle: { backgroundColor: "#FFFAE6" },
+          tabBarStyle: { backgroundColor: "#FF8343" },
           headerStyle: {
             backgroundColor: "lightblue",
           },
@@ -46,7 +47,7 @@ export default function TabsLayout() {
           headerStyle: {
             backgroundColor: "lightblue",
           },
-          tabBarStyle: { backgroundColor: "#FFFAE6" },
+          tabBarStyle: { backgroundColor: "#FF8343" },
           headerStyle: {
             backgroundColor: "lightblue",
           },

@@ -10,7 +10,7 @@ const socialMediaArray = [
 ];
 function SocialView(props) {
   return (
-    <View style={{ paddingBottom: 30 }}>
+    <View style={{ paddingBottom: 5 }}>
       <View style={styles.socialContainer}>
         <FlatList
           horizontal={true}

@@ -38,6 +38,12 @@ const userModel = new mongoose.Schema(
     },
     role: { type: String },
     pushToken: { type: String },
+    isNotification: {
+      type: Boolean,
+    },
+    tripFoodDrink: {
+      type: Array,
+    },
   },
   { timestamps: true }
 );

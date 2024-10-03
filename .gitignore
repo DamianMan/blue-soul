@@ -33,3 +33,7 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+#Google Server FCM Key
+blue-soul-9434a-firebase-adminsdk-yau4q-ee398c0d06.json
+google-services.json

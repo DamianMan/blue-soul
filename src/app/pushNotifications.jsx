@@ -13,6 +13,7 @@ import {
 import { TextInput, Divider, Button } from "react-native-paper";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import axios from "axios";
+import * as Notifications from "expo-notifications";
 
 import auth from "@react-native-firebase/auth";
 import { ContextData } from "../context/ContextDataProvider";
@@ -25,11 +26,26 @@ function pushNotifications(props) {
   const [groupToken, setGroupToken] = useState("");
   const [message, setMessage] = useState("");
 
+  async function schedulePushNotification(title, message) {
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        sound: "default",
+        title: title,
+        body: message,
+        data: { data: "goes here", test: { test1: "more data" } },
+      },
+      trigger: { seconds: 5 },
+    })
+      .then((res) => console.log("Success:", res))
+      .catch((err) => console.log("Error:", err));
+  }
+
   const handleSubmit = async () => {
+    // schedulePushNotification(title, message);
     try {
       await axios
         .post(
-          "http://localhost:3000/api/sendNotifications",
+          "http://192.168.1.53:3000/api/sendNotifications",
           { title, groupToken, message, isNotification },
           { headers: { "Content-Type": "application/json" } }
         )

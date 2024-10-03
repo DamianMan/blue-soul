@@ -1,4 +1,11 @@
-import { View, Text, StyleSheet, Dimensions, Platform } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  Platform,
+  Alert,
+} from "react-native";
 import auth from "@react-native-firebase/auth";
 import Animated, {
   interpolate,
@@ -9,10 +16,11 @@ import Animated, {
 import InfoUserCardItem from "../../components/InfoUserCardItem";
 import { useContext, useEffect, useState, useRef } from "react";
 import { ContextData } from "../../context/ContextDataProvider";
-
+import axios from "axios";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
+import FoodDrinkNotifModal from "../../components/FoodDrinkNotifModal";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -27,10 +35,29 @@ const { width } = Dimensions.get("window");
 const HeightIMG = 300;
 
 export default function MyCarousel() {
-  const { services } = useContext(ContextData);
+  const { services, users, getUsers } = useContext(ContextData);
   const user = auth().currentUser;
   const scrollRef = useAnimatedRef();
+  const [isNotification, setIsNotification] = useState();
 
+  useEffect(() => {
+    const loadUsers = async () => {
+      await getUsers();
+    };
+    loadUsers();
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      userFound = users.find((item) => item.email === user?.email);
+      if (userFound) {
+        setIsNotification(userFound.isNotification);
+
+        console.log("Current User Notif status:", userFound.isNotification);
+      }
+      // setIsNotification(userFound.isNotification);
+    }
+  }, [users]);
   // Notification
 
   const [expoPushToken, setExpoPushToken] = useState("");
@@ -38,7 +65,7 @@ export default function MyCarousel() {
   const [notification, setNotification] = useState(undefined > undefined);
   const notificationListener = useRef();
   const responseListener = useRef();
-  const { getNotificationStatus, isNotification } = useContext(ContextData);
+  const { getNotificationStatus } = useContext(ContextData);
   useEffect(() => {
     registerForPushNotificationsAsync().then(
       (token) => token && setExpoPushToken(token)
@@ -58,9 +85,9 @@ export default function MyCarousel() {
       Notifications.addNotificationResponseReceivedListener((response) => {
         console.log(response.notification.request.content.data);
         // Active Status when notification is open and the function set the value to true.
-        getNotificationStatus(
-          response.notification.request.content.data.notification
-        );
+        // getNotificationStatus(
+        //   response.notification.request.content.data.notification
+        // );
       });
     return () => {
       notificationListener.current &&
@@ -72,20 +99,22 @@ export default function MyCarousel() {
     };
   }, []);
 
+  // Save Push Token In Db
   const submitPushToken = async (token) => {
     const userEmail = user?.email;
     try {
       await axios
-
         .post(
-          "http://192.168.1.56:3000/api/postToken",
+          "http://192.168.1.53:3000/api/postToken",
           { token, userEmail },
           { headers: { "Content-Type": "application/json" } }
         )
-        .then((res) => Alert.alert(res.data.status, res.data.message))
+        .then((res) => {
+          Alert.alert(res.data.status, res.data.message);
+        })
         .catch((err) => Alert.alert(err.data.status, err.data.message));
     } catch (error) {
-      Alert.alert("Error Request", error);
+      console.log("Error Request Sendind Notification Home User", error);
     }
   };
 
@@ -128,6 +157,7 @@ export default function MyCarousel() {
             projectId,
           })
         ).data;
+
         submitPushToken(token);
       } catch (e) {
         token = `${e}`;
@@ -212,6 +242,12 @@ export default function MyCarousel() {
             description={item.description}
           />
         ))}
+        {isNotification && (
+          <FoodDrinkNotifModal
+            status={isNotification}
+            text={isNotification ? "Notif True" : "Notif False"}
+          />
+        )}
       </View>
     </Animated.ScrollView>
   );

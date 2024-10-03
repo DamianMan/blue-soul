@@ -6,6 +6,7 @@ import {
   Dimensions,
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
 } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -56,54 +57,47 @@ export default function LoginForm(props) {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={styles.container}
+    <View
+      style={{ justifyContent: "center", alignItems: "center", paddingTop: 30 }}
     >
-      <View>
-        <Button
-          mode="contained"
-          icon={({ size, color }) => (
-            <Icon
-              name={email === "admin@mail.com" ? "lock" : "account"}
-              size={30}
-              color="#ff5f00"
-            /> // Custom icon color
-          )}
-          labelStyle={{ color: "#FF9F66", fontSize: 20 }}
-          style={styles.iconLogin}
-        >
-          {email === "admin@mail.com" ? "ADMIN" : "USER"}
-        </Button>
-      </View>
-      <View style={styles.centered}>
-        <TextInput
-          label={email === "admin@mail.com" ? "Admin" : "Email"}
-          value={email}
-          mode="outlined"
-          keyboardType="email-address"
-          textColor="#ff5f00"
-          error={!isValid}
-          autoCapitalize="none"
-          activeOutlineColor={"#121481"}
-          onChangeText={handleEmail}
-          style={styles.userInput}
-        />
-        <TextInput
-          label="Password"
-          value={password}
-          secureTextEntry={isHide}
-          right={
-            <TextInput.Icon icon="eye" onPress={() => setIsHide(!isHide)} />
-          }
-          mode="outlined"
-          textColor="#ff5f00"
-          activeOutlineColor="#121481"
-          autoCapitalize="none"
-          onChangeText={handlePassword}
-          style={styles.userInput}
-        />
-      </View>
+      <Button
+        mode="contained"
+        icon={({ size, color }) => (
+          <Icon
+            name={email === "admin@mail.com" ? "lock" : "account"}
+            size={30}
+            color="#ff5f00"
+          /> // Custom icon color
+        )}
+        labelStyle={{ color: "#FF9F66", fontSize: 20 }}
+        style={styles.iconLogin}
+      >
+        {email === "admin@mail.com" ? "ADMIN" : "USER"}
+      </Button>
+      <TextInput
+        label={email === "admin@mail.com" ? "Admin" : "Email"}
+        value={email}
+        mode="outlined"
+        keyboardType="email-address"
+        textColor="#ff5f00"
+        error={!isValid}
+        autoCapitalize="none"
+        activeOutlineColor={"#121481"}
+        onChangeText={handleEmail}
+        style={styles.userInput}
+      />
+      <TextInput
+        label="Password"
+        value={password}
+        secureTextEntry={isHide}
+        right={<TextInput.Icon icon="eye" onPress={() => setIsHide(!isHide)} />}
+        mode="outlined"
+        textColor="#ff5f00"
+        activeOutlineColor="#121481"
+        autoCapitalize="none"
+        onChangeText={handlePassword}
+        style={styles.userInput}
+      />
       <View style={{ paddingTop: 20 }}>
         <Button
           mode="elevated"
@@ -117,7 +111,7 @@ export default function LoginForm(props) {
           {email === "admin@mail.com" ? "Get Admin Panel" : "Login"}
         </Button>
       </View>
-    </KeyboardAvoidingView>
+    </View>
   );
 }
 
@@ -138,7 +132,6 @@ const styles = StyleSheet.create({
   centered: {
     justifyContent: "center",
     alignItems: "center",
-    paddingTop: 5,
   },
   lefted: {
     justifyContent: "flex-start",

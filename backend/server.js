@@ -26,8 +26,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: `http://localhost:8081`,
-    // origin: "http://localhost:5173",
+    origin: `http://192.168.1.53:8081`,
     optionsSuccessStatus: 200,
     methods: ["GET", "POST"], // List the methods you want to allow
     credentials: true,
@@ -442,22 +441,33 @@ app.post("/api/deleteNameService", async (req, res) => {
 // Post User Device Push Token
 app.post("/api/postToken", async (req, res) => {
   const { token, userEmail } = req.body;
+  console.log("BODY POST TOKEN", req.body);
   const currentUser = await Users.findOne({ email: userEmail });
-  if (currentUser.length > 0) {
-    try {
-      const query = {
-        email: userEmail,
-      };
-      await Users.findOneAndUpdate(query, { pushToken: token });
+  try {
+    if (currentUser) {
+      try {
+        const query = {
+          email: userEmail,
+        };
+        await Users.findOneAndUpdate(query, { pushToken: token });
+        res.json({
+          message: `Push Token Added to ${currentUser.fullName}`,
+          status: "Success",
+        });
+      } catch (error) {
+        res.json({ message: error, status: "Error" });
+      }
+    } else {
       res.json({
-        message: `Push Token Added to ${currentUser.fullName}`,
-        status: "Success",
+        message: "User Not Found!",
+        status: "Error",
       });
-    } catch (error) {
-      res.json({ message: error, status: "Error" });
     }
-  } else {
-    res.json({ message: "User Not Found!", status: "Error" });
+  } catch (err) {
+    res.json({
+      message: err,
+      status: "Error",
+    });
   }
 });
 
@@ -493,12 +503,16 @@ app.post("/api/sendNotifications", async (req, res) => {
                 },
               }
             );
-            console.log("Notification sent!", response.data);
+            console.log("Notification Response:", response.data);
             res.json({
               message: "Push Notification Sent Succesfully!",
               status: "Success",
               notification: true,
             });
+            const query = {
+              email: item.email,
+            };
+            await Users.findOneAndUpdate(query, { isNotification: true });
           } catch (error) {
             res.json({
               message: "Push Notification Not Sent!",
@@ -520,6 +534,26 @@ app.post("/api/sendNotifications", async (req, res) => {
       status: "Error",
       notification: false,
     });
+  }
+});
+
+// Post User Picks For Trip
+app.post("/api/postTripMeal", async (req, res) => {
+  const { email, userPicks } = req.body;
+  const currentUser = await Users.findOne({ email });
+  if (currentUser) {
+    try {
+      const query = { email };
+      await Users.findOneAndUpdate(query, {
+        tripFoodDrink: userPicks,
+        isNotification: false,
+      });
+      res.json({ message: "User Meal Succesfully Added", status: "Success" });
+    } catch (error) {
+      res.json({ message: "User Meal Not Stored!", status: "Error" });
+    }
+  } else {
+    res.json({ message: "User Not Found", status: "Error" });
   }
 });
 app.listen(port, () => {
