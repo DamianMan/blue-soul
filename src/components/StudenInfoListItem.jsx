@@ -1,10 +1,26 @@
-import React, { useState } from "react";
-import { Text, View, StyleSheet, ImageBackground, Alert } from "react-native";
-import { Button, TextInput } from "react-native-paper";
+import React, { useEffect, useState } from "react";
+import {
+  Text,
+  View,
+  StyleSheet,
+  ImageBackground,
+  Alert,
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
+  Dimensions,
+  ScrollView,
+} from "react-native";
+import { Badge, Button, Chip, TextInput } from "react-native-paper";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import axios from "axios";
+import { useContext } from "react";
+import { ContextData } from "../context/ContextDataProvider";
 
-function StudenInfoListItem({ data }) {
+const { height } = Dimensions.get("window");
+
+function StudenInfoListItem({ data, toogleReload }) {
+  const { users, getUsers } = useContext(ContextData);
   const [isDisabled, setIsDisabled] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -14,6 +30,13 @@ function StudenInfoListItem({ data }) {
   const [city, setCity] = useState(data.city);
   const [phone, setPhone] = useState(data.phone);
   const [numDocument, setNumDocument] = useState(data.numDocument);
+  const [foodDrink, setFoodDrink] = useState(data.tripFoodDrink);
+
+  const handleFoodDrink = (text, index) => {
+    const newArray = [...foodDrink];
+    newArray[index] = text;
+    setFoodDrink(newArray);
+  };
 
   const handleSubmit = async () => {
     try {
@@ -27,6 +50,7 @@ function StudenInfoListItem({ data }) {
             city,
             phone,
             numDocument,
+            foodDrink,
           },
           {
             headers: {
@@ -37,7 +61,7 @@ function StudenInfoListItem({ data }) {
         .then((response) => {
           Alert.alert("Success", response.data.message);
           setIsDisabled(!isDisabled);
-          setIsEditing(!isEditing);
+          toogleReload();
         })
         .catch((err) => console.error("Error posting data:", err));
     } catch (error) {
@@ -46,115 +70,157 @@ function StudenInfoListItem({ data }) {
   };
 
   return (
-    <ImageBackground
-      resizeMode="cover"
-      imageStyle={{ opacity: 0.3, marginTop: 10 }}
-      source={{
-        uri: "https://img.freepik.com/free-photo/blue-user-icon-symbol-website-admin-social-login-element-concept-white-background-3d-rendering_56104-1217.jpg?ga=GA1.1.609292962.1726606020&semt=ais_hybrid",
-      }}
-    >
-      <View style={styles.container}>
-        <TextInput
-          autoCapitalize="none"
-          mode="outlined"
-          placeholder={fullName}
-          disabled={isDisabled}
-          label={"Full Name"}
-          value={fullName}
-          style={styles.input}
-          contentStyle={styles.modalText}
-          onChangeText={(text) => setFullname(text)}
-        />
-        <TextInput
-          autoCapitalize="none"
-          mode="outlined"
-          placeholder={data.email}
-          disabled={isDisabled}
-          label={"Email"}
-          value={email}
-          style={styles.input}
-          contentStyle={styles.modalText}
-          onChangeText={(text) => setEmail(text)}
-        />
-        <TextInput
-          autoCapitalize="none"
-          mode="outlined"
-          placeholder={address}
-          disabled={isDisabled}
-          label={"Address"}
-          value={address}
-          style={styles.input}
-          contentStyle={styles.modalText}
-          onChangeText={(text) => setAddress(text)}
-        />
-        <TextInput
-          autoCapitalize="none"
-          mode="outlined"
-          placeholder={city}
-          disabled={isDisabled}
-          label={"City"}
-          value={city}
-          style={styles.input}
-          contentStyle={styles.modalText}
-          onChangeText={(text) => setCity(text)}
-        />
-        <TextInput
-          autoCapitalize="none"
-          mode="outlined"
-          placeholder={phone}
-          disabled={isDisabled}
-          label={"Phone"}
-          value={phone}
-          style={styles.input}
-          contentStyle={styles.modalText}
-          onChangeText={(text) => setPhone(text)}
-        />
+    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : height}>
+      <ScrollView>
+        <ImageBackground
+          resizeMode="cover"
+          imageStyle={{ opacity: 0.3, marginTop: 10 }}
+          source={{
+            uri: "https://img.freepik.com/free-photo/blue-user-icon-symbol-website-admin-social-login-element-concept-white-background-3d-rendering_56104-1217.jpg?ga=GA1.1.609292962.1726606020&semt=ais_hybrid",
+          }}
+        >
+          <View style={styles.container}>
+            <TextInput
+              autoCapitalize="none"
+              mode="outlined"
+              placeholder={fullName}
+              disabled={isDisabled}
+              label={"Full Name"}
+              value={fullName}
+              style={styles.input}
+              contentStyle={styles.modalText}
+              onChangeText={(text) => setFullname(text)}
+            />
+            <TextInput
+              autoCapitalize="none"
+              mode="outlined"
+              placeholder={data.email}
+              disabled={isDisabled}
+              label={"Email"}
+              value={email}
+              style={styles.input}
+              contentStyle={styles.modalText}
+              onChangeText={(text) => setEmail(text)}
+            />
+            <TextInput
+              autoCapitalize="none"
+              mode="outlined"
+              placeholder={address}
+              disabled={isDisabled}
+              label={"Address"}
+              value={address}
+              style={styles.input}
+              contentStyle={styles.modalText}
+              onChangeText={(text) => setAddress(text)}
+            />
+            <TextInput
+              autoCapitalize="none"
+              mode="outlined"
+              placeholder={city}
+              disabled={isDisabled}
+              label={"City"}
+              value={city}
+              style={styles.input}
+              contentStyle={styles.modalText}
+              onChangeText={(text) => setCity(text)}
+            />
+            <TextInput
+              autoCapitalize="none"
+              mode="outlined"
+              placeholder={phone}
+              disabled={isDisabled}
+              label={"Phone"}
+              value={phone}
+              style={styles.input}
+              contentStyle={styles.modalText}
+              onChangeText={(text) => setPhone(text)}
+            />
 
-        <TextInput
-          mode="outlined"
-          autoCapitalize="none"
-          placeholder={numDocument}
-          disabled={isDisabled}
-          label={
-            (data.isId && "ID") ||
-            (data.isPassport && "Passport") ||
-            "Number Document"
-          }
-          value={numDocument}
-          style={styles.input}
-          contentStyle={styles.modalText}
-          onChangeText={(text) => setNumDocument(text)}
-        />
-        {!isEditing ? (
-          <Button
-            mode="elevated"
-            labelStyle={{ color: "#ffff", fontSize: 15 }}
-            icon={({ size, color }) => (
-              <AntDesign name="edit" size={30} color="#fff" /> // Custom icon color
+            <TextInput
+              mode="outlined"
+              autoCapitalize="none"
+              placeholder={numDocument}
+              disabled={isDisabled}
+              label={
+                (data.isId && "ID") ||
+                (data.isPassport && "Passport") ||
+                "Number Document"
+              }
+              value={numDocument}
+              style={styles.input}
+              contentStyle={styles.modalText}
+              onChangeText={(text) => setNumDocument(text)}
+            />
+            {data.tripFoodDrink.length > 0 && (
+              <View>
+                <Text
+                  style={{
+                    textAlign: "start",
+                    color: "orangered",
+                    fontSize: 20,
+                    paddingVertical: 10,
+                  }}
+                >
+                  Trip Food & Drink
+                  <AntDesign name="arrowdown" size={24} color="orangered" />
+                </Text>
+                <FlatList
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  data={foodDrink}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={({ item, index }) => (
+                    <TextInput
+                      mode="contained"
+                      autoCapitalize="none"
+                      disabled={isDisabled}
+                      value={item}
+                      textColor="aliceblue"
+                      style={{
+                        backgroundColor: "lightseagreen",
+                        borderRadius: 10,
+                        paddingHorizontal: 30,
+                        marginRight: 20,
+                        marginVertical: 10,
+                      }}
+                      onChangeText={(text) => handleFoodDrink(text, index)}
+                    />
+                  )}
+                />
+              </View>
             )}
-            style={styles.edit}
-            onPress={() => {
-              setIsDisabled(!isDisabled);
-              setIsEditing(!isEditing);
-            }}
-          >
-            Edit
-          </Button>
-        ) : (
-          <Button
-            mode="elevated"
-            labelStyle={{ color: "#ffff", fontSize: 15 }}
-            icon={({ size, color }) => (
-              <AntDesign name="database" size={30} color="#fff" /> // Custom icon color
+            {!isEditing ? (
+              <Button
+                mode="elevated"
+                labelStyle={{ color: "#ffff", fontSize: 15 }}
+                icon={({ size, color }) => (
+                  <AntDesign name="edit" size={30} color="#fff" /> // Custom icon color
+                )}
+                style={styles.edit}
+                onPress={() => {
+                  setIsDisabled(!isDisabled);
+                  setIsEditing(!isEditing);
+                }}
+              >
+                Edit
+              </Button>
+            ) : (
+              <Button
+                mode="elevated"
+                labelStyle={{ color: "#ffff", fontSize: 15 }}
+                icon={({ size, color }) => (
+                  <AntDesign name="database" size={30} color="#fff" /> // Custom icon color
+                )}
+                style={[styles.edit, { backgroundColor: "#3FA2F6" }]}
+                onPress={handleSubmit}
+              >
+                Submit
+              </Button>
             )}
-            style={[styles.edit, { backgroundColor: "#3FA2F6" }]}
-            onPress={handleSubmit}
-          >
-            Submit
-          </Button>
-        )}
-      </View>
-    </ImageBackground>
+          </View>
+        </ImageBackground>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 

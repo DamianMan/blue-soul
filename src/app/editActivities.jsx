@@ -274,6 +274,7 @@ function editActivities(props) {
                   <FlatList
                     horizontal
                     data={activities}
+                    showsHorizontalScrollIndicator={false}
                     renderItem={({ item }) => (
                       <ServiceActivityItem
                         handleDelete={handleDeleteNameService}
@@ -307,6 +308,7 @@ function editActivities(props) {
                   <FlatList
                     horizontal
                     data={food}
+                    showsHorizontalScrollIndicator={false}
                     renderItem={({ item }) => (
                       <ServiceActivityItem
                         handleDelete={handleDeleteNameService}
@@ -339,6 +341,7 @@ function editActivities(props) {
 
                   <FlatList
                     horizontal
+                    showsHorizontalScrollIndicator={false}
                     data={drinks}
                     renderItem={({ item }) => (
                       <ServiceActivityItem

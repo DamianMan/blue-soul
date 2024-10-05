@@ -22,25 +22,49 @@ function checkEditGroup(props) {
   const { getUsers, getGroups, users, groups } = useContext(ContextData);
   const [loading, setLoading] = useState(false);
   const [group, setGroup] = useState();
-  const [user, setUser] = useState();
+  const [user, setUser] = useState([]);
+  const [groupToken, setGroupToken] = useState("");
+  const [reload, setReload] = useState(false);
 
   // Get All Groups
   useEffect(() => {
     setLoading(true);
-    getUsers();
-    getGroups();
-    setLoading(false);
-  }, []);
+    const loadingData = async () => {
+      setLoading(true);
+      try {
+        await getUsers();
+        await getGroups();
+        console.log("Users and groups loaded");
+      } catch (error) {
+        console.error("Error loading data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadingData();
+    if (groupToken !== "") {
+      handlePress(groupToken);
+      console.log("Reloading!!!");
+    }
+  }, [reload, groupToken]);
+
+  const toogleReload = async () => {
+    setReload(!reload);
+    console.log("Reload status:", !reload);
+    console.log("Token:", groupToken);
+    console.log("Reload Users!");
+  };
 
   const handlePress = (token) => {
     const currentGroup = groups.find((item) => item.tokenGroup === token);
+    setGroupToken(token);
     if (currentGroup) {
       setGroup(currentGroup);
     } else {
       alert("No Group Found!");
     }
     const currentUsers = users.filter((item) => item.tokenGroup === token);
-    if (currentUsers) {
+    if (currentUsers.length > 0) {
       setUser(currentUsers);
       console.log("Users:", currentUsers);
     } else {
@@ -92,7 +116,7 @@ function checkEditGroup(props) {
           />
         </View>
       )}
-      {user && (
+      {user.length > 0 && (
         <View style={{ paddingVertical: 30 }}>
           <Divider style={styles.divider} />
           <Text style={[styles.titleText, { paddingBottom: 20 }]}>
@@ -102,6 +126,7 @@ function checkEditGroup(props) {
             (item) =>
               item.role === "Student" && (
                 <StudentChipItem
+                  toogleReload={toogleReload}
                   key={item.tokenGroup + item.fullName}
                   data={item}
                 />

@@ -178,23 +178,34 @@ app.post("/api/signUpUser", async (req, res) => {
 
 // Update User from Profile Screen
 app.post("/api/updateUser", async (req, res) => {
-  const { fullName, address, email, city, phone, id, passport, numDocument } =
-    req.body;
+  const {
+    fullName,
+    address,
+    email,
+    city,
+    phone,
+    id,
+    passport,
+    numDocument,
+    foodDrink,
+  } = req.body;
 
   const currentStudent = await Users.findOne({ email });
   if (currentStudent) {
     const query = { email };
 
     await Users.findOneAndUpdate(query, {
+      fullName,
       address,
       city,
       phone,
       isId: id,
       isPassport: passport,
       numDocument,
+      tripFoodDrink: foodDrink,
     });
 
-    console.log("User Updated:");
+    console.log("User Updated!");
     res.json({ message: "User Updated" });
   } else {
     res.json({ message: "User Not Found!" });

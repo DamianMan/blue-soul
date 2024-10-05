@@ -14,25 +14,33 @@ import {
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import StudenInfoListItem from "./StudenInfoListItem";
 const { width, height } = Dimensions.get("window");
-function StudentModalInfo({ modalVisible, setModalVisible, data }) {
+function StudentModalInfo({
+  modalVisible,
+  setModalVisible,
+  data,
+  toogleReload,
+}) {
   return (
-    <View style={styles.centeredView}>
-      <Modal
-        animationType="slide"
-        presentationStyle="fullScreen"
-        visible={modalVisible}
-        onRequestClose={setModalVisible}
-      >
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : height}
-          style={{ flex: 1 }}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : height}
+      style={{ flex: 1 }}
+    >
+      <ScrollView contentContainerStyle={styles.centeredView}>
+        <Modal
+          animationType="slide"
+          presentationStyle="fullScreen"
+          visible={modalVisible}
+          onRequestClose={setModalVisible}
         >
-          <ScrollView contentContainerStyle={styles.centeredView}>
+          <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text style={styles.modalText}>Info Student</Text>
               <Pressable
                 style={{ position: "absolute", right: 10, top: 5 }}
-                onPress={setModalVisible}
+                onPress={() => {
+                  setModalVisible();
+                  toogleReload();
+                }}
               >
                 <Text style={styles.textStyle}>
                   <MaterialCommunityIcons
@@ -42,12 +50,12 @@ function StudentModalInfo({ modalVisible, setModalVisible, data }) {
                   />
                 </Text>
               </Pressable>
-              <StudenInfoListItem data={data} />
+              <StudenInfoListItem data={data} toogleReload={toogleReload} />
             </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
-      </Modal>
-    </View>
+          </View>
+        </Modal>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 const styles = StyleSheet.create({
