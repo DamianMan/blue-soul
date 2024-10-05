@@ -19,12 +19,12 @@ function StudentModalInfo({ modalVisible, setModalVisible, data }) {
     <View style={styles.centeredView}>
       <Modal
         animationType="slide"
-        transparent={true}
+        presentationStyle="fullScreen"
         visible={modalVisible}
         onRequestClose={setModalVisible}
       >
         <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          behavior={Platform.OS === "ios" ? "padding" : height}
           style={{ flex: 1 }}
         >
           <ScrollView contentContainerStyle={styles.centeredView}>
@@ -52,17 +52,18 @@ function StudentModalInfo({ modalVisible, setModalVisible, data }) {
 }
 const styles = StyleSheet.create({
   centeredView: {
-    flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
   modalView: {
-    marginTop: height / 4,
+    marginTop: height / 10,
     width: (width * 90) / 100,
-    backgroundColor: "aliceblue",
     borderRadius: 20,
-    padding: 35,
-    shadowColor: "#000",
+    padding: 45,
+    marginVertical: 20,
+    backgroundColor: "aliceblue",
+
+    shadowColor: "blue",
     shadowOffset: {
       width: 0,
       height: 2,

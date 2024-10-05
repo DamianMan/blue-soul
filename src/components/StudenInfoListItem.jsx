@@ -19,7 +19,7 @@ function StudenInfoListItem({ data }) {
     try {
       await axios
         .post(
-          "http://localhost:3000/api/updateUser",
+          "http://192.168.1.63:3000/api/updateUser",
           {
             fullName,
             address,

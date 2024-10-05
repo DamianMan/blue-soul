@@ -80,7 +80,7 @@ function addNewGroup(props) {
         if (user) {
           await axios
             .post(
-              "http://192.168.1.54:3000/api/postGroup",
+              "http://192.168.1.63:3000/api/postGroup",
               {
                 name,
                 fullName,

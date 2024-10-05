@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import { StyleSheet } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Button } from "react-native-paper";
+import { ContextData } from "../context/ContextDataProvider";
 
 function ServiceActivityItem({
   name,
@@ -10,10 +11,22 @@ function ServiceActivityItem({
   food,
   drink,
   id,
+  setFood,
+  setDrinks,
+  categoryName,
+  setActivities,
 }) {
+  const { removeItem } = useContext(ContextData);
   const handleOnPress = () => {
     console.log("deleted");
     handleDelete(id, newActivity, food, drink);
+    if (categoryName !== "Food & Drink") {
+      removeItem(setActivities, name);
+    } else {
+      removeItem(food ? setFood : setDrinks, name);
+    }
+    // removeItem(setFoods, name);
+    // removeItem(setDrinks, name);
   };
   return (
     <Button

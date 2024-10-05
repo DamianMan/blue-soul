@@ -25,7 +25,7 @@ function ContextDataProvider({ children }) {
   const getGroups = async () => {
     try {
       await axios
-        .get("http://192.168.1.53:3000/api/getAllGroups")
+        .get("http://192.168.1.63:3000/api/getAllGroups")
         .then((res) => {
           setGroups(res.data);
         })
@@ -39,10 +39,9 @@ function ContextDataProvider({ children }) {
   // Get All Users
 
   const getUsers = async () => {
-    console.log("GETTING USERS!!!");
     try {
       await axios
-        .get("http://192.168.1.53:3000/api/getUsers")
+        .get("http://192.168.1.63:3000/api/getUsers")
         .then((res) => {
           setUsers(res.data);
         })
@@ -55,7 +54,7 @@ function ContextDataProvider({ children }) {
   const getServices = async () => {
     try {
       await axios
-        .get("http://192.168.1.53:3000/api/getServices")
+        .get("http://192.168.1.63:3000/api/getServices")
         .then((res) => {
           setServices(res.data);
         })
@@ -72,6 +71,16 @@ function ContextDataProvider({ children }) {
     setIsNotfication(notif);
   };
 
+  // Add Item To Array
+  const addItem = (setItem, item) => {
+    setItem((prev) => [...prev, item !== "" && item]);
+  };
+
+  // Remoce Item To Array
+  const removeItem = (setFunction, item) => {
+    setFunction((prev) => prev.filter((i) => i !== item));
+  };
+
   const appValues = {
     users,
     services,
@@ -81,6 +90,8 @@ function ContextDataProvider({ children }) {
     getServices,
     getNotificationStatus,
     isNotification,
+    addItem,
+    removeItem,
   };
   return (
     <ContextData.Provider value={appValues}>{children}</ContextData.Provider>

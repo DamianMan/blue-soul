@@ -22,7 +22,8 @@ import ServiceActivityItem from "../components/ServiceActivityItem";
 
 const { height, width } = Dimensions.get("window");
 function editActivities(props) {
-  const { services, getServices } = useContext(ContextData);
+  const { services, getServices, addItem, removeItem } =
+    useContext(ContextData);
   const [display, setDisplay] = useState(false);
   const [pressed, setPressed] = useState(false);
   const [id, setId] = useState("");
@@ -32,19 +33,21 @@ function editActivities(props) {
   const [images, setImages] = useState("");
   const [activities, setActivities] = useState(false);
   const [newActivity, setNewActivity] = useState("");
-  const [food, SetFood] = useState(false);
+  const [food, setFood] = useState(false);
   const [newFood, setNewFood] = useState("");
   const [drinks, setDrinks] = useState(false);
   const [newDrinks, setNewDrinks] = useState("");
 
+  const loadService = async () => {
+    await getServices();
+  };
   useEffect(() => {
-    getServices();
+    loadService();
   }, []);
 
   const handlePressFAB = (id) => {
     const currentActivity = services.find((item) => item.url === id);
     if (currentActivity) {
-      console.log(currentActivity);
       setDisplay(true);
       setName(currentActivity.name);
       setSubtitle(currentActivity.subTitle);
@@ -64,10 +67,10 @@ function editActivities(props) {
           currentActivity.drinks.length > 0
         ) {
           setDrinks(currentActivity.drinks);
-          SetFood(currentActivity.foods);
+          setFood(currentActivity.foods);
         } else {
           setDrinks(false);
-          SetFood(false);
+          setFood(false);
         }
       }
 
@@ -79,7 +82,7 @@ function editActivities(props) {
     try {
       await axios
         .post(
-          "http://localhost:3000/api/editService",
+          "http://192.168.1.63:3000/api/editService",
           {
             id,
             name,
@@ -92,7 +95,18 @@ function editActivities(props) {
           },
           { headers: { "Content-Type": "application/json" } }
         )
-        .then((res) => Alert.alert(res.data.status, res.data.message))
+        .then((res) => {
+          Alert.alert(res.data.status, res.data.message);
+          if (name !== "Food & Drink") {
+            addItem(setActivities, newActivity);
+            setNewActivity("");
+          } else {
+            newFood !== "" && addItem(setFood, newFood);
+            newDrinks !== "" && addItem(setDrinks, newDrinks);
+            setNewFood("");
+            setNewDrinks("");
+          }
+        })
         .catch((err) => Alert.alert(err.data.status, err.data.message));
     } catch (error) {
       Alert.alert("Error", error);
@@ -108,7 +122,7 @@ function editActivities(props) {
     try {
       await axios
         .post(
-          "http://localhost:3000/api/deleteImage",
+          "http://192.168.1.63:3000/api/deleteImage",
           { idService, imageUrl },
           { headers: { "Content-Type": "application/json" } }
         )
@@ -128,11 +142,13 @@ function editActivities(props) {
     try {
       await axios
         .post(
-          "http://localhost:3000/api/deleteNameService",
+          "http://192.168.1.63:3000/api/deleteNameService",
           { idService, newActivity, food, drink },
           { headers: { "Content-Type": "application/json" } }
         )
-        .then((res) => Alert.alert(res.data.status, res.data.message))
+        .then((res) => {
+          Alert.alert(res.data.status, res.data.message);
+        })
         .catch((err) => Alert.alert(err.data.status, err.data.message));
     } catch (err) {
       Alert.alert("Error Request", err);
@@ -154,11 +170,10 @@ function editActivities(props) {
   };
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      behavior={Platform.OS === "ios" ? "padding" : height}
       style={{ flex: 1 }}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
     >
-      <ScrollView keyboardShouldPersistTaps="handled">
+      <ScrollView>
         <ImageBackground
           style={styles.image}
           imageStyle={styles.image}
@@ -211,6 +226,7 @@ function editActivities(props) {
               onChangeText={(text) => setName(text)}
               mode="outlined"
               style={styles.userInput}
+              disabled
             />
             <TextInput
               value={subtitle}
@@ -264,6 +280,9 @@ function editActivities(props) {
                         id={id}
                         newActivity={item}
                         name={item}
+                        categoryName={name}
+                        removeItem={removeItem}
+                        setActivities={setActivities}
                       />
                     )}
                     keyExtractor={(item) => item}
@@ -291,9 +310,12 @@ function editActivities(props) {
                     renderItem={({ item }) => (
                       <ServiceActivityItem
                         handleDelete={handleDeleteNameService}
+                        removeItem={removeItem}
+                        setFood={setFood}
                         id={id}
                         food={item}
                         name={item}
+                        categoryName={name}
                       />
                     )}
                     keyExtractor={(item) => item}
@@ -321,9 +343,12 @@ function editActivities(props) {
                     renderItem={({ item }) => (
                       <ServiceActivityItem
                         handleDelete={handleDeleteNameService}
+                        removeItem={removeItem}
+                        setDrinks={setDrinks}
                         id={id}
                         drink={item}
                         name={item}
+                        categoryName={name}
                       />
                     )}
                     keyExtractor={(item) => item}

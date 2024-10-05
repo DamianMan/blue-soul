@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Text,
   ScrollView,
@@ -18,13 +18,20 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 const { width, height } = Dimensions.get("window");
 function nameServiceDetail(props) {
   const params = useLocalSearchParams();
-  const { services } = useContext(ContextData);
+  const { services, getServices } = useContext(ContextData);
   const [isHide, setIsHide] = useState(3);
   const currentService = services.find(
     (item) => item.url === params.nameActivity
   );
 
   const foodDrinkArray = [...currentService.foods, ...currentService.drinks];
+
+  useEffect(() => {
+    const loadServices = async () => {
+      getServices();
+    };
+    loadServices();
+  }, [services]);
 
   const ImageItem = ({ url }) => {
     return (

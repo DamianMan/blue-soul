@@ -45,7 +45,7 @@ function pushNotifications(props) {
     try {
       await axios
         .post(
-          "http://192.168.1.53:3000/api/sendNotifications",
+          "http://192.168.1.63:3000/api/sendNotifications",
           { title, groupToken, message, isNotification },
           { headers: { "Content-Type": "application/json" } }
         )

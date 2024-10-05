@@ -24,10 +24,13 @@ function FoodDrinkNotifModal({ status, text }) {
   const [modalVisible, setModalVisible] = useState(status);
   const [userPicks, setUSerPicks] = useState([]);
 
-  const service = services.find((item) => item.name === "Food & Drink");
   useEffect(() => {
-    getServices();
-  }, []);
+    const loadServices = async () => {
+      getServices();
+    };
+    loadServices();
+  }, [services]);
+  const service = services.find((item) => item.name === "Food & Drink");
 
   const storeUserPicks = (item) => {
     setUSerPicks((prev) => [...prev, item]);
@@ -47,7 +50,7 @@ function FoodDrinkNotifModal({ status, text }) {
         const email = user?.email;
         await axios
           .post(
-            "http://192.168.1.53:3000/api/postTripMeal",
+            "http://192.168.1.63:3000/api/postTripMeal",
             { userPicks, email },
             { headers: { "Content-Type": "application/json" } }
           )
