@@ -76,9 +76,16 @@ function ContextDataProvider({ children }) {
     setItem((prev) => [...prev, item !== "" && item]);
   };
 
-  // Remoce Item To Array
+  // Remove Item To Simple Array
   const removeItem = (setFunction, item) => {
     setFunction((prev) => prev.filter((i) => i !== item));
+  };
+
+  // Remove Item To Complex Array
+  const removeItemComplexArray = (setState, state, id) => {
+    const newArray = state.filter((item) => item._id !== id);
+
+    setState(newArray);
   };
 
   const appValues = {
@@ -92,6 +99,7 @@ function ContextDataProvider({ children }) {
     isNotification,
     addItem,
     removeItem,
+    removeItemComplexArray,
   };
   return (
     <ContextData.Provider value={appValues}>{children}</ContextData.Provider>

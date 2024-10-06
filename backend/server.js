@@ -8,6 +8,13 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const Service = require("./models/Services");
 const axios = require("axios");
+const admin = require("firebase-admin");
+
+const serviceAccount = require("../blue-soul-9434a-firebase-adminsdk-yau4q-ee398c0d06.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
 
 require("dotenv").config({ path: "../.env" });
 
@@ -564,6 +571,42 @@ app.post("/api/postTripMeal", async (req, res) => {
     }
   } else {
     res.json({ message: "User Not Found", status: "Error" });
+  }
+});
+
+// Delete Group
+app.post("/api/deleteGroup", async (req, res) => {
+  const { id, email } = req.body;
+  let firebaseId;
+  await admin
+    .auth()
+    .getUserByEmail(email)
+    .then((userRecord) => {
+      // See the UserRecord reference doc for the contents of userRecord.
+      console.log(`Successfully fetched user data: ${userRecord.uid}`);
+      firebaseId = userRecord.uid;
+    })
+    .catch((error) => {
+      console.log("Error fetching user data:", error);
+    });
+  console.log("UID:", firebaseId);
+
+  try {
+    const deletedGroup = await Schools.deleteOne({ _id: id });
+    console.log("Deleted group:", deletedGroup);
+    admin
+      .auth()
+      .deleteUser(firebaseId)
+      .then(() => {
+        console.log("Successfully deleted Firebase user");
+      })
+      .catch((error) => {
+        console.log("Error deleting user:", error);
+      });
+
+    res.json({ message: "Group Deleted Succesfully", status: "Success" });
+  } catch (error) {
+    res.json({ message: "No Group Found!", status: "Error" });
   }
 });
 app.listen(port, () => {

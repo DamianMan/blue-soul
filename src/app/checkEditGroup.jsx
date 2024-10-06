@@ -46,7 +46,7 @@ function checkEditGroup(props) {
       handlePress(groupToken);
       console.log("Reloading!!!");
     }
-  }, [reload, groupToken]);
+  }, [reload]);
 
   const toogleReload = async () => {
     setReload(!reload);

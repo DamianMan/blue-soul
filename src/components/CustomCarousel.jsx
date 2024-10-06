@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -6,9 +6,13 @@ import {
   Dimensions,
   ImageBackground,
   Pressable,
+  Alert,
 } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 import { BlurView } from "expo-blur";
+import { IconButton } from "react-native-paper";
+import axios from "axios";
+import { ContextData } from "../context/ContextDataProvider";
 
 const { width } = Dimensions.get("window");
 
@@ -28,13 +32,34 @@ const getRandomColor = () => {
 };
 
 const CustomCarousel = ({ data, handlePress }) => {
+  const { removeItemComplexArray } = useContext(ContextData);
+  const [group, setGroup] = useState(data);
+
+  const handleDeleteGroup = async (id, email) => {
+    try {
+      await axios
+        .post(
+          "http://192.168.1.63:3000/api/deleteGroup",
+          { id, email },
+          { headers: { "Content-Type": "application/json" } }
+        )
+        .then((res) => {
+          Alert.alert(res.data.status, res.data.message);
+          removeItemComplexArray(setGroup, group, id);
+        })
+        .catch((err) => Alert.alert(err.data.status, err.data.message));
+    } catch (error) {
+      alert("Error Request deleting group:", error);
+    }
+  };
+
   return (
     <View>
       <Carousel
         style={styles.carousel}
         width={width}
         height={width / 2}
-        data={data}
+        data={group}
         autoplay={true}
         scrollAnimationDuration={1000}
         mode="parallax"
@@ -69,6 +94,20 @@ const CustomCarousel = ({ data, handlePress }) => {
                 uri: "https://img.freepik.com/free-vector/watercolor-painted-malaga-skyline_52683-71499.jpg?ga=GA1.1.609292962.1726606020&semt=ais_hybrid",
               }}
             >
+              <IconButton
+                icon="delete-forever"
+                iconColor={"red"}
+                mode="outlined"
+                size={35}
+                onPress={() => handleDeleteGroup(item._id, item.email)}
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  right: 10,
+                  zIndex: 10,
+                }}
+              />
+
               <BlurView
                 intensity={30}
                 style={[
@@ -88,7 +127,7 @@ const CustomCarousel = ({ data, handlePress }) => {
 
 const styles = StyleSheet.create({
   carousel: {
-    marginVertical: 30,
+    marginBottom: 30,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -96,8 +135,10 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-
+    height: 250,
     elevation: 10,
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   blurContainer: {
