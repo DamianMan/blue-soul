@@ -70,6 +70,7 @@ function checkEditGroup(props) {
     } else {
       alert("No Users Found");
     }
+    setLoading(false);
   };
   return (
     <ScrollView style={styles.container}>
@@ -96,41 +97,49 @@ function checkEditGroup(props) {
         style={{ alignSelf: "center" }}
       />
 
+      <CustomCarousel
+        data={groups}
+        handlePress={handlePress}
+        setTeacher={setGroup}
+        setUsers={setUser}
+        setLoading={setLoading}
+      />
+
       {loading ? (
         <ActivityIndicator size={"large"} />
       ) : (
-        <CustomCarousel data={groups} handlePress={handlePress} />
-      )}
-
-      {group && (
         <View>
-          <Text style={[styles.titleText, { color: "orangered" }]}>
-            TEACHER
-          </Text>
-          <TeacherCardItem
-            teacher={group.fullNameTeacher}
-            email={group.email}
-            phone={group.phone}
-            city={group.city}
-            token={group.tokenGroup}
-          />
-        </View>
-      )}
-      {user.length > 0 && (
-        <View style={{ paddingVertical: 30 }}>
-          <Divider style={styles.divider} />
-          <Text style={[styles.titleText, { paddingBottom: 20 }]}>
-            STUDENTS
-          </Text>
-          {user.map(
-            (item) =>
-              item.role === "Student" && (
-                <StudentChipItem
-                  toogleReload={toogleReload}
-                  key={item.tokenGroup + item.fullName}
-                  data={item}
-                />
-              )
+          {group && (
+            <View>
+              <Text style={[styles.titleText, { color: "orangered" }]}>
+                TEACHER
+              </Text>
+              <TeacherCardItem
+                teacher={group.fullNameTeacher}
+                email={group.email}
+                phone={group.phone}
+                city={group.city}
+                token={group.tokenGroup}
+              />
+            </View>
+          )}
+          {user.length > 0 && (
+            <View style={{ paddingVertical: 30 }}>
+              <Divider style={styles.divider} />
+              <Text style={[styles.titleText, { paddingBottom: 20 }]}>
+                STUDENTS
+              </Text>
+              {user.map(
+                (item) =>
+                  item.role === "Student" && (
+                    <StudentChipItem
+                      toogleReload={toogleReload}
+                      key={item.tokenGroup + item.fullName}
+                      data={item}
+                    />
+                  )
+              )}
+            </View>
           )}
         </View>
       )}

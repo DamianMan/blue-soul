@@ -31,7 +31,13 @@ const getRandomColor = () => {
   return COLORS[randomColor];
 };
 
-const CustomCarousel = ({ data, handlePress }) => {
+const CustomCarousel = ({
+  data,
+  handlePress,
+  setTeacher,
+  setUsers,
+  setLoading,
+}) => {
   const { removeItemComplexArray } = useContext(ContextData);
   const [group, setGroup] = useState(data);
 
@@ -46,6 +52,8 @@ const CustomCarousel = ({ data, handlePress }) => {
         .then((res) => {
           Alert.alert(res.data.status, res.data.message);
           removeItemComplexArray(setGroup, group, id);
+          setTeacher();
+          setUsers([]);
         })
         .catch((err) => Alert.alert(err.data.status, err.data.message));
     } catch (error) {
@@ -62,8 +70,13 @@ const CustomCarousel = ({ data, handlePress }) => {
         data={group}
         autoplay={true}
         scrollAnimationDuration={1000}
-        mode="parallax"
+        enabled={group.length > 1 ? true : false}
+        mode={group.length > 1 ? "parallax" : "default"}
         withAnimation={{ type: "spring", config: 10000 }}
+        onSnapToItem={(item) => {
+          setLoading(true);
+          handlePress(group[item].tokenGroup);
+        }}
         renderItem={({ item, index }) => (
           <Pressable
             key={index}
@@ -80,7 +93,10 @@ const CustomCarousel = ({ data, handlePress }) => {
 
               elevation: 5,
             }}
-            onPress={() => handlePress(item.tokenGroup)}
+            onPress={() => {
+              setLoading(true);
+              handlePress(item.tokenGroup);
+            }}
           >
             <ImageBackground
               resizeMode="stretch"

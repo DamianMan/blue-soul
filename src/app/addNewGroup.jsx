@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -16,9 +16,11 @@ const { width } = Dimensions.get("window");
 import auth from "@react-native-firebase/auth";
 import * as Clipboard from "expo-clipboard";
 import axios from "axios";
+import { ContextData } from "../context/ContextDataProvider";
 
 function addNewGroup(props) {
   const user = auth().currentUser;
+  const { getGroups } = useContext(ContextData);
 
   const [isValidEmail, setIsValidEmail] = useState(true);
   const validateEmail = (text) => {
@@ -104,7 +106,8 @@ function addNewGroup(props) {
                 city: "",
                 phone: "",
               }));
-              signUp();
+              // signUp();
+              getGroups();
 
               setLoading(false);
             })

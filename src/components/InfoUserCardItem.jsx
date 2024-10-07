@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
   },
   cardStyle: {
     width: (width * 90) / 100,
-    backgroundColor: "skyblue",
+    backgroundColor: "lightseagreen",
     shadowColor: "darkblue",
     shadowOffset: {
       width: 0,
