@@ -10,13 +10,13 @@ const Service = require("./models/Services");
 const axios = require("axios");
 const admin = require("firebase-admin");
 
-const serviceAccount = require("../blue-soul-9434a-firebase-adminsdk-yau4q-ee398c0d06.json");
+require("dotenv").config({ path: "../.env" });
+
+const serviceAccount = JSON.parse(process.env.FIREBASE_ADMIN_SDK);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
-
-require("dotenv").config({ path: "../.env" });
 
 // Connection Db
 main().catch((err) => console.log(err));
