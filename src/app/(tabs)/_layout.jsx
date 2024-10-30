@@ -13,23 +13,23 @@ export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: "#002379",
-        tabBarInactiveTintColor: "aliceblue",
+        tabBarActiveTintColor: "#F3F3F3",
+        tabBarInactiveTintColor: "#303841",
       }}
     >
       <Tabs.Screen
         name="homeUser"
         options={{
           title: "Home Page",
-          tabBarStyle: { backgroundColor: "#FF8343" },
+          tabBarStyle: { backgroundColor: "#2185D5" },
           headerStyle: {
-            backgroundColor: "lightblue",
+            backgroundColor: "#F3F3F3",
           },
           headerTitle: (props) => (
             <Image
               source={require("../../../assets/logo.png")}
               resizeMode="contain"
-              style={{ width: 50, height: 50 }}
+              style={{ width: 130, height: 130 }}
             />
           ),
           headerTitleAlign: "center", // Center the logo
@@ -45,17 +45,15 @@ export default function TabsLayout() {
         options={{
           title: user?.displayName || "Profile",
           headerStyle: {
-            backgroundColor: "lightblue",
+            backgroundColor: "#F3F3F3",
           },
-          tabBarStyle: { backgroundColor: "#FF8343" },
-          headerStyle: {
-            backgroundColor: "lightblue",
-          },
+          tabBarStyle: { backgroundColor: "#2185D5" },
+
           headerTitle: (props) => (
             <Image
               source={require("../../../assets/logo.png")}
               resizeMode="contain"
-              style={{ width: 50, height: 50 }}
+              style={{ width: 130, height: 130 }}
             />
           ),
           headerRight: () => <LogoutBtn />,

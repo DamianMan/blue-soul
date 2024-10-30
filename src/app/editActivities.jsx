@@ -82,7 +82,7 @@ function editActivities(props) {
     try {
       await axios
         .post(
-          "http://192.168.1.63:3000/api/editService",
+          "http://192.168.1.51:3000/api/editService",
           {
             id,
             name,
@@ -122,7 +122,7 @@ function editActivities(props) {
     try {
       await axios
         .post(
-          "http://192.168.1.63:3000/api/deleteImage",
+          "http://192.168.1.51:3000/api/deleteImage",
           { idService, imageUrl },
           { headers: { "Content-Type": "application/json" } }
         )
@@ -142,7 +142,7 @@ function editActivities(props) {
     try {
       await axios
         .post(
-          "http://192.168.1.63:3000/api/deleteNameService",
+          "http://192.168.1.51:3000/api/deleteNameService",
           { idService, newActivity, food, drink },
           { headers: { "Content-Type": "application/json" } }
         )

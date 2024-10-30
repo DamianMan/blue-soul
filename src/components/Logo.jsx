@@ -20,9 +20,7 @@ function Logo(props) {
     >
       <ImageBackground
         resizeMode="cover"
-        source={{
-          uri: "https://images.unsplash.com/photo-1545986467-13cfe33c156e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDE4fHx8ZW58MHx8fHx8",
-        }}
+        source={require("../../assets/bluesoul-logo.png")}
         style={[styles.background, width]}
       />
       <View style={styles.container}>
@@ -65,7 +63,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     height: height / 2,
 
-    opacity: 0.8,
+    opacity: 0.3,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,

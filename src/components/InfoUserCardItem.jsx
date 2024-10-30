@@ -15,13 +15,13 @@ function InfoUserCardItem({ src, title, text, nameActivity }) {
             style={{
               margin: 15,
               marginBottom: 8,
-              backgroundColor: "aliceblue",
+              backgroundColor: "white",
               borderRadius: 10,
             }}
           >
             <Text
               variant="titleLarge"
-              style={{ color: "darkblue", letterSpacing: 1 }}
+              style={{ color: "#2185D5", letterSpacing: 1 }}
             >
               {title}
             </Text>
@@ -33,7 +33,7 @@ function InfoUserCardItem({ src, title, text, nameActivity }) {
           <Card.Actions>
             <Button
               mode="contained-tonal"
-              buttonColor="orangered"
+              buttonColor="#2185D5"
               textColor="#fff"
               contentStyle={{ flexDirection: "row-reverse" }}
               icon={() => (
@@ -58,8 +58,8 @@ const styles = StyleSheet.create({
   },
   cardStyle: {
     width: (width * 90) / 100,
-    backgroundColor: "lightseagreen",
-    shadowColor: "darkblue",
+    backgroundColor: "#E4F1FE",
+    shadowColor: "#2185D5",
     shadowOffset: {
       width: 0,
       height: 7,
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
   },
   text: {
-    color: "royalblue",
+    color: "#3A4750",
 
     fontWeight: "lighter",
     letterSpacing: 1,

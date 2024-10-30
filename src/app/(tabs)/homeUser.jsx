@@ -218,7 +218,7 @@ export default function MyCarousel() {
           uri: "https://images.unsplash.com/photo-1725272123537-105e02c214d8?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDE0fHx8ZW58MHx8fHx8",
         }}
       />
-      <View style={{ backgroundColor: "ivory", flex: 1 }}>
+      <View style={{ backgroundColor: "#F3F3F3", flex: 1 }}>
         <View>
           <Text style={styles.introText}>
             Hello <Text style={styles.textName}>{user?.displayName}</Text>,
@@ -257,7 +257,7 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   carousleContainer: { marginVertical: 30 },
   introText: {
-    color: "darkblue",
+    color: "#303841",
     paddingHorizontal: 20,
     paddingVertical: 20,
     fontSize: 30,
@@ -268,10 +268,10 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     marginHorizontal: 20,
     marginVertical: 20,
-    shadowColor: "orangered",
+    shadowColor: "#2185D5",
     shadowOffset: {
       width: 0,
-      height: 9,
+      height: 3,
     },
     shadowOpacity: 0.48,
     shadowRadius: 11.95,
@@ -279,7 +279,7 @@ const styles = StyleSheet.create({
     elevation: 18,
   },
   textName: {
-    color: "orangered",
+    color: "#2185D5",
   },
   image: {
     width,
@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
   introTextSub: {
-    color: "steelblue",
+    color: "#3A4750",
     fontSize: 16,
     letterSpacing: 1,
     paddingHorizontal: 20,

@@ -70,7 +70,7 @@ function profileUser(props) {
     try {
       await axios
         .post(
-          "http://192.168.1.63:3000/api/updateUser",
+          "http://192.168.1.51:3000/api/updateUser",
           {
             fullName: user?.displayName,
             address,
@@ -131,8 +131,8 @@ function profileUser(props) {
               <TextInput
                 value={infoGroup.fullName}
                 mode="outlined"
-                textColor="#ff5f00"
-                activeOutlineColor="#121481"
+                textColor="#303841"
+                activeOutlineColor="#2185D5"
                 label="Full Name"
                 onChangeText={(text) =>
                   setInfoGroup({ ...infoGroup, fullName: text })
@@ -146,8 +146,8 @@ function profileUser(props) {
               <TextInput
                 value={infoGroup.address}
                 mode="outlined"
-                textColor="#ff5f00"
-                activeOutlineColor="#121481"
+                textColor="#303841"
+                activeOutlineColor="#2185D5"
                 label="Address"
                 autoCapitalize="none" // Disables auto-capitalization
                 onChangeText={(text) =>
@@ -159,8 +159,8 @@ function profileUser(props) {
               <TextInput
                 value={infoGroup.city}
                 mode="outlined"
-                textColor="#ff5f00"
-                activeOutlineColor="#121481"
+                textColor="#303841"
+                activeOutlineColor="#2185D5"
                 autoCapitalize="none" // Disables auto-capitalization
                 label="City"
                 onChangeText={(text) =>
@@ -171,8 +171,8 @@ function profileUser(props) {
               <TextInput
                 value={infoGroup.email}
                 mode="outlined"
-                textColor="#ff5f00"
-                activeOutlineColor="#121481"
+                textColor="#303841"
+                activeOutlineColor="#2185D5"
                 autoCapitalize="none" // Disables auto-capitalization
                 label="Email"
                 error={!isValidEmail}
@@ -182,8 +182,8 @@ function profileUser(props) {
               <TextInput
                 value={infoGroup.phone}
                 mode="outlined"
-                textColor="#ff5f00"
-                activeOutlineColor="#121481"
+                textColor="#303841"
+                activeOutlineColor="#2185D5"
                 label="Phone numer"
                 placeholder="+49 69 1234 5678"
                 onChangeText={(text) =>
@@ -224,8 +224,8 @@ function profileUser(props) {
                 <TextInput
                   value={infoGroup.numDocument}
                   mode="outlined"
-                  textColor="#ff5f00"
-                  activeOutlineColor="#121481"
+                  textColor="#303841"
+                  activeOutlineColor="#2185D5"
                   autoCapitalize="none" // Disables auto-capitalization
                   label={`Numer ${
                     (infoGroup.id && "ID") || (infoGroup.passport && "Passport")
@@ -300,18 +300,18 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "midnightblue",
+    color: "#2185D5",
     textAlign: "start",
   },
 
   subtitle: {
     fontSize: 15,
     fontWeight: "bold",
-    color: "steelblue",
+    color: "#3A4750",
     textAlign: "start",
   },
   submitBtn: {
-    backgroundColor: "#3572EF",
+    backgroundColor: "#0099FF",
     elevation: 5,
     textShadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },

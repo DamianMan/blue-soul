@@ -44,7 +44,7 @@ export default function App() {
             </Text>
             <Divider
               style={{
-                backgroundColor: "lightseagreen",
+                backgroundColor: "#2185D5",
                 marginHorizontal: 30,
                 marginBottom: Platform.OS === "ios" && 20,
               }}
@@ -75,18 +75,19 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "ivory",
+    backgroundColor: "#F3F3F3",
     alignItems: "center",
     flexDirection: "column",
   },
   primary: {
     fontSize: 16,
-    color: "#121481",
+    color: "#303841",
     textAlign: "center",
     paddingVertical: 30,
   },
   link: {
     fontSize: 16,
-    color: "orangered",
+    color: "#0099FF",
+    textDecorationLine: "underline",
   },
 });

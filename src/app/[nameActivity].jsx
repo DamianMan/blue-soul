@@ -41,12 +41,7 @@ function nameServiceDetail(props) {
     );
   };
   return (
-    <ScrollView
-      style={{
-        backgroundColor: "ivory",
-        flex: 1,
-      }}
-    >
+    <>
       <Stack.Screen
         options={{
           title: `${currentService.url.toUpperCase()}`,
@@ -57,163 +52,170 @@ function nameServiceDetail(props) {
             <Image
               source={require("../../assets/logo.png")}
               resizeMode="contain"
-              style={{ width: 50, height: 50 }}
+              style={{ width: 130, height: 130, position: "absolute" }}
             />
           ),
           headerTitleAlign: "center", // Center the logo
 
           headerStyle: {
-            backgroundColor: "lightblue",
+            backgroundColor: "#F3F3F3",
           },
-          headerTintColor: "#fff",
+          headerTintColor: "black",
           headerTitleStyle: {
             fontWeight: "bold",
           },
         }}
       />
-      <View
+      <ScrollView
         style={{
-          shadowColor: "#000",
-          shadowOffset: {
-            width: 0,
-            height: 3,
-          },
-          shadowOpacity: 0.57,
-          shadowRadius: 4.65,
-
-          elevation: 6,
+          backgroundColor: "#F3F3F3",
+          flex: 1,
         }}
       >
-        <Image
-          style={styles.imageBg}
-          resizeMode="cover"
-          source={{
-            uri: `${
-              params.nameActivity === "sports"
-                ? "https://blue-soul.de/wp-content/uploads/2021/01/Cat.png"
-                : params.nameActivity === "activities"
-                ? "https://blue-soul.de/wp-content/uploads/2021/01/Tauchen.png"
-                : "https://images.unsplash.com/photo-1598866594230-a7c12756260f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDV8fHxlbnwwfHx8fHw%3D"
-            }`,
-          }}
-        />
-        <BlurView intensity={60} tint="light" style={styles.introTitle}>
-          <Text style={styles.title}>{currentService.name}</Text>
-          <View
-            style={{
-              borderRadius: 100,
-              backgroundColor: "aliceblue",
-              padding: 10,
-              shadowColor: "darkblue",
-              shadowOffset: {
-                width: 1,
-                height: 3,
-              },
-              shadowOpacity: 0.65,
-              shadowRadius: 2.84,
-
-              elevation: 5,
-            }}
-          >
-            <MaterialCommunityIcons
-              name={`${
-                params.nameActivity === "sports"
-                  ? "surfing"
-                  : params.nameActivity === "activities"
-                  ? "diving-scuba-tank-multiple"
-                  : params.nameActivity === "foodDrink" && "food-fork-drink"
-              }`}
-              size={36}
-              color="orangered"
-            />
-          </View>
-        </BlurView>
-      </View>
-
-      <View style={styles.container}>
-        <FlatList
-          style={styles.imagesList}
-          horizontal
-          showsHorizontalScrollIndicator={false} // Hide the horizontal scroll bar
-          data={currentService.images}
-          renderItem={({ item }) => (
-            <ImageItem url={item} style={styles.imageContainer} />
-          )}
-          keyExtractor={(item) => item}
-        />
-      </View>
-      <View style={styles.subtitleView}>
-        <Text style={styles.subtitle}>{currentService.subTitle}</Text>
-      </View>
-      <Divider style={{ margin: 20 }} />
-      <View>
-        <Text style={styles.sectionText}>
-          You Could {params.nameActivity === "foodDrink" ? "Have" : "Do"}
-        </Text>
-        <FlatList
-          horizontal
-          style={styles.namesActivities}
-          showsHorizontalScrollIndicator={false} // Hide the horizontal scroll bar
-          data={
-            params.nameActivity !== "foodDrink"
-              ? currentService.namesActivities
-              : foodDrinkArray
-          }
-          renderItem={({ item }) => (
-            <Button
-              mode="elevated"
-              buttonColor="orangered"
-              textColor="#fff"
-              style={styles.sportsName}
-            >
-              {item}{" "}
-            </Button>
-          )}
-          keyExtractor={(item) => item}
-        />
-      </View>
-      <Divider style={{ margin: 20 }} />
-      <View>
-        <Text style={styles.sectionText}>What You Will Have From Us</Text>
-      </View>
-      <View style={styles.secondContainer}>
-        <Text
-          style={[styles.subtitle, { color: "aliceblue" }]}
-          numberOfLines={isHide}
-        >
-          {currentService.description}
-        </Text>
-
         <View
           style={{
-            justifyContent: "center",
-            alignItems: "center",
-            marginTop: 20,
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 3,
+            },
+            shadowOpacity: 0.57,
+            shadowRadius: 4.65,
+
+            elevation: 6,
           }}
         >
-          <Button
-            contentStyle={{
-              alignSelf: "center",
-              backgroundColor: "transparent",
+          <Image
+            style={styles.imageBg}
+            resizeMode="cover"
+            source={{
+              uri: `${
+                params.nameActivity === "sports"
+                  ? "https://blue-soul.de/wp-content/uploads/2021/01/Cat.png"
+                  : params.nameActivity === "activities"
+                  ? "https://blue-soul.de/wp-content/uploads/2021/01/Tauchen.png"
+                  : "https://images.unsplash.com/photo-1598866594230-a7c12756260f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDV8fHxlbnwwfHx8fHw%3D"
+              }`,
             }}
-            icon={"eye-circle"}
-            mode="elevated"
-            textColor="darkblue"
-            onPress={() => (isHide === 3 ? setIsHide(null) : setIsHide(3))}
-          >
-            See {isHide === null ? "Less" : "More"}
-          </Button>
+          />
+          <BlurView intensity={60} tint="light" style={styles.introTitle}>
+            <Text style={styles.title}>{currentService.name}</Text>
+            <View
+              style={{
+                borderRadius: 100,
+                backgroundColor: "aliceblue",
+                padding: 10,
+                shadowColor: "#3A4750",
+                shadowOffset: {
+                  width: 1,
+                  height: 3,
+                },
+                shadowOpacity: 0.65,
+                shadowRadius: 2.84,
+
+                elevation: 5,
+              }}
+            >
+              <MaterialCommunityIcons
+                name={`${
+                  params.nameActivity === "sports"
+                    ? "surfing"
+                    : params.nameActivity === "activities"
+                    ? "diving-scuba-tank-multiple"
+                    : params.nameActivity === "foodDrink" && "food-fork-drink"
+                }`}
+                size={36}
+                color="#2185D5"
+              />
+            </View>
+          </BlurView>
         </View>
-      </View>
-      <Divider style={{ margin: 20 }} />
 
-      <View style={styles.regards}>
-        <Text style={styles.enjoy}>HAVE FUN!</Text>
-        <Text style={styles.enjoy}>... AND ENJOY YOUR VISIT</Text>
+        <View style={styles.container}>
+          <FlatList
+            style={styles.imagesList}
+            horizontal
+            showsHorizontalScrollIndicator={false} // Hide the horizontal scroll bar
+            data={currentService.images}
+            renderItem={({ item }) => (
+              <ImageItem url={item} style={styles.imageContainer} />
+            )}
+            keyExtractor={(item) => item}
+          />
+        </View>
+        <View style={styles.subtitleView}>
+          <Text style={styles.subtitle}>{currentService.subTitle}</Text>
+        </View>
+        <Divider style={{ margin: 20 }} />
+        <View>
+          <Text style={styles.sectionText}>
+            You Could {params.nameActivity === "foodDrink" ? "Have" : "Do"}
+          </Text>
+          <FlatList
+            horizontal
+            style={styles.namesActivities}
+            showsHorizontalScrollIndicator={false} // Hide the horizontal scroll bar
+            data={
+              params.nameActivity !== "foodDrink"
+                ? currentService.namesActivities
+                : foodDrinkArray
+            }
+            renderItem={({ item }) => (
+              <Button
+                mode="elevated"
+                buttonColor="#2185D5"
+                textColor="#fff"
+                style={styles.sportsName}
+              >
+                {item}{" "}
+              </Button>
+            )}
+            keyExtractor={(item) => item}
+          />
+        </View>
+        <Divider style={{ margin: 20 }} />
+        <View>
+          <Text style={styles.sectionText}>What You Will Have From Us</Text>
+        </View>
+        <View style={styles.secondContainer}>
+          <Text
+            style={[styles.subtitle, { color: "#3A4750" }]}
+            numberOfLines={isHide}
+          >
+            {currentService.description}
+          </Text>
 
-        <Text style={styles.staff}>Blue Soul Staff</Text>
-      </View>
-    </ScrollView>
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: 20,
+            }}
+          >
+            <Button
+              contentStyle={{
+                alignSelf: "center",
+                backgroundColor: "transparent",
+              }}
+              icon={"eye-circle"}
+              mode="elevated"
+              textColor="#0066CC"
+              onPress={() => (isHide === 3 ? setIsHide(null) : setIsHide(3))}
+            >
+              See {isHide === null ? "Less" : "More"}
+            </Button>
+          </View>
+        </View>
+        <Divider style={{ margin: 20 }} />
+
+        <View style={styles.regards}>
+          <Text style={styles.enjoy}>HAVE FUN!</Text>
+          <Text style={styles.enjoy}>... AND ENJOY YOUR VISIT</Text>
+
+          <Text style={styles.staff}>Blue Soul Staff</Text>
+        </View>
+      </ScrollView>
+    </>
   );
 }
 
@@ -226,8 +228,8 @@ const styles = StyleSheet.create({
   secondContainer: {
     paddingTop: 20,
     borderRadius: 20,
-    backgroundColor: "lightseagreen",
-    shadowColor: "orangered",
+    backgroundColor: "#E4F1FE",
+    shadowColor: "#2185D5",
     shadowOffset: {
       width: 3,
       height: 1,
@@ -280,7 +282,7 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     borderRadius: 16,
     backgroundColor: "aliceblue",
-    shadowColor: "blue",
+    shadowColor: "#2185D5",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -301,7 +303,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 42,
-    color: "midnightblue",
+    color: "#303841",
     letterSpacing: 1,
     shadowColor: "#fff",
     shadowOffset: {
@@ -313,10 +315,10 @@ const styles = StyleSheet.create({
 
     elevation: 5,
   },
-  subtitle: { fontSize: 18, color: "aliceblue", paddingHorizontal: 20 },
+  subtitle: { fontSize: 18, color: "#393E46", paddingHorizontal: 20 },
   subtitleView: {
-    backgroundColor: "#050C9C",
-    shadowColor: "#000",
+    backgroundColor: "#E4F1FE",
+    shadowColor: "#2185D5",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -333,7 +335,7 @@ const styles = StyleSheet.create({
   sectionText: {
     textAlign: "left",
     fontSize: 20,
-    color: "midnightblue",
+    color: "#222831",
     paddingLeft: 20,
   },
   regards: {
@@ -344,10 +346,10 @@ const styles = StyleSheet.create({
   },
   enjoy: {
     fontSize: 20,
-    color: "orangered",
+    color: "#2185D5",
   },
   staff: {
-    color: "midnightblue",
+    color: "#3A4750",
     fontSize: 18,
   },
 });

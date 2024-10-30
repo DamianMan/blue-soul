@@ -45,7 +45,7 @@ const CustomCarousel = ({
     try {
       await axios
         .post(
-          "http://192.168.1.63:3000/api/deleteGroup",
+          "http://192.168.1.51:3000/api/deleteGroup",
           { id, email },
           { headers: { "Content-Type": "application/json" } }
         )

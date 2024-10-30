@@ -57,7 +57,7 @@ function SignUpModal({ isModalVisibile, toggleModal }) {
     try {
       await axios
         .post(
-          "http://192.168.1.63:3000/api/signUpUser",
+          "http://192.168.1.51:3000/api/signUpUser",
           { fullName, email, password },
           { headers: { "Content-Type": "application/json" } }
         )

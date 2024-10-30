@@ -33,7 +33,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: `http://192.168.1.63:8081`,
+    origin: `http://192.168.1.59:8081`,
     optionsSuccessStatus: 200,
     methods: ["GET", "POST"], // List the methods you want to allow
     credentials: true,

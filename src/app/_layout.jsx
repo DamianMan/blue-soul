@@ -49,7 +49,7 @@ export default function RootLayout() {
             headerTitleAlign: "center",
             headerShown: true,
             headerStyle: {
-              backgroundColor: "steelblue",
+              backgroundColor: "#2185D5",
             },
             headerTintColor: "#fff",
             headerTitleStyle: {
@@ -75,7 +75,7 @@ export default function RootLayout() {
             headerShown: true,
             headerRight: () => <LogoutBtn />,
             headerStyle: {
-              backgroundColor: "steelblue",
+              backgroundColor: "#2185D5",
             },
             headerTintColor: "#fff",
             headerTitleStyle: {
@@ -91,7 +91,7 @@ export default function RootLayout() {
 
             headerShown: true,
             headerStyle: {
-              backgroundColor: "steelblue",
+              backgroundColor: "#2185D5",
             },
             headerTintColor: "#fff",
             headerTitleStyle: {
@@ -109,7 +109,7 @@ export default function RootLayout() {
             headerShown: true,
             headerRight: () => <LogoutBtn />,
             headerStyle: {
-              backgroundColor: "steelblue",
+              backgroundColor: "#2185D5",
             },
             headerTintColor: "#fff",
             headerTitleStyle: {
@@ -126,7 +126,7 @@ export default function RootLayout() {
             headerShown: true,
             headerRight: () => <LogoutBtn />,
             headerStyle: {
-              backgroundColor: "steelblue",
+              backgroundColor: "#2185D5",
             },
             headerTintColor: "#fff",
             headerTitleStyle: {

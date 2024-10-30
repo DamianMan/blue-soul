@@ -66,10 +66,10 @@ export default function LoginForm(props) {
           <Icon
             name={email === "admin@mail.com" ? "lock" : "account"}
             size={30}
-            color="#ff5f00"
+            color="#0099FF"
           /> // Custom icon color
         )}
-        labelStyle={{ color: "#FF9F66", fontSize: 20 }}
+        labelStyle={{ color: "#0099FF", fontSize: 20 }}
         style={styles.iconLogin}
       >
         {email === "admin@mail.com" ? "ADMIN" : "USER"}
@@ -79,10 +79,10 @@ export default function LoginForm(props) {
         value={email}
         mode="outlined"
         keyboardType="email-address"
-        textColor="#ff5f00"
+        textColor="midnoghtblue"
         error={!isValid}
         autoCapitalize="none"
-        activeOutlineColor={"#121481"}
+        activeOutlineColor={"#2185D5"}
         onChangeText={handleEmail}
         style={styles.userInput}
       />
@@ -92,8 +92,8 @@ export default function LoginForm(props) {
         secureTextEntry={isHide}
         right={<TextInput.Icon icon="eye" onPress={() => setIsHide(!isHide)} />}
         mode="outlined"
-        textColor="#ff5f00"
-        activeOutlineColor="#121481"
+        textColor="midnoghtblue"
+        activeOutlineColor="#2185D5"
         autoCapitalize="none"
         onChangeText={handlePassword}
         style={styles.userInput}
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   submitBtn: {
-    backgroundColor: "#050C9C",
+    backgroundColor: "#0099FF",
     borderRadius: 3,
   },
 });
