@@ -82,7 +82,7 @@ function addNewGroup(props) {
         if (user) {
           await axios
             .post(
-              "http://192.168.1.63:3000/api/postGroup",
+              "http://192.168.1.59:3000/api/postGroup",
               {
                 name,
                 fullName,
@@ -129,7 +129,7 @@ function addNewGroup(props) {
     <View style={styles.container}>
       <Text
         style={{
-          color: "#121481",
+          color: "#303841",
           fontSize: 18,
           paddingBottom: 10,
           textAlign: "left",
@@ -143,8 +143,8 @@ function addNewGroup(props) {
           <TextInput
             value={infoGroup.name}
             mode="outlined"
-            textColor="#ff5f00"
-            activeOutlineColor="#121481"
+            textColor="#3A4750"
+            activeOutlineColor="#2185D5"
             autoCapitalize="none"
             label="Group Name"
             onChangeText={(text) => setInfoGroup({ ...infoGroup, name: text })}
@@ -153,8 +153,8 @@ function addNewGroup(props) {
           <TextInput
             value={infoGroup.fullName}
             mode="outlined"
-            textColor="#ff5f00"
-            activeOutlineColor="#121481"
+            textColor="#3A4750"
+            activeOutlineColor="#2185D5"
             label="Full Name Teacher In Charge"
             autoCapitalize="none"
             onChangeText={(text) =>
@@ -166,8 +166,8 @@ function addNewGroup(props) {
             value={infoGroup.email}
             mode="outlined"
             autoCapitalize="none"
-            textColor="#ff5f00"
-            activeOutlineColor="#121481"
+            textColor="#3A4750"
+            activeOutlineColor="#2185D5"
             label="Email"
             error={!isValidEmail}
             onChangeText={handleEmail}
@@ -177,8 +177,8 @@ function addNewGroup(props) {
           <TextInput
             value={infoGroup.city}
             mode="outlined"
-            textColor="#ff5f00"
-            activeOutlineColor="#121481"
+            textColor="#3A4750"
+            activeOutlineColor="#2185D5"
             label="City"
             onChangeText={(text) => setInfoGroup({ ...infoGroup, city: text })}
             style={styles.userInput}
@@ -187,8 +187,8 @@ function addNewGroup(props) {
             value={infoGroup.phone}
             autoCapitalize="none"
             mode="outlined"
-            textColor="#ff5f00"
-            activeOutlineColor="#121481"
+            textColor="#3A4750"
+            activeOutlineColor="#2185D5"
             label="Phone numer"
             placeholder="+49 69 1234 5678"
             onChangeText={(text) => setInfoGroup({ ...infoGroup, phone: text })}
@@ -198,12 +198,12 @@ function addNewGroup(props) {
             <Button
               icon={
                 infoGroup.token === ""
-                  ? () => <Icon name="barcode" size={30} color={"#121481"} />
+                  ? () => <Icon name="barcode" size={30} color={"aliceblue"} />
                   : null
               }
               mode="contained-total"
               labelStyle={{
-                color: "#121481",
+                color: "aliceblue",
                 fontSize: 14,
               }}
               onPress={handleToken}
@@ -216,11 +216,11 @@ function addNewGroup(props) {
           ) : (
             <Button
               icon={() => (
-                <MaterialIcons name="content-copy" size={24} color="#121481" />
+                <MaterialIcons name="content-copy" size={24} color="#2185D5" />
               )}
               mode="contained-total"
               labelStyle={{
-                color: "#121481",
+                color: "#2185D5",
                 fontSize: 14,
               }}
               style={styles.generateBtn}
@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingTop: 40,
-    backgroundColor: "ivory",
+    backgroundColor: "#F3F3F3",
   },
   copiedText: {
     marginTop: 10,
@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
     marginTop: "auto",
   },
   generateBtn: {
-    backgroundColor: "#ff5f00",
+    backgroundColor: "orangered",
     marginVertical: 5,
     borderRadius: 5,
     height: 50,

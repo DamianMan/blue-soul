@@ -50,7 +50,7 @@ function FoodDrinkNotifModal({ status, text }) {
         const email = user?.email;
         await axios
           .post(
-            "http://192.168.1.63:3000/api/postTripMeal",
+            "http://192.168.1.59:3000/api/postTripMeal",
             { userPicks, email },
             { headers: { "Content-Type": "application/json" } }
           )

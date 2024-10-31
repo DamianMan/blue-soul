@@ -42,7 +42,7 @@ function StudenInfoListItem({ data, toogleReload }) {
     try {
       await axios
         .post(
-          "http://192.168.1.51:3000/api/updateUser",
+          "http://192.168.1.59:3000/api/updateUser",
           {
             fullName,
             address,
@@ -83,6 +83,7 @@ function StudenInfoListItem({ data, toogleReload }) {
             <TextInput
               autoCapitalize="none"
               mode="outlined"
+              activeOutlineColor="#2185D5"
               placeholder={fullName}
               disabled={isDisabled}
               label={"Full Name"}
@@ -94,6 +95,7 @@ function StudenInfoListItem({ data, toogleReload }) {
             <TextInput
               autoCapitalize="none"
               mode="outlined"
+              activeOutlineColor="#2185D5"
               placeholder={data.email}
               disabled={isDisabled}
               label={"Email"}
@@ -105,6 +107,7 @@ function StudenInfoListItem({ data, toogleReload }) {
             <TextInput
               autoCapitalize="none"
               mode="outlined"
+              activeOutlineColor="#2185D5"
               placeholder={address}
               disabled={isDisabled}
               label={"Address"}
@@ -116,6 +119,7 @@ function StudenInfoListItem({ data, toogleReload }) {
             <TextInput
               autoCapitalize="none"
               mode="outlined"
+              activeOutlineColor="#2185D5"
               placeholder={city}
               disabled={isDisabled}
               label={"City"}
@@ -127,6 +131,7 @@ function StudenInfoListItem({ data, toogleReload }) {
             <TextInput
               autoCapitalize="none"
               mode="outlined"
+              activeOutlineColor="#2185D5"
               placeholder={phone}
               disabled={isDisabled}
               label={"Phone"}
@@ -138,6 +143,7 @@ function StudenInfoListItem({ data, toogleReload }) {
 
             <TextInput
               mode="outlined"
+              activeOutlineColor="#2185D5"
               autoCapitalize="none"
               placeholder={numDocument}
               disabled={isDisabled}
@@ -156,13 +162,14 @@ function StudenInfoListItem({ data, toogleReload }) {
                 <Text
                   style={{
                     textAlign: "start",
-                    color: "orangered",
+                    color: "#2185D5",
                     fontSize: 20,
                     paddingVertical: 10,
+                    fontWeight: "bold",
                   }}
                 >
                   Trip Food & Drink
-                  <AntDesign name="arrowdown" size={24} color="orangered" />
+                  <AntDesign name="arrowdown" size={24} color="#2185D5" />
                 </Text>
                 <FlatList
                   horizontal
@@ -226,10 +233,10 @@ function StudenInfoListItem({ data, toogleReload }) {
 
 const styles = StyleSheet.create({
   modalText: {
-    color: "darkblue",
+    color: "#303841",
   },
   input: {
-    color: "#0E46A3",
+    color: "#303841",
     marginVertical: 3,
 
     backgroundColor: "transparent",

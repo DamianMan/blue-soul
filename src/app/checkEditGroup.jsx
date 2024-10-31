@@ -111,7 +111,7 @@ function checkEditGroup(props) {
         <View>
           {group && (
             <View>
-              <Text style={[styles.titleText, { color: "orangered" }]}>
+              <Text style={[styles.titleText, { color: "#2185D5" }]}>
                 TEACHER
               </Text>
               <TeacherCardItem
@@ -150,7 +150,7 @@ function checkEditGroup(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "ivory",
+    backgroundColor: "#F3F3F3",
   },
   image: {
     height: height / 3,
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
   },
   group: {
     fontSize: 20,
-    color: "orangered",
+    color: "#2185D5",
   },
   divider: {
     marginHorizontal: 20,
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
   titleText: {
     textAlign: "center",
     fontSize: 20,
-    color: "midnightblue",
+    color: "#303841",
     letterSpacing: 1,
   },
 });

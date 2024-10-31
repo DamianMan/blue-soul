@@ -62,6 +62,7 @@ const styles = StyleSheet.create({
   centeredView: {
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#F3F3F3",
   },
   modalView: {
     marginTop: height / 10,
@@ -101,7 +102,7 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: "center",
-    color: "orangered",
+    color: "#2185D5",
     fontSize: 20,
   },
 });

@@ -45,8 +45,8 @@ function AdminPanel(props) {
       >
         <LinearGradient
           // Button Linear Gradient
-          colors={["#FF9F66", "#A7E6FF", "#4c669f"]}
-          start={{ x: 0.5, y: 0.1 }}
+          colors={["#8DC6FF", "#F3F3F3", "#2185D5"]}
+          start={{ x: 0.8, y: 0.3 }}
           style={styles.background}
         />
       </ImageBackground>
@@ -72,7 +72,7 @@ export default AdminPanel;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "ivory",
+    backgroundColor: "#F3F3F3",
   },
   background: {
     position: "absolute",

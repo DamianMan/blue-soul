@@ -17,13 +17,11 @@ import { ContextData } from "../context/ContextDataProvider";
 const { width } = Dimensions.get("window");
 
 const COLORS = [
-  "cornflowerblue",
-  "darkcyan",
-  "cadetblue",
-  "lemonchiffon",
   "lightblue",
-  "lightsalmon",
-  "mediumaquamarine",
+  "lightskyblue",
+  "lightsteelblue",
+  "lightgray",
+  "lightslategrey",
 ];
 
 const getRandomColor = () => {

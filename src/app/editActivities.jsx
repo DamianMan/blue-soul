@@ -173,7 +173,7 @@ function editActivities(props) {
       behavior={Platform.OS === "ios" ? "padding" : height}
       style={{ flex: 1 }}
     >
-      <ScrollView>
+      <ScrollView contentContainerStyle={{ backgroundColor: "#F3F3F3" }}>
         <ImageBackground
           style={styles.image}
           imageStyle={styles.image}
@@ -220,8 +220,8 @@ function editActivities(props) {
             <TextInput
               value={name}
               label={"Name"}
-              textColor="#ff5f00"
-              activeOutlineColor="#121481"
+              textColor="#303841"
+              activeOutlineColor="#2185D5"
               autoCapitalize="none"
               onChangeText={(text) => setName(text)}
               mode="outlined"
@@ -231,8 +231,8 @@ function editActivities(props) {
             <TextInput
               value={subtitle}
               label={"Subtitle"}
-              textColor="#ff5f00"
-              activeOutlineColor="#121481"
+              textColor="#303841"
+              activeOutlineColor="#2185D5"
               autoCapitalize="none"
               onChangeText={(text) => setSubtitle(text)}
               mode="outlined"
@@ -242,8 +242,8 @@ function editActivities(props) {
             <TextInput
               value={description}
               label={"Description"}
-              textColor="#ff5f00"
-              activeOutlineColor="#121481"
+              textColor="#303841"
+              activeOutlineColor="#2185D5"
               autoCapitalize="none"
               onChangeText={(text) => setDescription(text)}
               mode="outlined"
@@ -291,8 +291,8 @@ function editActivities(props) {
                   <TextInput
                     value={newActivity}
                     label={`New ${name} To Add`}
-                    textColor="#ff5f00"
-                    activeOutlineColor="#121481"
+                    textColor="#303841"
+                    activeOutlineColor="#2185D5"
                     autoCapitalize="none"
                     onChangeText={(text) => setNewActivity(text)}
                     mode="outlined"
@@ -325,8 +325,8 @@ function editActivities(props) {
                   <TextInput
                     value={newFood}
                     label={`New Food To Add`}
-                    textColor="#ff5f00"
-                    activeOutlineColor="#121481"
+                    textColor="#303841"
+                    activeOutlineColor="#2185D5"
                     autoCapitalize="none"
                     onChangeText={(text) => setNewFood(text)}
                     mode="outlined"
@@ -359,8 +359,8 @@ function editActivities(props) {
                   <TextInput
                     value={newDrinks}
                     label={`New Drink To Add`}
-                    textColor="#ff5f00"
-                    activeOutlineColor="#121481"
+                    textColor="#303841"
+                    activeOutlineColor="#2185D5"
                     autoCapitalize="none"
                     onChangeText={(text) => setNewDrinks(text)}
                     mode="outlined"
@@ -408,7 +408,7 @@ const styles = StyleSheet.create({
 
   activity: {
     fontSize: 20,
-    color: "orangered",
+    color: "#2185D5",
   },
   submitBtn: {
     backgroundColor: "#3572EF",
@@ -428,7 +428,7 @@ const styles = StyleSheet.create({
   namesServiceView: {
     marginBottom: 20,
   },
-  titleNamesActivity: { marginLeft: 25, color: "#121481" },
+  titleNamesActivity: { marginLeft: 25, color: "#2185D5" },
   activityTitle: {
     fontSize: 22,
     color: "#3FA2F6",
@@ -461,7 +461,7 @@ const styles = StyleSheet.create({
   titleText: {
     textAlign: "center",
     fontSize: 20,
-    color: "midnightblue",
+    color: "#303841",
     letterSpacing: 1,
   },
   userInput: {
@@ -486,7 +486,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     borderRadius: 5,
   },
-  imagesTitle: { color: "#121481", paddingLeft: 5 },
+  imagesTitle: { color: "#2185D5", paddingLeft: 5 },
 });
 
 export default editActivities;

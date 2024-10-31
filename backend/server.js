@@ -12,7 +12,8 @@ const admin = require("firebase-admin");
 
 require("dotenv").config({ path: "../.env" });
 
-const serviceAccount = JSON.parse(process.env.FIREBASE_ADMIN_SDK);
+// JSON.parse(process.env.FIREBASE_ADMIN_SDK)
+const serviceAccount = require("../blue-soul-9434a-firebase-adminsdk-yau4q-0a78a8df74.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -516,8 +517,9 @@ app.post("/api/sendNotifications", async (req, res) => {
     (item) => item.pushToken !== undefined
   ).length;
   console.log("User for notification", numOfUSers);
-  if (numOfUSers > 0) {
-    if (usersFilteredPerGroup.length > 0) {
+  if (usersFilteredPerGroup.length > 0) {
+    if (numOfUSers > 0) {
+      console.log("Sendig Notification!!!");
       usersFilteredPerGroup.forEach(async (item) => {
         if (item.pushToken) {
           const body = {

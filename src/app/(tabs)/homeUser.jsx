@@ -105,7 +105,7 @@ export default function MyCarousel() {
     try {
       await axios
         .post(
-          "http://192.168.1.53:3000/api/postToken",
+          "http://192.168.1.59:3000/api/postToken",
           { token, userEmail },
           { headers: { "Content-Type": "application/json" } }
         )

@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   text: {
-    color: "#E85C0D",
+    color: "#0077C0",
     fontWeight: "bold",
     textShadowColor: "#000",
     textShadowColor: "#000",

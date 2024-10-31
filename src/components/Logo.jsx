@@ -20,13 +20,17 @@ function Logo(props) {
     >
       <ImageBackground
         resizeMode="cover"
-        source={require("../../assets/bluesoul-logo.png")}
+        source={{
+          uri: "https://images.unsplash.com/photo-1551506448-074afa034c05?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDE0fHx8ZW58MHx8fHx8",
+        }}
         style={[styles.background, width]}
       />
       <View style={styles.container}>
         <ImageBackground
           style={styles.tinyLogo}
-          source={require("../../assets/bluesoul-logo.png")}
+          source={{
+            uri: "https://images.unsplash.com/photo-1551506448-074afa034c05?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDE0fHx8ZW58MHx8fHx8",
+          }}
           resizeMode="cover"
         >
           <ImageBackground

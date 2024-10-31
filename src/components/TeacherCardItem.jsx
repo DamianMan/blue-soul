@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
   teacherView: {
     padding: 10,
     backgroundColor: "#3FA2F6",
-    shadowColor: "orangered",
+    shadowColor: "#3A4750",
     shadowOffset: {
       width: 0,
       height: 7,
