@@ -12,8 +12,8 @@ const admin = require("firebase-admin");
 
 require("dotenv").config({ path: "../.env" });
 
-// JSON.parse(process.env.FIREBASE_ADMIN_SDK)
-const serviceAccount = require("../blue-soul-9434a-firebase-adminsdk-yau4q-0a78a8df74.json");
+// require("../blue-soul-9434a-firebase-adminsdk-yau4q-0a78a8df74.json")
+const serviceAccount = JSON.parse(process.env.FIREBASE_ADMIN_SDK);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -34,7 +34,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: `http://192.168.1.59:8081`,
+    origin: `*`,
     optionsSuccessStatus: 200,
     methods: ["GET", "POST"], // List the methods you want to allow
     credentials: true,

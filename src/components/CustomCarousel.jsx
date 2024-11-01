@@ -43,7 +43,7 @@ const CustomCarousel = ({
     try {
       await axios
         .post(
-          "http://192.168.1.51:3000/api/deleteGroup",
+          "https://blue-soul-app.onrender.com/api/deleteGroup",
           { id, email },
           { headers: { "Content-Type": "application/json" } }
         )

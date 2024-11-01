@@ -105,7 +105,7 @@ export default function MyCarousel() {
     try {
       await axios
         .post(
-          "http://192.168.1.59:3000/api/postToken",
+          "https://blue-soul-app.onrender.com/api/postToken",
           { token, userEmail },
           { headers: { "Content-Type": "application/json" } }
         )

@@ -70,7 +70,7 @@ function profileUser(props) {
     try {
       await axios
         .post(
-          "http://192.168.1.51:3000/api/updateUser",
+          "https://blue-soul-app.onrender.com/api/updateUser",
           {
             fullName: user?.displayName,
             address,

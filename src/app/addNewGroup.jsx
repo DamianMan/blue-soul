@@ -82,7 +82,7 @@ function addNewGroup(props) {
         if (user) {
           await axios
             .post(
-              "http://192.168.1.59:3000/api/postGroup",
+              "https://blue-soul-app.onrender.com/api/postGroup",
               {
                 name,
                 fullName,

@@ -57,7 +57,7 @@ function SignUpModal({ isModalVisibile, toggleModal }) {
     try {
       await axios
         .post(
-          "http://192.168.1.51:3000/api/signUpUser",
+          "https://blue-soul-app.onrender.com/api/signUpUser",
           { fullName, email, password },
           { headers: { "Content-Type": "application/json" } }
         )

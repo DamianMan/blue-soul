@@ -45,7 +45,7 @@ function pushNotifications(props) {
     try {
       await axios
         .post(
-          "http://192.168.1.59:3000/api/sendNotifications",
+          "https://blue-soul-app.onrender.com/api/sendNotifications",
           { title, groupToken, message, isNotification },
           { headers: { "Content-Type": "application/json" } }
         )

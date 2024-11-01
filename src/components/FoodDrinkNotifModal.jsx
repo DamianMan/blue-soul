@@ -50,7 +50,7 @@ function FoodDrinkNotifModal({ status, text }) {
         const email = user?.email;
         await axios
           .post(
-            "http://192.168.1.59:3000/api/postTripMeal",
+            "https://blue-soul-app.onrender.com/api/postTripMeal",
             { userPicks, email },
             { headers: { "Content-Type": "application/json" } }
           )

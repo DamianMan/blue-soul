@@ -82,7 +82,7 @@ function editActivities(props) {
     try {
       await axios
         .post(
-          "http://192.168.1.51:3000/api/editService",
+          "https://blue-soul-app.onrender.com/api/editService",
           {
             id,
             name,
@@ -122,7 +122,7 @@ function editActivities(props) {
     try {
       await axios
         .post(
-          "http://192.168.1.51:3000/api/deleteImage",
+          "https://blue-soul-app.onrender.com/api/deleteImage",
           { idService, imageUrl },
           { headers: { "Content-Type": "application/json" } }
         )
@@ -142,7 +142,7 @@ function editActivities(props) {
     try {
       await axios
         .post(
-          "http://192.168.1.51:3000/api/deleteNameService",
+          "https://blue-soul-app.onrender.com/api/deleteNameService",
           { idService, newActivity, food, drink },
           { headers: { "Content-Type": "application/json" } }
         )
