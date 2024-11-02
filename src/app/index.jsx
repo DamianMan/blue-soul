@@ -23,6 +23,8 @@ export default function App() {
   const toggleModal = (item) => {
     setIsModalVisible((item) => !item);
   };
+  console.log("Google Services JSON:", process.env.GOOGLE_SERVICES_JSON);
+
   return (
     <View style={styles.container}>
       <PaperProvider>
@@ -44,7 +46,7 @@ export default function App() {
             </Text>
             <Divider
               style={{
-                backgroundColor: "#2185D5",
+                backgroundColor: "#0099FF",
                 marginHorizontal: 30,
                 marginBottom: Platform.OS === "ios" && 20,
               }}

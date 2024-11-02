@@ -38,5 +38,6 @@ yarn-error.*
 
 #Google Server FCM Key
 blue-soul-9434a-firebase-adminsdk-yau4q-0a78a8df74.json
+./android/app/google-services.json
 google-services.json
 GoogleService-Info.plist

@@ -20,7 +20,11 @@ function SocialView(props) {
               key={item.name}
               mode="contained"
               icon={({ size, color }) => (
-                <Icon name={item.name} size={30} color="#303841" /> // Custom icon color
+                <Icon
+                  name={item.name}
+                  size={30}
+                  color={item.name === "instagram" ? "#ec0075" : "#0099FF"}
+                /> // Custom icon color
               )}
               labelStyle={{
                 color: "#FF9F66",
@@ -46,5 +50,14 @@ const styles = StyleSheet.create({
   },
   socialIcon: {
     backgroundColor: "transparent",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.32,
+    shadowRadius: 5.46,
+
+    elevation: 9,
   },
 });

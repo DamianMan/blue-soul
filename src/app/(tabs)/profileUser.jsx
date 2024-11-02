@@ -105,7 +105,7 @@ function profileUser(props) {
       <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
         <ImageBackground
           source={{
-            uri: "https://images.unsplash.com/photo-1516149893016-813d9a01d5d3?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            uri: "https://plus.unsplash.com/premium_photo-1683865775275-a576c7588bc8?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cHJvZmlsZSUyMHVzZXJ8ZW58MHx8MHx8fDA%3D",
           }}
           style={styles.background}
           resizeMode="cover"
@@ -116,7 +116,7 @@ function profileUser(props) {
               style={{
                 justifyContent: "flex-start",
                 alignItems: "flex-start",
-                padding: 20,
+                padding: 30,
               }}
             >
               <Text style={styles.title}>Registration</Text>
@@ -286,16 +286,12 @@ export default profileUser;
 const styles = StyleSheet.create({
   background: {
     position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    flex: 1,
+
     justifyContent: "center",
     alignItems: "center",
     width: width,
     height: height,
-    opacity: 0.6,
+    opacity: 0.3,
   },
   title: {
     fontSize: 20,
@@ -311,7 +307,7 @@ const styles = StyleSheet.create({
     textAlign: "start",
   },
   submitBtn: {
-    backgroundColor: "#0099FF",
+    backgroundColor: "#48CFCB",
     elevation: 5,
     textShadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },

@@ -129,11 +129,12 @@ function addNewGroup(props) {
     <View style={styles.container}>
       <Text
         style={{
-          color: "#303841",
+          color: "#2185D5",
           fontSize: 18,
           paddingBottom: 10,
           textAlign: "left",
           paddingRight: 20,
+          fontWeight: "bold",
         }}
       >
         Please fill all the fields with the info group
@@ -276,16 +277,8 @@ const styles = StyleSheet.create({
   userInput: {
     width: (width * 90) / 100,
     borderRadius: 10,
-    backgroundColor: "#fff",
-    shadowColor: "#3572EF",
-    shadowOffset: {
-      width: 3,
-      height: 2,
-    },
-    shadowOpacity: 0.4,
-    shadowRadius: 1.65,
+    backgroundColor: "#EEEEEE",
 
-    elevation: 2,
     marginBottom: 5,
   },
   submitBtn: {

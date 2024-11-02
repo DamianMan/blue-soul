@@ -112,7 +112,7 @@ function SignUpModal({ isModalVisibile, toggleModal }) {
           resizeMode="cover"
           style={styles.background}
           source={{
-            uri: "https://images.unsplash.com/photo-1687042268541-5cc60ad9d3de?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDF8fHxlbnwwfHx8fHw%3D",
+            uri: "https://img.freepik.com/free-photo/blue-user-icon-symbol-website-admin-social-login-element-concept-white-background-3d-rendering_56104-1217.jpg?ga=GA1.1.609292962.1726606020&semt=ais_hybrid",
           }}
         ></ImageBackground>
         <Pressable style={{ alignItems: "flex-end" }} onPress={handleToggle}>
@@ -128,7 +128,7 @@ function SignUpModal({ isModalVisibile, toggleModal }) {
                 <FontAwesome
                   name="user-circle-o"
                   size={24}
-                  color="orangered"
+                  color="#48CFCB"
                   style={{ alignSelf: "center" }}
                 />
 
@@ -205,7 +205,7 @@ function SignUpModal({ isModalVisibile, toggleModal }) {
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
-    backgroundColor: "ivory",
+    backgroundColor: "aliceblue",
   },
   background: {
     width: width,
@@ -214,6 +214,7 @@ const styles = StyleSheet.create({
   userInput: {
     width: (width * 90) / 100,
     borderRadius: 10,
+    backgroundColor: "#fff",
   },
   formContainer: {
     justifyContent: "center",
@@ -257,7 +258,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: "center",
     fontSize: 20,
-    color: "#0B2F9F",
+    color: "#303841",
   },
 });
 

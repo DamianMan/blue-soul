@@ -58,7 +58,7 @@ function nameServiceDetail(props) {
           headerTitleAlign: "center", // Center the logo
 
           headerStyle: {
-            backgroundColor: "#F3F3F3",
+            backgroundColor: "aliceblue",
           },
           headerTintColor: "black",
           headerTitleStyle: {

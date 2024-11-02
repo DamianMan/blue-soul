@@ -23,7 +23,7 @@ export default function TabsLayout() {
           title: "Home Page",
           tabBarStyle: { backgroundColor: "#2185D5" },
           headerStyle: {
-            backgroundColor: "#F3F3F3",
+            backgroundColor: "aliceblue",
           },
           headerTitle: (props) => (
             <Image
@@ -45,7 +45,7 @@ export default function TabsLayout() {
         options={{
           title: user?.displayName || "Profile",
           headerStyle: {
-            backgroundColor: "#F3F3F3",
+            backgroundColor: "aliceblue",
           },
           tabBarStyle: { backgroundColor: "#2185D5" },
 
