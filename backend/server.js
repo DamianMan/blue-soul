@@ -481,7 +481,7 @@ app.post("/api/postToken", async (req, res) => {
   const { token, userEmail } = req.body;
   const currentUser = await Users.findOne({ email: userEmail });
   try {
-    if (currentUser.pushToken !== undefined) {
+    if (currentUser.pushToken === undefined) {
       try {
         const query = {
           email: userEmail,
