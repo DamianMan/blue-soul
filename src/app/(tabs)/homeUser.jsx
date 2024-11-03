@@ -5,6 +5,7 @@ import {
   Dimensions,
   Platform,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import auth from "@react-native-firebase/auth";
 import Animated, {
@@ -35,11 +36,10 @@ const { width } = Dimensions.get("window");
 const HeightIMG = 300;
 
 export default function MyCarousel() {
-  const { services, users, getUsers } = useContext(ContextData);
+  const { services, users, getUsers, loading } = useContext(ContextData);
   const user = auth().currentUser;
   const scrollRef = useAnimatedRef();
   const [isNotification, setIsNotification] = useState();
-
   useEffect(() => {
     const loadUsers = async () => {
       await getUsers();
@@ -67,9 +67,10 @@ export default function MyCarousel() {
   const responseListener = useRef();
   const { getNotificationStatus } = useContext(ContextData);
   useEffect(() => {
-    registerForPushNotificationsAsync().then(
-      (token) => token && setExpoPushToken(token)
-    );
+    registerForPushNotificationsAsync().then((token) => {
+      token && setExpoPushToken(token);
+      submitPushToken(token);
+    });
 
     if (Platform.OS === "android") {
       Notifications.getNotificationChannelsAsync().then((value) =>
@@ -157,8 +158,6 @@ export default function MyCarousel() {
             projectId,
           })
         ).data;
-
-        submitPushToken(token);
       } catch (e) {
         token = `${e}`;
       }
@@ -232,16 +231,20 @@ export default function MyCarousel() {
             Fun 🤩!
           </Text>
         </View>
-        {services.map((item) => (
-          <InfoUserCardItem
-            key={item.name}
-            src={item.images[0]}
-            title={item.name}
-            nameActivity={item.url}
-            text={item.subTitle}
-            description={item.description}
-          />
-        ))}
+        {loading ? (
+          <ActivityIndicator size="large" color={"#2185D5"} />
+        ) : (
+          services.map((item) => (
+            <InfoUserCardItem
+              key={item.name}
+              src={item.images[0]}
+              title={item.name}
+              nameActivity={item.url}
+              text={item.subTitle}
+              description={item.description}
+            />
+          ))
+        )}
         {isNotification && (
           <FoodDrinkNotifModal
             status={isNotification}

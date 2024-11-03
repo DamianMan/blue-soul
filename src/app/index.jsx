@@ -23,7 +23,6 @@ export default function App() {
   const toggleModal = (item) => {
     setIsModalVisible((item) => !item);
   };
-  console.log("Google Services JSON:", process.env.GOOGLE_SERVICES_JSON);
 
   return (
     <View style={styles.container}>

@@ -30,7 +30,6 @@ function checkEditGroup(props) {
   useEffect(() => {
     setLoading(true);
     const loadingData = async () => {
-      setLoading(true);
       try {
         await getUsers();
         await getGroups();
@@ -38,7 +37,6 @@ function checkEditGroup(props) {
       } catch (error) {
         console.error("Error loading data:", error);
       } finally {
-        setLoading(false);
       }
     };
     loadingData();
@@ -106,7 +104,7 @@ function checkEditGroup(props) {
       />
 
       {loading ? (
-        <ActivityIndicator size={"large"} />
+        <ActivityIndicator size={"large"} color={"#2185D5"} />
       ) : (
         <View>
           {group && (

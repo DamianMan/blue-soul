@@ -8,6 +8,7 @@ function ContextDataProvider({ children }) {
   const [services, setServices] = useState([]);
   const [groups, setGroups] = useState([]);
   const [isNotification, setIsNotfication] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     // Get Services
@@ -52,11 +53,13 @@ function ContextDataProvider({ children }) {
   };
   // Get Services
   const getServices = async () => {
+    setLoading((prev) => !prev);
     try {
       await axios
         .get("https://blue-soul-app.onrender.com/api/getServices")
         .then((res) => {
           setServices(res.data);
+          setLoading((prev) => !prev);
         })
         .catch((err) => {
           console.log("Error Responding Data:", err);

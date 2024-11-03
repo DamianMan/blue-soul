@@ -5,7 +5,7 @@ export default {
     scheme: "BlueSoul-App",
     version: "1.0.0",
     orientation: "portrait",
-    icon: "./assets/logo.png",
+    icon: "./assets/icon.png",
     userInterfaceStyle: "light",
     splash: {
       image: "./assets/logo.png",
