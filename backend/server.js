@@ -494,11 +494,6 @@ app.post("/api/postToken", async (req, res) => {
       } catch (error) {
         res.json({ message: error, status: "Error" });
       }
-    } else {
-      res.json({
-        message: "User Push Token Already Stored",
-        status: "Error",
-      });
     }
   } catch (err) {
     res.json({
