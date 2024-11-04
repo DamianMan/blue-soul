@@ -479,9 +479,10 @@ app.post("/api/deleteNameService", async (req, res) => {
 // Post User Device Push Token
 app.post("/api/postToken", async (req, res) => {
   const { token, userEmail } = req.body;
-  const currentUser = await Users.findOne({ email: userEmail });
   try {
-    if (currentUser.pushToken === undefined) {
+    const currentUser = await Users.findOne({ email: userEmail });
+
+    if (currentUser) {
       try {
         const query = {
           email: userEmail,

@@ -30,12 +30,12 @@ export default function RootLayout() {
     const inAuthGroup = segments[0] === "(tabs)";
     if (user) {
       if (user.email === "admin@mail.com") {
-        router.replace("/admin");
+        router.navigate("/admin");
       } else {
-        router.replace("/homeUser");
+        router.navigate("/homeUser");
       }
     } else {
-      router.replace("/");
+      router.navigate("/");
     }
   }, [user, initializing]);
   return (

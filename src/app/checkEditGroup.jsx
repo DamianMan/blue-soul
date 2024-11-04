@@ -15,6 +15,7 @@ import { ContextData } from "../context/ContextDataProvider";
 import CustomCarousel from "../components/CustomCarousel";
 import { Divider } from "react-native-paper";
 import StudentChipItem from "../components/StudentChipItem";
+import PdfButton from "../components/PdfButton";
 
 const { height } = Dimensions.get("window");
 
@@ -37,6 +38,7 @@ function checkEditGroup(props) {
       } catch (error) {
         console.error("Error loading data:", error);
       } finally {
+        setLoading(false);
       }
     };
     loadingData();
@@ -122,22 +124,25 @@ function checkEditGroup(props) {
             </View>
           )}
           {user.length > 0 && (
-            <View style={{ paddingVertical: 30 }}>
-              <Divider style={styles.divider} />
-              <Text style={[styles.titleText, { paddingBottom: 20 }]}>
-                STUDENTS
-              </Text>
-              {user.map(
-                (item) =>
-                  item.role === "Student" && (
-                    <StudentChipItem
-                      toogleReload={toogleReload}
-                      key={item.tokenGroup + item.fullName}
-                      data={item}
-                    />
-                  )
-              )}
-            </View>
+            <>
+              <View style={{ paddingVertical: 30 }}>
+                <Divider style={styles.divider} />
+                <Text style={[styles.titleText, { paddingBottom: 20 }]}>
+                  STUDENTS
+                </Text>
+                {user.map(
+                  (item) =>
+                    item.role === "Student" && (
+                      <StudentChipItem
+                        toogleReload={toogleReload}
+                        key={item.tokenGroup + item.fullName}
+                        data={item}
+                      />
+                    )
+                )}
+              </View>
+              <PdfButton currentUsers={user} />
+            </>
           )}
         </View>
       )}
