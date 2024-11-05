@@ -12,7 +12,7 @@ const admin = require("firebase-admin");
 
 require("dotenv").config({ path: "../.env" });
 // require("../blue-soul-9434a-firebase-adminsdk-yau4q-0a78a8df74.json")
-const serviceAccount = process.env.GOOGLE_SERVICES_JSON;
+const serviceAccount = process.env.FIREBASE_ADMIN_SDK;
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
