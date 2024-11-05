@@ -17,7 +17,7 @@ function StudentChipItem({ data, toogleReload }) {
       style={{
         justifyContent: "center",
         alignItems: "center",
-        marginVertical: 5,
+        margin: 20,
       }}
     >
       <Pressable onPress={toggleModal} style={styles.chip}>
@@ -26,7 +26,7 @@ function StudentChipItem({ data, toogleReload }) {
             name="account"
             size={24}
             color="#3FA2F6"
-            style={{ marginRight: 30 }}
+            style={{ marginRight: 10 }}
           />
 
           <Text style={styles.chipText}>{data.fullName}</Text>
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     flexDirection: "row",
-    width: (width * 85) / 100,
+    width: (width * 65) / 100,
     padding: 5,
     paddingHorizontal: 10,
     borderRadius: 10,

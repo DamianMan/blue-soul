@@ -24,11 +24,14 @@ function ContextDataProvider({ children }) {
 
   // Get All Groups
   const getGroups = async () => {
+    setLoading(!loading);
     try {
       await axios
         .get("https://blue-soul-app.onrender.com/api/getAllGroups")
         .then((res) => {
           setGroups(res.data);
+          console.log("Render context GROUPS");
+          setLoading(!loading);
         })
         .catch((err) => {
           console.log("Error Responding All Groups:", err);
@@ -40,11 +43,15 @@ function ContextDataProvider({ children }) {
   // Get All Users
 
   const getUsers = async () => {
+    setLoading(!loading);
+
     try {
       await axios
         .get("https://blue-soul-app.onrender.com/api/getUsers")
         .then((res) => {
           setUsers(res.data);
+          console.log("Render context USERS");
+          setLoading(!loading);
         })
         .catch((err) => console.log("Error Getting Response All Users:", err));
     } catch (error) {

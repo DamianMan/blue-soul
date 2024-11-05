@@ -20,8 +20,8 @@ import PdfButton from "../components/PdfButton";
 const { height } = Dimensions.get("window");
 
 function checkEditGroup(props) {
-  const { getUsers, getGroups, users, groups } = useContext(ContextData);
-  const [loading, setLoading] = useState(false);
+  const { getUsers, getGroups, users, groups, loading } =
+    useContext(ContextData);
   const [group, setGroup] = useState();
   const [user, setUser] = useState([]);
   const [groupToken, setGroupToken] = useState("");
@@ -29,16 +29,13 @@ function checkEditGroup(props) {
 
   // Get All Groups
   useEffect(() => {
-    setLoading(true);
     const loadingData = async () => {
       try {
         await getUsers();
         await getGroups();
-        console.log("Users and groups loaded");
       } catch (error) {
         console.error("Error loading data:", error);
       } finally {
-        setLoading(false);
       }
     };
     loadingData();
@@ -70,7 +67,6 @@ function checkEditGroup(props) {
     } else {
       alert("No Users Found");
     }
-    setLoading(false);
   };
   return (
     <ScrollView style={styles.container}>
@@ -102,7 +98,6 @@ function checkEditGroup(props) {
         handlePress={handlePress}
         setTeacher={setGroup}
         setUsers={setUser}
-        setLoading={setLoading}
       />
 
       {loading ? (
@@ -125,12 +120,26 @@ function checkEditGroup(props) {
           )}
           {user.length > 0 && (
             <>
-              <View style={{ paddingVertical: 30 }}>
+              <View style={{ paddingVertical: 10 }}>
                 <Divider style={styles.divider} />
                 <Text style={[styles.titleText, { paddingBottom: 20 }]}>
                   STUDENTS
                 </Text>
-                {user.map(
+                <FlatList
+                  horizontal
+                  data={user}
+                  renderItem={({ item }) =>
+                    item.role == "Student" && (
+                      <StudentChipItem
+                        toogleReload={toogleReload}
+                        key={item.tokenGroup + item.fullName}
+                        data={item}
+                      />
+                    )
+                  }
+                  keyExtractor={(item) => item._id}
+                />
+                {/* {user.map(
                   (item) =>
                     item.role === "Student" && (
                       <StudentChipItem
@@ -139,7 +148,7 @@ function checkEditGroup(props) {
                         data={item}
                       />
                     )
-                )}
+                )} */}
               </View>
               <PdfButton currentUsers={user} />
             </>

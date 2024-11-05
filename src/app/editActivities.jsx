@@ -89,6 +89,9 @@ function editActivities(props) {
             subtitle,
             description,
             images,
+            food,
+            drinks,
+            activities,
             newFood,
             newDrinks,
             newActivity,
@@ -97,7 +100,7 @@ function editActivities(props) {
         )
         .then((res) => {
           Alert.alert(res.data.status, res.data.message);
-          if (name !== "Food & Drink") {
+          if (newActivity !== "") {
             addItem(setActivities, newActivity);
             setNewActivity("");
           } else {

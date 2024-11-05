@@ -29,13 +29,7 @@ const getRandomColor = () => {
   return COLORS[randomColor];
 };
 
-const CustomCarousel = ({
-  data,
-  handlePress,
-  setTeacher,
-  setUsers,
-  setLoading,
-}) => {
+const CustomCarousel = ({ data, handlePress, setTeacher, setUsers }) => {
   const { removeItemComplexArray } = useContext(ContextData);
   const [group, setGroup] = useState(data);
 
@@ -72,7 +66,6 @@ const CustomCarousel = ({
         mode={group.length > 1 ? "parallax" : "default"}
         withAnimation={{ type: "spring", config: 10000 }}
         onSnapToItem={(item) => {
-          setLoading(true);
           handlePress(group[item].tokenGroup);
         }}
         renderItem={({ item, index }) => (
@@ -92,7 +85,6 @@ const CustomCarousel = ({
               elevation: 5,
             }}
             onPress={() => {
-              setLoading(true);
               handlePress(item.tokenGroup);
             }}
           >

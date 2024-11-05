@@ -65,7 +65,7 @@ function PdfButton({ currentUsers }) {
       const { filePath } = await RNHTMLtoPDF.convert({
         html: htmlContent,
         fileName: "users_info",
-        directory: Platform.OS === "android" ? dir : "Documents",
+        directory: Platform.OS === "android" ? "Dowloads" : "Documents",
       });
 
       Alert.alert("PDF created at:", filePath);

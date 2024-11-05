@@ -13,7 +13,7 @@ const admin = require("firebase-admin");
 require("dotenv").config({ path: "../.env" });
 
 // require("../blue-soul-9434a-firebase-adminsdk-yau4q-0a78a8df74.json")
-const serviceAccount = JSON.parse(process.env.FIREBASE_ADMIN_SDK);
+const serviceAccount = require("../blue-soul-9434a-firebase-adminsdk-yau4q-0a78a8df74.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -321,6 +321,9 @@ app.post("/api/editService", async (req, res) => {
     subtitle,
     description,
     images,
+    food,
+    drinks,
+    activities,
     newActivity,
     newFood,
     newDrinks,
@@ -328,72 +331,114 @@ app.post("/api/editService", async (req, res) => {
   const query = {
     _id: id,
   };
-  console.log(newActivity, newFood, newDrinks);
+  console.log("New acitivity", name);
   try {
-    if (newActivity !== "") {
-      await Services.findOneAndUpdate(
-        query,
-        {
-          $set: {
-            name,
-            subTitle: subtitle,
-            description,
-            images,
+    if (name !== "Food & Drink") {
+      if (newActivity !== "") {
+        await Services.findOneAndUpdate(
+          query,
+          {
+            $set: {
+              name,
+              subTitle: subtitle,
+              description,
+              images,
+            },
+            $push: { namesActivities: newActivity },
           },
-          $push: { namesActivities: newActivity },
-        },
-        { new: true }
-      );
-      res.json({ message: "Service Updated Successfully", status: "Succes" });
-    } else if (newFood !== "" && newDrinks !== "") {
-      console.log("Triggered Food");
-      await Services.findOneAndUpdate(
-        query,
-        {
-          $set: {
-            name,
-            subTitle: subtitle,
-            description,
-            images,
+          { new: true }
+        );
+        res.json({ message: "Service Updated Successfully", status: "Succes" });
+      } else if (newActivity === "") {
+        await Services.findOneAndUpdate(
+          query,
+          {
+            $set: {
+              name,
+              subTitle: subtitle,
+              description,
+              images,
+              namesActivities: activities,
+            },
           },
-          $push: { foods: newFood, drinks: newDrinks },
-        },
-        { new: true }
-      );
-      res.json({ message: "Service Updated Successfully", status: "Succes" });
-    } else if (newDrinks !== "") {
-      console.log("Triggered Drink");
-      await Services.findOneAndUpdate(
-        query,
-        {
-          $set: {
-            name,
-            subTitle: subtitle,
-            description,
-            images,
-          },
-          $push: { drinks: newDrinks },
-        },
-        { new: true }
-      );
-      res.json({ message: "Service Updated Successfully", status: "Succes" });
-    } else if (newFood !== "") {
-      await Services.findOneAndUpdate(
-        query,
-        {
-          $set: {
-            name,
-            subTitle: subtitle,
-            description,
-            images,
-          },
-          $push: { foods: newFood },
-        },
-        { new: true }
-      );
-      res.json({ message: "Service Updated Successfully", status: "Succes" });
+          { new: true }
+        );
+        res.json({
+          message: "Service Updated Successfully No Input",
+          status: "Succes",
+        });
+      }
     } else {
-      res.json({ message: "Service Not Updated", status: "Error" });
+      if (newFood !== "" && newDrinks !== "") {
+        console.log("Triggered Food");
+        await Services.findOneAndUpdate(
+          query,
+          {
+            $set: {
+              name,
+              subTitle: subtitle,
+              description,
+              images,
+            },
+            $push: { foods: newFood, drinks: newDrinks },
+          },
+          { new: true }
+        );
+        res.json({
+          message: "Food & Drinks Updated Successfully",
+          status: "Succes",
+        });
+      } else if (newDrinks !== "") {
+        console.log("Triggered Drink");
+        await Services.findOneAndUpdate(
+          query,
+          {
+            $set: {
+              name,
+              subTitle: subtitle,
+              description,
+              images,
+              foods: food,
+            },
+            $push: { drinks: newDrinks },
+          },
+          { new: true }
+        );
+        res.json({ message: "Drinks Updated Successfully", status: "Succes" });
+      } else if (newFood !== "") {
+        await Services.findOneAndUpdate(
+          query,
+          {
+            $set: {
+              name,
+              subTitle: subtitle,
+              description,
+              images,
+              drinks,
+            },
+            $push: { foods: newFood },
+          },
+          { new: true }
+        );
+        res.json({ message: "Food Updated Successfully", status: "Succes" });
+      } else {
+        console.log("update everything but no food and drinks");
+        await Services.findOneAndUpdate(
+          query,
+          {
+            $set: {
+              name,
+              subTitle: subtitle,
+              description,
+              images,
+              drinks,
+              foods: food,
+            },
+          },
+          { new: true }
+        );
+        res.json({ message: "Updated Successfully", status: "Succes" });
+      }
     }
   } catch (error) {
     res.json({ message: "Service Not Found", status: "Error" });

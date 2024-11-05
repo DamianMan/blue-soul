@@ -22,6 +22,7 @@ import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
 import FoodDrinkNotifModal from "../../components/FoodDrinkNotifModal";
+import { router } from "expo-router";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -39,13 +40,20 @@ export default function MyCarousel() {
   const { services, users, getUsers, loading } = useContext(ContextData);
   const user = auth().currentUser;
   const scrollRef = useAnimatedRef();
-  const [isNotification, setIsNotification] = useState();
+  const [isNotification, setIsNotification] = useState(false);
+
+  const [expoPushToken, setExpoPushToken] = useState("");
+  const [channels, setChannels] = useState([]);
+  const [notification, setNotification] = useState(undefined > undefined);
+  const notificationListener = useRef();
+  const responseListener = useRef();
+  const { getNotificationStatus } = useContext(ContextData);
   useEffect(() => {
     const loadUsers = async () => {
       await getUsers();
     };
     loadUsers();
-  }, []);
+  }, [notification]);
 
   useEffect(() => {
     if (user) {
@@ -60,12 +68,6 @@ export default function MyCarousel() {
   }, [users]);
   // Notification
 
-  const [expoPushToken, setExpoPushToken] = useState("");
-  const [channels, setChannels] = useState([]);
-  const [notification, setNotification] = useState(undefined > undefined);
-  const notificationListener = useRef();
-  const responseListener = useRef();
-  const { getNotificationStatus } = useContext(ContextData);
   useEffect(() => {
     registerForPushNotificationsAsync().then((token) => {
       token && setExpoPushToken(token);
