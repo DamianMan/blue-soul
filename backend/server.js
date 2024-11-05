@@ -11,9 +11,8 @@ const axios = require("axios");
 const admin = require("firebase-admin");
 
 require("dotenv").config({ path: "../.env" });
-
 // require("../blue-soul-9434a-firebase-adminsdk-yau4q-0a78a8df74.json")
-const serviceAccount = require("../blue-soul-9434a-firebase-adminsdk-yau4q-0a78a8df74.json");
+const serviceAccount = process.env.GOOGLE_SERVICES_JSON;
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
