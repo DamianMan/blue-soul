@@ -174,7 +174,7 @@ app.post("/api/signUpUser", async (req, res) => {
             console.log(
               "Successfully created new user in Firebase:",
               userRecord.uid,
-              userRecord.fullName
+              userRecord.displayName
             );
           })
           .catch((error) => {
@@ -318,7 +318,7 @@ app.post("/api/postGroup", async (req, res) => {
         console.log(
           "Successfully created new user in Firebase:",
           userRecord.uid,
-          userRecord.fullName
+          userRecord.displayName
         );
       })
       .catch((error) => {
@@ -574,12 +574,12 @@ app.post("/api/sendNotifications", async (req, res) => {
   const usersFilteredPerGroup = await Users.find({ tokenGroup: groupToken });
   const numOfUSers = usersFilteredPerGroup.filter(
     (item) => item.pushToken !== undefined
-  ).length;
+  );
   console.log("User for notification", numOfUSers);
   if (usersFilteredPerGroup.length > 0) {
-    if (numOfUSers > 0) {
-      console.log("Sendig Notification!!!");
-      usersFilteredPerGroup.forEach(async (item) => {
+    if (numOfUSers.length > 0) {
+      console.log("Sendig Notification to:", item.email);
+      numOfUSers.forEach(async (item) => {
         if (item.pushToken) {
           const body = {
             to: item.pushToken, // The device push token

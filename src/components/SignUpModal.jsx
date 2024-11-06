@@ -35,23 +35,23 @@ function SignUpModal({ isModalVisibile, toggleModal }) {
     toggleModal(isModalVisibile);
   };
 
-  const firebaseSign = async () => {
-    try {
-      await auth()
-        .createUserWithEmailAndPassword(infoUser.email, infoUser.password)
-        .then((credential) => {
-          credential.user.updateProfile({
-            displayName: infoUser.fullName,
-          });
-          auth().signOut();
-        })
-        .catch((error) => {
-          alert(error);
-        });
-    } catch (err) {
-      alert(err);
-    }
-  };
+  // const firebaseSign = async () => {
+  //   try {
+  //     await auth()
+  //       .createUserWithEmailAndPassword(infoUser.email, infoUser.password)
+  //       .then((credential) => {
+  //         credential.user.updateProfile({
+  //           displayName: infoUser.fullName,
+  //         });
+  //         auth().signOut();
+  //       })
+  //       .catch((error) => {
+  //         alert(error);
+  //       });
+  //   } catch (err) {
+  //     alert(err);
+  //   }
+  // };
   const signUp = async () => {
     const { fullName, email, password } = infoUser;
     try {
@@ -140,8 +140,8 @@ function SignUpModal({ isModalVisibile, toggleModal }) {
                     label="Full Name"
                     autoCapitalize="none"
                     value={infoUser}
-                    textColor="#ff5f00"
-                    activeOutlineColor="#121481"
+                    textColor="#303841"
+                    activeOutlineColor="#2185D5"
                     style={styles.userInput}
                     mode="outlined"
                     onChangeText={(text) =>
@@ -154,9 +154,9 @@ function SignUpModal({ isModalVisibile, toggleModal }) {
                     autoCapitalize="none"
                     keyboardType="email-address"
                     value={infoUser}
-                    textColor="#ff5f00"
+                    textColor="#303841"
                     error={!isValid}
-                    activeOutlineColor="#121481"
+                    activeOutlineColor="#2185D5"
                     style={styles.userInput}
                     mode="outlined"
                     onChangeText={handleEmail}
@@ -165,8 +165,8 @@ function SignUpModal({ isModalVisibile, toggleModal }) {
                     label="Password"
                     autoCapitalize="none"
                     value={infoUser}
-                    textColor="#ff5f00"
-                    activeOutlineColor="#121481"
+                    textColor="#303841"
+                    activeOutlineColor="#2185D5"
                     style={styles.userInput}
                     mode="outlined"
                     right={

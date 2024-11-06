@@ -80,7 +80,7 @@ export default function LoginForm(props) {
         value={email}
         mode="outlined"
         keyboardType="email-address"
-        textColor="midnoghtblue"
+        textColor="#303841"
         error={!isValid}
         autoCapitalize="none"
         activeOutlineColor={"#2185D5"}
@@ -93,7 +93,7 @@ export default function LoginForm(props) {
         secureTextEntry={isHide}
         right={<TextInput.Icon icon="eye" onPress={() => setIsHide(!isHide)} />}
         mode="outlined"
-        textColor="midnoghtblue"
+        textColor="#303841"
         activeOutlineColor="#2185D5"
         autoCapitalize="none"
         onChangeText={handlePassword}

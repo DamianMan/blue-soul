@@ -1,6 +1,6 @@
 import {
   View,
-  Text,
+  ScrollView,
   StyleSheet,
   FlatList,
   ImageBackground,
@@ -37,7 +37,7 @@ const { width, height } = Dimensions.get("window");
 
 function AdminPanel(props) {
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <ImageBackground
         style={styles.logoImage}
         source={require("../../assets/logo.png")}
@@ -51,6 +51,7 @@ function AdminPanel(props) {
         />
       </ImageBackground>
       <FlatList
+        horizontal
         data={Tasks}
         renderItem={({ item }) => (
           <TaskItem
@@ -63,7 +64,7 @@ function AdminPanel(props) {
         keyExtractor={(item) => item.name}
         style={styles.flat}
       />
-    </View>
+    </ScrollView>
   );
 }
 

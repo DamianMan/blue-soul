@@ -11,15 +11,14 @@ import {
 } from "../context/ContextDataProvider";
 
 export default function RootLayout() {
-  const { user, addUserAuth } = useContext(ContextData);
   const segments = useSegments();
   // Set an initializing state whilst Firebase connects
   const [initializing, setInitializing] = useState(true);
-  //   const [user, setUser] = useState();
+  const [user, setUser] = useState();
 
   // Handle user state changes
   function onAuthStateChanged(user) {
-    addUserAuth(user);
+    setUser(user);
     if (initializing) setInitializing(false);
   }
 
@@ -39,7 +38,7 @@ export default function RootLayout() {
         router.navigate("/homeUser");
       }
     } else {
-      router.navigate("/");
+      router.push("/");
     }
   }, [user, initializing]);
   return (

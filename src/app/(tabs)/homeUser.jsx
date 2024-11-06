@@ -6,6 +6,7 @@ import {
   Platform,
   Alert,
   ActivityIndicator,
+  FlatList,
 } from "react-native";
 import auth from "@react-native-firebase/auth";
 import Animated, {
@@ -233,14 +234,11 @@ export default function MyCarousel() {
             Fun 🤩!
           </Text>
         </View>
-        {loading ? (
-          <ActivityIndicator
-            size="large"
-            color={"#2185D5"}
-            style={{ marginTop: 90 }}
-          />
-        ) : (
-          services.map((item) => (
+        <FlatList
+          horizontal
+          in
+          data={services}
+          renderItem={({ item }) => (
             <InfoUserCardItem
               key={item.name}
               src={item.images[0]}
@@ -249,8 +247,20 @@ export default function MyCarousel() {
               text={item.subTitle}
               description={item.description}
             />
-          ))
-        )}
+          )}
+          keyExtractor={(item) => item._id}
+          showsHorizontalScrollIndicator={false} // Disable scrolling
+        />
+        {/* {services.map((item) => (
+          <InfoUserCardItem
+            key={item.name}
+            src={item.images[0]}
+            title={item.name}
+            nameActivity={item.url}
+            text={item.subTitle}
+            description={item.description}
+          />
+        ))} */}
         {isNotification && (
           <FoodDrinkNotifModal
             status={isNotification}

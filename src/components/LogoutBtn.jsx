@@ -3,6 +3,7 @@ import { View, Text, Pressable } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import auth from "@react-native-firebase/auth";
 import { ContextData } from "../context/ContextDataProvider";
+import { router } from "expo-router";
 
 function LogoutBtn(props) {
   const { removeUserAuth } = useContext(ContextData);
@@ -10,6 +11,7 @@ function LogoutBtn(props) {
     try {
       await auth().signOut();
       removeUserAuth();
+      router.replace("/");
     } catch (error) {
       alert(error);
     }
