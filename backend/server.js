@@ -602,27 +602,23 @@ app.post("/api/sendNotifications", async (req, res) => {
               }
             );
             console.log("Notification Response:", response.data);
-            res.json({
-              message: "Push Notification Sent Succesfully!",
-              status: "Success",
-              notification: true,
-            });
+
             const query = {
               email: item.email,
             };
             await Users.findOneAndUpdate(query, { isNotification: true });
           } catch (error) {
-            res.json({
-              message: "Push Notification Not Sent!",
-              status: "Error",
-            });
-
             console.error(
               "Error sending notification:",
               error.response ? error.response.data : error.message
             );
           }
         }
+      });
+      res.json({
+        message: `${numOfUSers.length} Push Notifications Sent Succesfully!`,
+        status: "Success",
+        notification: true,
       });
     }
   } else {
