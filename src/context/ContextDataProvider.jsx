@@ -9,6 +9,7 @@ function ContextDataProvider({ children }) {
   const [groups, setGroups] = useState([]);
   const [isNotification, setIsNotfication] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState("damaino");
 
   useEffect(() => {
     // Get Services
@@ -24,14 +25,14 @@ function ContextDataProvider({ children }) {
 
   // Get All Groups
   const getGroups = async () => {
-    setLoading(!loading);
+    setLoading((prev) => !prev);
     try {
       await axios
         .get("https://blue-soul-app.onrender.com/api/getAllGroups")
         .then((res) => {
           setGroups(res.data);
           console.log("Render context GROUPS");
-          setLoading(!loading);
+          setLoading((prev) => !prev);
         })
         .catch((err) => {
           console.log("Error Responding All Groups:", err);
@@ -43,7 +44,7 @@ function ContextDataProvider({ children }) {
   // Get All Users
 
   const getUsers = async () => {
-    setLoading(!loading);
+    setLoading((prev) => !prev);
 
     try {
       await axios
@@ -51,7 +52,7 @@ function ContextDataProvider({ children }) {
         .then((res) => {
           setUsers(res.data);
           console.log("Render context USERS");
-          setLoading(!loading);
+          setLoading((prev) => !prev);
         })
         .catch((err) => console.log("Error Getting Response All Users:", err));
     } catch (error) {
@@ -98,10 +99,24 @@ function ContextDataProvider({ children }) {
     setState(newArray);
   };
 
+  // Set USER authenthication
+  const addUserAuth = (user) => {
+    setUser(user);
+  };
+
+  // Remove USR Auth
+  const removeUserAuth = () => {
+    setUser();
+  };
+
   const appValues = {
+    user,
+    addUserAuth,
+    removeUserAuth,
     users,
     services,
     groups,
+    loading,
     getGroups,
     getUsers,
     getServices,

@@ -63,7 +63,7 @@ function SignUpModal({ isModalVisibile, toggleModal }) {
         )
         .then((res) => {
           if (res.data.isIn) {
-            firebaseSign();
+            // firebaseSign();
             Alert.alert(res.data.status, res.data.message);
             toggleModal(isModalVisibile);
           } else {

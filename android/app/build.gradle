@@ -126,7 +126,7 @@ android {
         // }
         release {
             if (project.hasProperty('MYAPP_UPLOAD_STORE_FILE')) {
-                storeFile file('./my-upload-key.keystore')
+                storeFile file('./blue-soul-app-keystore.bak.jks')
                 storePassword MYAPP_UPLOAD_STORE_PASSWORD
                 keyAlias MYAPP_UPLOAD_KEY_ALIAS
                 keyPassword MYAPP_UPLOAD_KEY_PASSWORD

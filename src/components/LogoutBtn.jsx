@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import { View, Text, Pressable } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import auth from "@react-native-firebase/auth";
+import { ContextData } from "../context/ContextDataProvider";
 
 function LogoutBtn(props) {
+  const { removeUserAuth } = useContext(ContextData);
   const signOut = async () => {
     try {
       await auth().signOut();
+      removeUserAuth();
     } catch (error) {
       alert(error);
     }

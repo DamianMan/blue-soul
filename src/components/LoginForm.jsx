@@ -25,6 +25,7 @@ export default function LoginForm(props) {
   const signIn = async () => {
     try {
       await auth().signInWithEmailAndPassword(email, password);
+      console.log("USER:", auth().currentUser.displayName);
     } catch (error) {
       alert(error);
     }

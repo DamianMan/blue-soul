@@ -234,7 +234,11 @@ export default function MyCarousel() {
           </Text>
         </View>
         {loading ? (
-          <ActivityIndicator size="large" color={"#2185D5"} />
+          <ActivityIndicator
+            size="large"
+            color={"#2185D5"}
+            style={{ marginTop: 90 }}
+          />
         ) : (
           services.map((item) => (
             <InfoUserCardItem

@@ -22,6 +22,7 @@ const { height } = Dimensions.get("window");
 function checkEditGroup(props) {
   const { getUsers, getGroups, users, groups, loading } =
     useContext(ContextData);
+  console.log("loading staus:", loading);
   const [group, setGroup] = useState();
   const [user, setUser] = useState([]);
   const [groupToken, setGroupToken] = useState("");
@@ -93,53 +94,58 @@ function checkEditGroup(props) {
         style={{ alignSelf: "center" }}
       />
 
-      <CustomCarousel
-        data={groups}
-        handlePress={handlePress}
-        setTeacher={setGroup}
-        setUsers={setUser}
-      />
-
       {loading ? (
-        <ActivityIndicator size={"large"} color={"#2185D5"} />
+        <ActivityIndicator
+          size={"large"}
+          color={"#2185D5"}
+          style={{ marginTop: 100 }}
+        />
       ) : (
-        <View>
-          {group && (
-            <View>
-              <Text style={[styles.titleText, { color: "#2185D5" }]}>
-                TEACHER
+        <CustomCarousel
+          data={groups}
+          handlePress={handlePress}
+          setTeacher={setGroup}
+          setUsers={setUser}
+        />
+      )}
+
+      <View>
+        {group && (
+          <View>
+            <Text style={[styles.titleText, { color: "#2185D5" }]}>
+              TEACHER
+            </Text>
+            <TeacherCardItem
+              teacher={group.fullNameTeacher}
+              email={group.email}
+              phone={group.phone}
+              city={group.city}
+              token={group.tokenGroup}
+            />
+          </View>
+        )}
+        {user.length > 0 && (
+          <>
+            <View style={{ paddingVertical: 10 }}>
+              <Divider style={styles.divider} />
+              <Text style={[styles.titleText, { paddingBottom: 20 }]}>
+                STUDENTS
               </Text>
-              <TeacherCardItem
-                teacher={group.fullNameTeacher}
-                email={group.email}
-                phone={group.phone}
-                city={group.city}
-                token={group.tokenGroup}
+              <FlatList
+                horizontal
+                data={user}
+                renderItem={({ item }) =>
+                  item.role == "Student" && (
+                    <StudentChipItem
+                      toogleReload={toogleReload}
+                      key={item.tokenGroup + item.fullName}
+                      data={item}
+                    />
+                  )
+                }
+                keyExtractor={(item) => item._id}
               />
-            </View>
-          )}
-          {user.length > 0 && (
-            <>
-              <View style={{ paddingVertical: 10 }}>
-                <Divider style={styles.divider} />
-                <Text style={[styles.titleText, { paddingBottom: 20 }]}>
-                  STUDENTS
-                </Text>
-                <FlatList
-                  horizontal
-                  data={user}
-                  renderItem={({ item }) =>
-                    item.role == "Student" && (
-                      <StudentChipItem
-                        toogleReload={toogleReload}
-                        key={item.tokenGroup + item.fullName}
-                        data={item}
-                      />
-                    )
-                  }
-                  keyExtractor={(item) => item._id}
-                />
-                {/* {user.map(
+              {/* {user.map(
                   (item) =>
                     item.role === "Student" && (
                       <StudentChipItem
@@ -149,12 +155,11 @@ function checkEditGroup(props) {
                       />
                     )
                 )} */}
-              </View>
-              <PdfButton currentUsers={user} />
-            </>
-          )}
-        </View>
-      )}
+            </View>
+            <PdfButton currentUsers={user} />
+          </>
+        )}
+      </View>
     </ScrollView>
   );
 }

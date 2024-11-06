@@ -160,6 +160,26 @@ app.post("/api/signUpUser", async (req, res) => {
           role: "Student",
         });
         await newUser.save();
+
+        // Register Firebase User
+        await admin
+          .auth()
+          .createUser({
+            email,
+            password,
+            displayName: fullName,
+          })
+          .then((userRecord) => {
+            // See the UserRecord reference doc for the contents of userRecord.
+            console.log(
+              "Successfully created new user in Firebase:",
+              userRecord.uid,
+              userRecord.fullName
+            );
+          })
+          .catch((error) => {
+            console.log("Error creating new user in Firebase:", error);
+          });
         res.json({
           message: "User Signed Up",
           status: "Success",
