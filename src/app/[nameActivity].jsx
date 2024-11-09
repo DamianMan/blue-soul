@@ -281,7 +281,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginVertical: 20,
     borderRadius: 16,
-    backgroundColor: "aliceblue",
+    backgroundColor: "#BFCFE7",
     shadowColor: "#2185D5",
     shadowOffset: {
       width: 0,

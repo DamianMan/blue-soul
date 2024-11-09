@@ -6,11 +6,9 @@ import { ContextData } from "../context/ContextDataProvider";
 import { router } from "expo-router";
 
 function LogoutBtn(props) {
-  const { removeUserAuth } = useContext(ContextData);
   const signOut = async () => {
     try {
       await auth().signOut();
-      removeUserAuth();
       router.replace("/");
     } catch (error) {
       alert(error);

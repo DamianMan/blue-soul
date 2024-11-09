@@ -27,30 +27,29 @@ function TaskItem({ text, img, icon, url }) {
             style={styles.blurContainer}
             experimentalBlurMethod={true}
           >
-            <Text style={styles.text}>
-              {text}
-              <FontAwesome
-                name={icon}
-                size={35}
-                color={
-                  (icon === "plus-square" && "#1B9C85") ||
-                  (icon === "edit" && "#FF9209") ||
-                  (icon === "list-alt" && "orangered")
-                }
-                style={{
-                  shadowColor: "#000",
-                  shadowOffset: {
-                    width: 0,
-                    height: 2,
-                  },
-                  shadowOpacity: 0.5,
-                  shadowRadius: 1,
+            <Text style={styles.text}>{text}</Text>
+            <FontAwesome
+              name={icon}
+              size={45}
+              color={
+                (icon === "plus-square" && "#1B9C85") ||
+                (icon === "edit" && "#FF9209") ||
+                (icon === "list-alt" && "orangered")
+              }
+              style={{
+                shadowColor: "#000",
+                shadowOffset: {
+                  width: 0,
+                  height: 2,
+                },
+                shadowOpacity: 0.5,
+                shadowRadius: 1,
+                marginHorizontal: 3,
 
-                  elevation: 8,
-                  paddingHorizontal: 10,
-                }}
-              />{" "}
-            </Text>
+                elevation: 8,
+                paddingHorizontal: 10,
+              }}
+            />
           </BlurView>
         </ImageBackground>
       </Pressable>
@@ -101,10 +100,11 @@ const styles = StyleSheet.create({
     textShadowOpacity: 0.6,
     textShadowRadius: 0.8,
     fontSize: 33,
-
     borderRadius: 10,
   },
   blurContainer: {
+    justifyContent: "space-between",
+    alignItems: "center",
     padding: 15,
     borderRadius: 20,
   },

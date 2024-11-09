@@ -16,8 +16,14 @@ export default {
       supportsTablet: true,
       bundleIdentifier: "com.blueSoul.firebaseApp",
       googleServicesFile: "./GoogleService-Info.plist",
+      infoPlist: {
+        NSUserNotificationsUsageDescription:
+          "Allow notifications to stay up to date. These can be configured from the System Settings.",
+      },
     },
     android: {
+      permissions: ["WRITE_EXTERNAL_STORAGE", "POST_NOTIFICATIONS"],
+
       adaptiveIcon: {
         foregroundImage: "./assets/logo.png",
         backgroundColor: "#ffffff",

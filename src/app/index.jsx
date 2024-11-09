@@ -13,17 +13,22 @@ import LoginForm from "../components/LoginForm";
 import Logo from "../components/Logo";
 import { PaperProvider, Divider } from "react-native-paper";
 import SocialView from "../components/SocialView";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import SignUpModal from "../components/SignUpModal";
+import { ContextData } from "../context/ContextDataProvider";
+import HomeLoader from "../components/HomeLoader";
 
 const { height } = Dimensions.get("window");
 
 export default function App() {
+  const { loading } = useContext(ContextData);
   const [isModalVisibile, setIsModalVisible] = useState(false);
   const toggleModal = (item) => {
     setIsModalVisible((item) => !item);
   };
-
+  if (loading) {
+    return <HomeLoader />;
+  }
   return (
     <View style={styles.container}>
       <PaperProvider>

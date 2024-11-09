@@ -11,6 +11,7 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
 } from "react-native";
 import { ContextData } from "../context/ContextDataProvider";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -22,7 +23,7 @@ import ServiceActivityItem from "../components/ServiceActivityItem";
 
 const { height, width } = Dimensions.get("window");
 function editActivities(props) {
-  const { services, getServices, addItem, removeItem } =
+  const { services, getServices, addItem, removeItem, loading } =
     useContext(ContextData);
   const [display, setDisplay] = useState(false);
   const [pressed, setPressed] = useState(false);
@@ -202,20 +203,24 @@ function editActivities(props) {
             style={{ alignSelf: "center" }}
           />
         </View>
-        <View
-          style={{
-            margin: 20,
-          }}
-        >
-          {services.map((item) => (
-            <FabActivitiesItem
-              key={item.url}
-              name={item.name}
-              url={item.url}
-              hanldePress={handlePressFAB}
-            />
-          ))}
-        </View>
+        {loading ? (
+          <ActivityIndicator size={"large"} color={"#3FA2F6"} />
+        ) : (
+          <View
+            style={{
+              margin: 20,
+            }}
+          >
+            {services.map((item) => (
+              <FabActivitiesItem
+                key={item.url}
+                name={item.name}
+                url={item.url}
+                hanldePress={handlePressFAB}
+              />
+            ))}
+          </View>
+        )}
 
         {display && (
           <View style={styles.activityView}>

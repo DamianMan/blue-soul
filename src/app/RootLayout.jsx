@@ -19,6 +19,7 @@ export default function RootLayout() {
   // Handle user state changes
   function onAuthStateChanged(user) {
     setUser(user);
+    console.log("USER AUTHENTICATED:", user);
     if (initializing) setInitializing(false);
   }
 
@@ -31,14 +32,18 @@ export default function RootLayout() {
     if (initializing) return;
 
     const inAuthGroup = segments[0] === "(tabs)";
-    if (user) {
+    console.log("IN AUTH GROUP:", inAuthGroup);
+    if (user && !inAuthGroup) {
       if (user.email === "admin@mail.com") {
-        router.navigate("/admin");
+        router.replace("/admin");
       } else {
-        router.navigate("/homeUser");
+        router.replace("/(tabs)/homeUser");
       }
-    } else {
-      router.push("/");
+    } else if (!user && inAuthGroup) {
+      router.replace("/");
+    } else if (!user && !inAuthGroup) {
+      console.log("No user No AUTH group");
+      router.replace("/");
     }
   }, [user, initializing]);
   return (
@@ -51,9 +56,9 @@ export default function RootLayout() {
           headerTitleAlign: "center",
           headerShown: true,
           headerStyle: {
-            backgroundColor: "#2185D5",
+            backgroundColor: "aliceblue",
           },
-          headerTintColor: "#fff",
+          headerTintColor: "#303841",
           headerTitleStyle: {
             fontWeight: "bold",
           },
@@ -77,9 +82,9 @@ export default function RootLayout() {
           headerShown: true,
           headerRight: () => <LogoutBtn />,
           headerStyle: {
-            backgroundColor: "#2185D5",
+            backgroundColor: "aliceblue",
           },
-          headerTintColor: "#fff",
+          headerTintColor: "#303841",
           headerTitleStyle: {
             fontWeight: "bold",
           },
@@ -93,9 +98,9 @@ export default function RootLayout() {
 
           headerShown: true,
           headerStyle: {
-            backgroundColor: "#2185D5",
+            backgroundColor: "aliceblue",
           },
-          headerTintColor: "#fff",
+          headerTintColor: "#303841",
           headerTitleStyle: {
             fontWeight: "bold",
           },
@@ -111,9 +116,9 @@ export default function RootLayout() {
           headerShown: true,
           headerRight: () => <LogoutBtn />,
           headerStyle: {
-            backgroundColor: "#2185D5",
+            backgroundColor: "aliceblue",
           },
-          headerTintColor: "#fff",
+          headerTintColor: "#303841",
           headerTitleStyle: {
             fontWeight: "bold",
           },
@@ -128,9 +133,9 @@ export default function RootLayout() {
           headerShown: true,
           headerRight: () => <LogoutBtn />,
           headerStyle: {
-            backgroundColor: "#2185D5",
+            backgroundColor: "aliceblue",
           },
-          headerTintColor: "#fff",
+          headerTintColor: "#303841",
           headerTitleStyle: {
             fontWeight: "bold",
           },

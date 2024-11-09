@@ -34,6 +34,7 @@ function checkEditGroup(props) {
       try {
         await getUsers();
         await getGroups();
+        console.log("Loading in screen");
       } catch (error) {
         console.error("Error loading data:", error);
       } finally {

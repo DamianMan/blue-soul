@@ -2,10 +2,15 @@ import React from "react";
 import { Platform } from "react-native";
 import { Button } from "react-native-paper";
 import RNHTMLtoPDF from "react-native-html-to-pdf";
-// import RNFS from "react-native-fs"; // For direct file system access
+import RNFS from "react-native-fs"; // For direct file system access
 import { Alert } from "react-native";
+import { useState } from "react";
+import * as Print from "expo-print";
+import { shareAsync } from "expo-sharing";
 
 function PdfButton({ currentUsers }) {
+  const [selectedPrinter, setSelectedPrinter] = useState();
+
   const generateUserHTML = (users) => {
     return `
           <html>
@@ -60,20 +65,47 @@ function PdfButton({ currentUsers }) {
   const generatePDF = async () => {
     const htmlContent = generateUserHTML(currentUsers);
     // const dir = RNFS.DocumentDirectoryPath; // Get the Document Directory Path for Android
+    // const fileName = "users_info.pdf";
 
-    try {
-      const { filePath } = await RNHTMLtoPDF.convert({
-        html: htmlContent,
-        fileName: "users_info",
-        directory: Platform.OS === "android" ? "Dowloads" : "Documents",
-      });
+    // const filePath2 =
+    //   Platform.OS === "android"
+    //     ? `${RNFS.DownloadDirectoryPath}/${fileName}`
+    //     : `${RNFS.DocumentDirectoryPath}/${fileName}`;
 
-      Alert.alert("PDF created at:", filePath);
-      console.log(filePath);
-      return filePath;
-    } catch (error) {
-      Alert.alert("PDF generation error:", error);
-    }
+    // try {
+    //   const { filePath } = await RNHTMLtoPDF.convert({
+    //     html: htmlContent,
+    //     fileName: "users_info",
+    //     directory: Platform.OS === "android" ? "Dowloads" : "Documents",
+    //     path: filePath2,
+    //   });
+
+    //   Alert.alert("PDF created at:", filePath2);
+    //   console.log(filePath2);
+    //   return filePath;
+    // } catch (error) {
+    //   Alert.alert("PDF generation error:", error);
+    // }
+
+    // On iOS/android prints the given html. On web prints the HTML from the current page.
+    console.log("generating pdf...");
+    const { uri } = await Print.printToFileAsync({
+      html: htmlContent,
+      base64: false,
+    });
+    console.log("File has been saved to:", uri);
+    await shareAsync(uri, { UTI: ".pdf", mimeType: "application/pdf" });
+
+    // const printToFile = async () => {
+    //   // On iOS/android prints the given html. On web prints the HTML from the current page.
+    //   const { uri } = await Print.printToFileAsync({ html });
+    //   console.log("File has been saved to:", uri);
+    // };
+
+    // const selectPrinter = async () => {
+    //   const printer = await Print.selectPrinterAsync(); // iOS only
+    //   setSelectedPrinter(printer);
+    // };
   };
 
   return (

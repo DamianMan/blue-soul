@@ -13,7 +13,7 @@ export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: "#F3F3F3",
+        tabBarActiveTintColor: "#2185D5",
         tabBarInactiveTintColor: "#303841",
       }}
     >
@@ -21,7 +21,7 @@ export default function TabsLayout() {
         name="homeUser"
         options={{
           title: "Home Page",
-          tabBarStyle: { backgroundColor: "#2185D5" },
+          tabBarStyle: { backgroundColor: "aliceblue" },
           headerStyle: {
             backgroundColor: "aliceblue",
           },
@@ -47,7 +47,7 @@ export default function TabsLayout() {
           headerStyle: {
             backgroundColor: "aliceblue",
           },
-          tabBarStyle: { backgroundColor: "#2185D5" },
+          tabBarStyle: { backgroundColor: "aliceblue" },
 
           headerTitle: (props) => (
             <Image

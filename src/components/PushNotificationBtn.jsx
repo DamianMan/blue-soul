@@ -14,10 +14,10 @@ function PushNotificationBtn(props) {
         <AntDesign
           name="message1"
           size={20}
-          color={"springgreen"}
+          color={"lightseagreen"}
           style={{ paddingRight: 5 }}
         />
-        <Text style={{ color: "springgreen" }}>Push Msg</Text>
+        <Text style={{ color: "lightseagreen" }}>Push Msg</Text>
       </Pressable>
     </Link>
   );

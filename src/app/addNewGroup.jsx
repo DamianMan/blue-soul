@@ -277,7 +277,7 @@ const styles = StyleSheet.create({
   userInput: {
     width: (width * 90) / 100,
     borderRadius: 10,
-    backgroundColor: "#EEEEEE",
+    backgroundColor: "#fff",
 
     marginBottom: 5,
   },

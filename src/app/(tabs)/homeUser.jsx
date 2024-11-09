@@ -28,8 +28,8 @@ import { router } from "expo-router";
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
   }),
 });
 
@@ -39,6 +39,7 @@ const HeightIMG = 300;
 
 export default function MyCarousel() {
   const { services, users, getUsers, loading } = useContext(ContextData);
+  console.log("loading:", loading);
   const user = auth().currentUser;
   const scrollRef = useAnimatedRef();
   const [isNotification, setIsNotification] = useState(false);
@@ -72,7 +73,6 @@ export default function MyCarousel() {
   useEffect(() => {
     registerForPushNotificationsAsync().then((token) => {
       token && setExpoPushToken(token);
-      submitPushToken(token);
     });
 
     if (Platform.OS === "android") {
@@ -87,7 +87,7 @@ export default function MyCarousel() {
 
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log(response.notification.request.content.data);
+        console.log(response);
         // Active Status when notification is open and the function set the value to true.
         // getNotificationStatus(
         //   response.notification.request.content.data.notification
@@ -161,6 +161,7 @@ export default function MyCarousel() {
             projectId,
           })
         ).data;
+        submitPushToken(token);
       } catch (e) {
         token = `${e}`;
       }
@@ -207,6 +208,7 @@ export default function MyCarousel() {
       ],
     };
   });
+
   return (
     <Animated.ScrollView
       style={styles.container}
@@ -234,23 +236,26 @@ export default function MyCarousel() {
             Fun 🤩!
           </Text>
         </View>
-        <FlatList
-          horizontal
-          in
-          data={services}
-          renderItem={({ item }) => (
-            <InfoUserCardItem
-              key={item.name}
-              src={item.images[0]}
-              title={item.name}
-              nameActivity={item.url}
-              text={item.subTitle}
-              description={item.description}
-            />
-          )}
-          keyExtractor={(item) => item._id}
-          showsHorizontalScrollIndicator={false} // Disable scrolling
-        />
+        {loading ? (
+          <ActivityIndicator size={"large"} color={"#2185D5"} />
+        ) : (
+          <FlatList
+            horizontal
+            data={services}
+            renderItem={({ item }) => (
+              <InfoUserCardItem
+                key={item.name}
+                src={item.images[0]}
+                title={item.name}
+                nameActivity={item.url}
+                text={item.subTitle}
+                description={item.description}
+              />
+            )}
+            keyExtractor={(item) => item._id}
+            showsHorizontalScrollIndicator={false} // Disable scrolling
+          />
+        )}
         {/* {services.map((item) => (
           <InfoUserCardItem
             key={item.name}
