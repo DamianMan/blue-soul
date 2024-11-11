@@ -191,34 +191,46 @@ function profileUser(props) {
                 }
                 style={styles.userInput}
               />
-              <Surface elevation={5} style={[styles.surface, { marginTop: 5 }]}>
-                <Checkbox.Item
-                  color="lime"
-                  label="ID"
-                  status={infoGroup.id ? "checked" : "unchecked"}
-                  onPress={() =>
-                    setInfoGroup((prev) => ({
-                      ...prev,
-                      id: !prev.id,
-                      passport: false,
-                    }))
-                  }
-                />
-              </Surface>
-              <Surface elevation={5} style={styles.surface}>
-                <Checkbox.Item
-                  color="lime"
-                  label="Passport"
-                  status={infoGroup.passport ? "checked" : "unchecked"}
-                  onPress={() =>
-                    setInfoGroup((prev) => ({
-                      ...prev,
-                      passport: !prev.passport,
-                      id: false,
-                    }))
-                  }
-                />
-              </Surface>
+              <View
+                style={{
+                  width: (width * 90) / 100,
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  flexDirection: "row",
+                }}
+              >
+                <Surface
+                  elevation={5}
+                  style={[styles.surface, { marginTop: 5 }]}
+                >
+                  <Checkbox.Item
+                    color="lime"
+                    label="ID"
+                    status={infoGroup.id ? "checked" : "unchecked"}
+                    onPress={() =>
+                      setInfoGroup((prev) => ({
+                        ...prev,
+                        id: !prev.id,
+                        passport: false,
+                      }))
+                    }
+                  />
+                </Surface>
+                <Surface elevation={5} style={styles.surface}>
+                  <Checkbox.Item
+                    color="lime"
+                    label="Passport"
+                    status={infoGroup.passport ? "checked" : "unchecked"}
+                    onPress={() =>
+                      setInfoGroup((prev) => ({
+                        ...prev,
+                        passport: !prev.passport,
+                        id: false,
+                      }))
+                    }
+                  />
+                </Surface>
+              </View>
 
               {(infoGroup.id || infoGroup.passport) && (
                 <TextInput
@@ -286,11 +298,13 @@ export default profileUser;
 const styles = StyleSheet.create({
   background: {
     position: "absolute",
+    top: 0,
+    bottom: 0,
 
     justifyContent: "center",
     alignItems: "center",
-    width: width,
-    height: height,
+    width,
+    height,
     opacity: 0.3,
   },
   title: {
@@ -314,6 +328,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     elevation: 3,
     marginVertical: 3,
+    marginHorizontal: 50,
   },
   editPAsswordBtn: {
     backgroundColor: "orangered",
@@ -323,12 +338,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     elevation: 3,
     marginVertical: 3,
+    marginHorizontal: 50,
   },
   userInput: {
+    borderRadius: 10,
+    backgroundColor: "#fff",
+    borderRadius: 10,
     width: (width * 90) / 100,
-    borderRadius: 10,
-    backgroundColor: "transparent",
-    borderRadius: 10,
   },
   form: {
     justifyContent: "center",
@@ -342,6 +358,5 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     backgroundColor: "lightcyan",
     opacity: 0.8,
-    marginLeft: 20,
   },
 });

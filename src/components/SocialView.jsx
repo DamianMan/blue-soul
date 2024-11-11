@@ -13,7 +13,7 @@ function SocialView(props) {
     <View style={{ paddingBottom: 5 }}>
       <View style={styles.socialContainer}>
         <FlatList
-          horizontal={true}
+          horizontal
           data={socialMediaArray}
           renderItem={({ item }) => (
             <Button
@@ -47,17 +47,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     flexDirection: "row",
+    marginBottom: 20,
   },
   socialIcon: {
     backgroundColor: "transparent",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.32,
-    shadowRadius: 5.46,
-
-    elevation: 9,
   },
 });

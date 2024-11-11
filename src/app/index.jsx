@@ -18,7 +18,7 @@ import SignUpModal from "../components/SignUpModal";
 import { ContextData } from "../context/ContextDataProvider";
 import HomeLoader from "../components/HomeLoader";
 
-const { height } = Dimensions.get("window");
+const { height, width } = Dimensions.get("window");
 
 export default function App() {
   const { loading } = useContext(ContextData);
@@ -36,33 +36,40 @@ export default function App() {
           behavior={Platform.OS === "ios" ? "padding" : height}
           style={{ flex: 1 }}
         >
-          <ScrollView>
+          <ScrollView
+            contentContainerStyle={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
             <Logo />
 
             <LoginForm />
-
-            <Text style={styles.primary}>
-              Don't you have an account?
-              <Text style={styles.link} onPress={toggleModal}>
-                {" "}
-                Please Sign Up.
+            <View>
+              <Text style={styles.primary}>
+                Don't you have an account?
+                <Text style={styles.link} onPress={toggleModal}>
+                  {" "}
+                  Please Sign Up.
+                </Text>
               </Text>
-            </Text>
-            <Divider
-              style={{
-                backgroundColor: "#0099FF",
-                marginHorizontal: 30,
-                marginBottom: Platform.OS === "ios" && 20,
-              }}
-            />
+              <Divider
+                style={{
+                  backgroundColor: "#0099FF",
+                  width: (width * 90) / 100,
+                  marginBottom: Platform.OS === "ios" && 20,
+                }}
+              />
 
-            <View
-              style={{
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <SocialView />
+              <View
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <SocialView />
+              </View>
             </View>
           </ScrollView>
         </KeyboardAvoidingView>

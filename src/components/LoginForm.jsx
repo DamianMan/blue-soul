@@ -58,7 +58,12 @@ export default function LoginForm(props) {
 
   return (
     <View
-      style={{ justifyContent: "center", alignItems: "center", paddingTop: 30 }}
+      style={{
+        justifyContent: "center",
+        alignItems: "center",
+        paddingTop: 30,
+        flexGrow: 1,
+      }}
     >
       <Button
         mode="contained"

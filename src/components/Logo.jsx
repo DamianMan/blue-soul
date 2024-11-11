@@ -16,6 +16,7 @@ function Logo(props) {
         justifyContent: "center",
         alignItems: "center",
         width,
+        height: height / 2,
       }}
     >
       <ImageBackground

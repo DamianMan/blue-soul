@@ -93,13 +93,13 @@ function pushNotifications(props) {
       <View style={{ marginVertical: 30 }}>
         <Text style={styles.title}>
           Please Write Below The{" "}
-          <Text style={{ color: "orangered", fontSize: 22 }}>Message</Text> You
-          Want Sending To A Group
+          <Text style={{ color: "#2185D5", fontSize: 22 }}>Notification</Text>{" "}
+          You Want Sending To A Group
         </Text>
         <MaterialCommunityIcons
           name="cellphone-message"
           size={62}
-          color="orangered"
+          color="#2185D5"
           style={{
             alignSelf: "center",
             shadowColor: "#000",
@@ -150,7 +150,7 @@ function pushNotifications(props) {
         <Button
           mode="elevated"
           labelStyle={{
-            color: "midnightblue",
+            color: "#000",
             fontSize: 15,
           }}
           elevation={6}
@@ -167,7 +167,7 @@ function pushNotifications(props) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "lightcyan",
+    backgroundColor: "#F3F3F3",
   },
   imageBg: {
     height: height / 2.5,
@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   title: {
-    color: "darkblue",
+    color: "#303841",
     fontSize: 18,
     fontWeight: "consentBold",
     textAlign: "center",

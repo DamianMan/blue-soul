@@ -17,11 +17,11 @@ function HomeLoader(props) {
       style={styles.image}
       resizeMode="cover"
       source={{
-        uri: "https://images.unsplash.com/photo-1650895209447-83ce3b498cf0?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        uri: "https://images.unsplash.com/photo-1509641498745-13c26fd1ed89?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       }}
     >
       <View style={styles.centered}>
-        <ActivityIndicator size={"large"} color={"lightblue"} />
+        <ActivityIndicator size={"large"} color={"lightgrey"} />
         <Text style={styles.text}>Loading...</Text>
       </View>
       <View style={styles.imageContainter}>
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   text: {
-    color: "lightblue",
+    color: "#303841",
     fontSize: 16,
   },
   imageLogo: { width: 200, height: 200 },
@@ -53,7 +53,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,
-    opacity: 0.8,
     marginBottom: 60,
     marginHorizontal: 60,
     shadowColor: "lightblue",

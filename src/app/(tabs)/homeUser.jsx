@@ -14,6 +14,9 @@ import Animated, {
   useAnimatedRef,
   useAnimatedStyle,
   useScrollViewOffset,
+  FadeIn,
+  FadeOut,
+  Extrapolation,
 } from "react-native-reanimated";
 import InfoUserCardItem from "../../components/InfoUserCardItem";
 import { useContext, useEffect, useState, useRef } from "react";
@@ -33,9 +36,9 @@ Notifications.setNotificationHandler({
   }),
 });
 
-const { width } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 
-const HeightIMG = 300;
+const HeightIMG = height / 2;
 
 export default function MyCarousel() {
   const { services, users, getUsers, loading } = useContext(ContextData);
@@ -88,6 +91,8 @@ export default function MyCarousel() {
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
         console.log(response);
+        setNotification(true);
+
         // Active Status when notification is open and the function set the value to true.
         // getNotificationStatus(
         //   response.notification.request.content.data.notification
@@ -179,7 +184,7 @@ export default function MyCarousel() {
         sound: "default",
         title: "You've got mail! 📬",
         body: "Here is the notification body",
-        data: { data: "goes here", test: { test1: "more data" } },
+        data: { notification: true, test: { test1: "more data" } },
       },
       trigger: { seconds: 10 },
     })
@@ -188,6 +193,12 @@ export default function MyCarousel() {
   }
 
   const scrollOffset = useScrollViewOffset(scrollRef);
+  const fadeOut = () => {
+    fadeInOpacity.value = withTiming(0, {
+      duration: 1000,
+      easing: Easing.linear,
+    });
+  };
   const imageAnimatedStyle = useAnimatedStyle(() => {
     return {
       transform: [
@@ -206,6 +217,12 @@ export default function MyCarousel() {
           ),
         },
       ],
+      opacity: interpolate(
+        scrollOffset.value,
+        [0, HeightIMG / 2, HeightIMG], // Adjust this range to control the fade-out speed
+        [0.9, 0.5, 0], // Starts fully opaque, fades out halfway, and becomes invisible
+        Extrapolation.CLAMP
+      ),
     };
   });
 
@@ -214,6 +231,7 @@ export default function MyCarousel() {
       style={styles.container}
       ref={scrollRef}
       scrollEventThrottle={16}
+      entering={FadeIn}
     >
       <Animated.Image
         style={[styles.image, imageAnimatedStyle]}

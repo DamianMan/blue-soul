@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
   secondContainer: {
     paddingTop: 20,
     borderRadius: 20,
-    backgroundColor: "#E4F1FE",
+    backgroundColor: "aliceblue",
     shadowColor: "#2185D5",
     shadowOffset: {
       width: 3,
@@ -281,7 +281,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginVertical: 20,
     borderRadius: 16,
-    backgroundColor: "#BFCFE7",
+    backgroundColor: "aliceblue",
     shadowColor: "#2185D5",
     shadowOffset: {
       width: 0,
@@ -317,7 +317,7 @@ const styles = StyleSheet.create({
   },
   subtitle: { fontSize: 18, color: "#393E46", paddingHorizontal: 20 },
   subtitleView: {
-    backgroundColor: "#E4F1FE",
+    backgroundColor: "aliceblue",
     shadowColor: "#2185D5",
     shadowOffset: {
       width: 0,
