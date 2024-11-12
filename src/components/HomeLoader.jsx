@@ -22,7 +22,6 @@ function HomeLoader(props) {
     >
       <View style={styles.centered}>
         <ActivityIndicator size={"large"} color={"lightgrey"} />
-        <Text style={styles.text}>Loading...</Text>
       </View>
       <View style={styles.imageContainter}>
         <Image

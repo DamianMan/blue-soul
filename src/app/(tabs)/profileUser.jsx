@@ -16,9 +16,10 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import auth from "@react-native-firebase/auth";
 import EditPAsswordModal from "../../components/EditPasswordModal";
-const { width, height } = Dimensions.get("window");
 import { ContextData } from "../../context/ContextDataProvider";
 import axios from "axios";
+
+const { width, height } = Dimensions.get("window");
 
 function profileUser(props) {
   const { users } = useContext(ContextData);
@@ -99,10 +100,14 @@ function profileUser(props) {
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      behavior={Platform.OS === "ios" ? "padding" : height}
       style={{ flex: 1 }}
     >
-      <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
+      <ScrollView
+        contentContainerStyle={{
+          flex: 1,
+        }}
+      >
         <ImageBackground
           source={{
             uri: "https://plus.unsplash.com/premium_photo-1683865775275-a576c7588bc8?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cHJvZmlsZSUyMHVzZXJ8ZW58MHx8MHx8fDA%3D",
@@ -110,6 +115,7 @@ function profileUser(props) {
           style={styles.background}
           resizeMode="cover"
         ></ImageBackground>
+
         {!loading ? (
           <View style={{ flex: 1 }}>
             <View

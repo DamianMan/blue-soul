@@ -5,7 +5,7 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import auth from "@react-native-firebase/auth";
 import axios from "axios";
 
-const { width } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 
 function EditPAsswordModal({ modalVisible, setModalVisible }) {
   const user = auth().currentUser;
@@ -71,8 +71,8 @@ function EditPAsswordModal({ modalVisible, setModalVisible }) {
               label="Password"
               autoCapitalize="none"
               value={password}
-              textColor="#ff5f00"
-              activeOutlineColor="#121481"
+              textColor="#303841"
+              activeOutlineColor="#2185D5"
               style={styles.userInput}
               mode="outlined"
               right={
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: "center",
-    color: "darkblue",
+    color: "#2185D5",
   },
 });
 
