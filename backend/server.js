@@ -297,7 +297,7 @@ app.post("/api/postGroup", async (req, res) => {
       password: token,
       city: city,
       phone: phone,
-      peopleCount: numOfPeople,
+      peopleCount: parseInt(numOfPeople),
       startDate: convertedStartDate,
       endDate: convertedEndDate,
     });
