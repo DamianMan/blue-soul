@@ -13,9 +13,10 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import TeacherCardItem from "../components/TeacherCardItem";
 import { ContextData } from "../context/ContextDataProvider";
 import CustomCarousel from "../components/CustomCarousel";
-import { Divider } from "react-native-paper";
+import { Chip, Divider } from "react-native-paper";
 import StudentChipItem from "../components/StudentChipItem";
 import PdfButton from "../components/PdfButton";
+import FilterDatesForm from "../components/FilterDatesForm";
 
 const { height } = Dimensions.get("window");
 
@@ -23,10 +24,12 @@ function checkEditGroup(props) {
   const { getUsers, getGroups, users, groups, loading } =
     useContext(ContextData);
   console.log("loading staus:", loading);
+  const [filteredGroups, setFilteredGroups] = useState([]);
   const [group, setGroup] = useState();
   const [user, setUser] = useState([]);
   const [groupToken, setGroupToken] = useState("");
   const [reload, setReload] = useState(false);
+  console.log("Groups per date:", filteredGroups);
 
   // Get All Groups
   useEffect(() => {
@@ -70,6 +73,7 @@ function checkEditGroup(props) {
       alert("No Users Found");
     }
   };
+
   return (
     <ScrollView style={styles.container}>
       <ImageBackground
@@ -80,21 +84,6 @@ function checkEditGroup(props) {
           uri: "https://images.unsplash.com/photo-1669647561467-891414e9b140?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDF8fHxlbnwwfHx8fHw%3D",
         }}
       />
-      <Text
-        style={[
-          styles.titleText,
-          { letterSpacing: 0, padding: 10, marginTop: 20, fontSize: 18 },
-        ]}
-      >
-        Tap On The <Text style={styles.group}>Group</Text> To Check And Edit
-      </Text>
-      <MaterialCommunityIcons
-        name="gesture-tap"
-        size={50}
-        color="#3FA2F6"
-        style={{ alignSelf: "center" }}
-      />
-
       {loading ? (
         <ActivityIndicator
           size={"large"}
@@ -102,12 +91,41 @@ function checkEditGroup(props) {
           style={{ marginTop: 100 }}
         />
       ) : (
-        <CustomCarousel
-          data={groups}
-          handlePress={handlePress}
-          setTeacher={setGroup}
-          setUsers={setUser}
-        />
+        <View>
+          <FilterDatesForm setFilteredGroups={setFilteredGroups} />
+
+          {filteredGroups.length > 0 && (
+            <>
+              <Text
+                style={[
+                  styles.titleText,
+                  {
+                    letterSpacing: 0,
+                    padding: 10,
+                    marginTop: 20,
+                    fontSize: 18,
+                  },
+                ]}
+              >
+                Tap On The <Text style={styles.group}>Group</Text> To Check And
+                Edit
+              </Text>
+              <MaterialCommunityIcons
+                name="gesture-tap"
+                size={50}
+                color="#3FA2F6"
+                style={{ alignSelf: "center" }}
+              />
+
+              <CustomCarousel
+                data={filteredGroups || groups}
+                handlePress={handlePress}
+                setTeacher={setGroup}
+                setUsers={setUser}
+              />
+            </>
+          )}
+        </View>
       )}
 
       <View>
@@ -122,6 +140,9 @@ function checkEditGroup(props) {
               phone={group.phone}
               city={group.city}
               token={group.tokenGroup}
+              numOfPeople={group.numOfPeople}
+              startDate={group.startDate}
+              endDate={group.endDate}
             />
           </View>
         )}
@@ -130,7 +151,8 @@ function checkEditGroup(props) {
             <View style={{ paddingVertical: 10 }}>
               <Divider style={styles.divider} />
               <Text style={[styles.titleText, { paddingBottom: 20 }]}>
-                STUDENTS
+                STUDENTS ({user.length}/{group.numOfPeople}{" "}
+                <Text style={{ fontSize: 10 }}>teacher incl.</Text>)
               </Text>
               <FlatList
                 horizontal

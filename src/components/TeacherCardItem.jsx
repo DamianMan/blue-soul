@@ -4,20 +4,40 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import * as Clipboard from "expo-clipboard";
 const { width } = Dimensions.get("window");
 
-function TeacherCardItem({ teacher, email, phone, city, token }) {
+function TeacherCardItem({
+  teacher,
+  email,
+  phone,
+  city,
+  token,
+  numOfPeople,
+  startDate,
+  endDate,
+}) {
   const copyToClipboard = async () => {
     await Clipboard.setStringAsync(token);
   };
+
+  const startFormatDate = new Date(startDate);
+  const endFormatDate = new Date(endDate);
 
   return (
     <View style={styles.teacherView}>
       <View
         style={{
-          justifyContent: "center",
+          justifyContent: "space-between",
           alignItems: "center",
-          paddingVertical: 5,
+          flexDirection: "row",
+          padding: 5,
         }}
       >
+        <View style={{ flexDirection: "column" }}>
+          <Text style={styles.chipText}>From</Text>
+          <Text style={styles.chipText}>
+            {startFormatDate.toLocaleDateString("de-DE")}
+          </Text>
+        </View>
+
         <Avatar.Image
           size={53}
           source={{
@@ -25,6 +45,12 @@ function TeacherCardItem({ teacher, email, phone, city, token }) {
           }}
           style={{ backgroundColor: "lightcyan" }}
         />
+        <View style={{ flexDirection: "column" }}>
+          <Text style={styles.chipText}>To</Text>
+          <Text style={styles.chipText}>
+            {endFormatDate.toLocaleDateString("de-DE")}
+          </Text>
+        </View>
       </View>
       <View>
         <Chip
@@ -39,7 +65,6 @@ function TeacherCardItem({ teacher, email, phone, city, token }) {
             />
           )}
           style={styles.chip}
-          onPress={() => console.log("Pressed")}
         >
           <Text style={styles.chipText}>{teacher}</Text>
         </Chip>
@@ -55,7 +80,6 @@ function TeacherCardItem({ teacher, email, phone, city, token }) {
             />
           )}
           style={styles.chip}
-          onPress={() => console.log("Pressed")}
         >
           <Text style={styles.chipText}>{email}</Text>
         </Chip>
@@ -71,7 +95,6 @@ function TeacherCardItem({ teacher, email, phone, city, token }) {
             />
           )}
           style={styles.chip}
-          onPress={() => console.log("Pressed")}
         >
           <Text style={styles.chipText}>{phone}</Text>
         </Chip>
@@ -87,10 +110,25 @@ function TeacherCardItem({ teacher, email, phone, city, token }) {
             />
           )}
           style={styles.chip}
-          onPress={() => console.log("Pressed")}
         >
           <Text style={styles.chipText}>{city}</Text>
         </Chip>
+        <Chip
+          mode="outlined"
+          elevated="true"
+          icon={() => (
+            <MaterialCommunityIcons
+              name="format-list-numbered"
+              size={24}
+              color="aliceblue"
+              style={{ marginRight: 30 }}
+            />
+          )}
+          style={styles.chip}
+        >
+          <Text style={styles.chipText}>{numOfPeople} People</Text>
+        </Chip>
+
         <Chip
           mode="outlined"
           elevated="true"

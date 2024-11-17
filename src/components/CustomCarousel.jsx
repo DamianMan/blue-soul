@@ -60,11 +60,8 @@ const CustomCarousel = ({ data, handlePress, setTeacher, setUsers }) => {
         width={width}
         height={width / 2}
         data={group}
-        autoplay={true}
-        scrollAnimationDuration={1000}
         enabled={group.length > 1 ? true : false}
         mode={group.length > 1 ? "parallax" : "default"}
-        withAnimation={{ type: "spring", config: 10000 }}
         onSnapToItem={(item) => {
           handlePress(group[item].tokenGroup);
         }}

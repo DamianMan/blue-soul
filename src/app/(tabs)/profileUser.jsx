@@ -327,7 +327,7 @@ const styles = StyleSheet.create({
     textAlign: "start",
   },
   submitBtn: {
-    backgroundColor: "lightseagreen",
+    backgroundColor: "#2185D5",
     elevation: 5,
     textShadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -17,6 +17,9 @@ import auth from "@react-native-firebase/auth";
 import * as Clipboard from "expo-clipboard";
 import axios from "axios";
 import { ContextData } from "../context/ContextDataProvider";
+import { DatePickerModal } from "react-native-paper-dates";
+import { de, registerTranslation } from "react-native-paper-dates";
+registerTranslation("de", de);
 
 function addNewGroup(props) {
   const user = auth().currentUser;
@@ -35,9 +38,48 @@ function addNewGroup(props) {
     token: "",
     city: "",
     phone: "",
+    numOfPeople: 0,
   });
+
   const [loading, setLoading] = useState(false);
 
+  // Date Picker   const [range, setRange] = React.useState({ startDate: undefined, endDate: undefined });
+  const [range, setRange] = useState({
+    startDate: undefined,
+    endDate: undefined,
+  });
+  const [open, setOpen] = useState(false);
+
+  const onDismiss = useCallback(() => {
+    setOpen(false);
+  }, [setOpen]);
+
+  const onConfirm = useCallback(
+    ({ startDate, endDate }) => {
+      setOpen(false);
+      setRange({ startDate, endDate });
+      getDaysInRange(startDate, endDate);
+    },
+    [setOpen, setRange]
+  );
+
+  // Get Days in Date Range
+  const getDaysInRange = (startDate, endDate) => {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const dates = [];
+
+    if (start > end) return dates;
+
+    while (start <= end) {
+      dates.push(new Date(start));
+      start.setDate(start.getDate() + 1);
+    }
+    console.log(dates);
+    return dates;
+  };
+
+  // Copy function
   const copyToClipboard = async () => {
     await Clipboard.setStringAsync(infoGroup.token);
   };
@@ -71,7 +113,9 @@ function addNewGroup(props) {
   };
 
   const handleSubmit = async () => {
-    const { name, fullName, email, token, city, phone } = infoGroup;
+    const { name, fullName, email, token, city, phone, numOfPeople } =
+      infoGroup;
+    const { startDate, endDate } = range;
     setLoading(true);
     if (infoGroup.token === "" || infoGroup.email === "") {
       Alert.alert("Error", "Please fill all field");
@@ -90,6 +134,9 @@ function addNewGroup(props) {
                 token,
                 city,
                 phone,
+                numOfPeople,
+                startDate,
+                endDate,
               },
               {
                 headers: { "Content-Type": "application/json" },
@@ -105,7 +152,9 @@ function addNewGroup(props) {
                 token: "",
                 city: "",
                 phone: "",
+                numOfPeople: 0,
               }));
+              setRange({ startDate: undefined, endDate: undefined });
               // signUp();
               getGroups();
 
@@ -171,6 +220,7 @@ function addNewGroup(props) {
             activeOutlineColor="#2185D5"
             label="Email"
             error={!isValidEmail}
+            keyboardType="email-address"
             onChangeText={handleEmail}
             style={styles.userInput}
           />
@@ -195,6 +245,20 @@ function addNewGroup(props) {
             onChangeText={(text) => setInfoGroup({ ...infoGroup, phone: text })}
             style={styles.userInput}
           />
+          <TextInput
+            value={infoGroup.numOfPeople}
+            autoCapitalize="none"
+            mode="outlined"
+            textColor="#3A4750"
+            activeOutlineColor="#2185D5"
+            label="Number Of People"
+            keyboardType="numeric"
+            onChangeText={(num) =>
+              setInfoGroup({ ...infoGroup, numOfPeople: num })
+            }
+            style={styles.userInput}
+          />
+
           {infoGroup.token === "" ? (
             <Button
               icon={
@@ -217,11 +281,15 @@ function addNewGroup(props) {
           ) : (
             <Button
               icon={() => (
-                <MaterialIcons name="content-copy" size={24} color="#2185D5" />
+                <MaterialIcons
+                  name="content-copy"
+                  size={24}
+                  color="aliceblue"
+                />
               )}
               mode="contained-total"
               labelStyle={{
-                color: "#2185D5",
+                color: "aliceblue",
                 fontSize: 14,
               }}
               style={styles.generateBtn}
@@ -230,6 +298,35 @@ function addNewGroup(props) {
               <Text>{infoGroup.token}</Text>
             </Button>
           )}
+          <Button
+            onPress={() => setOpen(true)}
+            uppercase={false}
+            mode="elevated"
+            buttonColor="lightseagreen"
+            textColor="aliceblue"
+            style={{ borderRadius: 5, padding: 5, marginTop: 5 }}
+          >
+            Pick Dates
+          </Button>
+          <DatePickerModal
+            locale="de"
+            mode="range"
+            visible={open}
+            onDismiss={onDismiss}
+            startDate={range.startDate}
+            endDate={range.endDate}
+            onConfirm={onConfirm}
+          />
+          <View style={styles.dateView}>
+            <Text>
+              Start-Date:{" "}
+              {range.startDate && range.startDate.toLocaleDateString("de-De")}
+            </Text>
+            <Text>
+              End-Date:{" "}
+              {range.endDate && range.endDate.toLocaleDateString("de-De")}
+            </Text>
+          </View>
         </View>
       ) : (
         <ActivityIndicator />
@@ -297,5 +394,16 @@ const styles = StyleSheet.create({
     width: (width * 90) / 100,
     justifyContent: "center",
     alignItems: "center",
+  },
+  dateButton: {
+    backgroundColor: "lightseagreen",
+    marginVertical: 3,
+    borderRadius: 3,
+  },
+  dateView: {
+    justifyContent: "space-between",
+    alignItems: "center",
+    flexDirection: "row",
+    marginTop: 5,
   },
 });

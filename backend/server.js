@@ -266,7 +266,17 @@ app.post("/api/editPassword", async (req, res) => {
 
 // Post Group From Admin
 app.post("/api/postGroup", async (req, res) => {
-  const { name, fullName, email, token, city, phone } = req.body;
+  const {
+    name,
+    fullName,
+    email,
+    token,
+    city,
+    phone,
+    numOfPeople,
+    startDate,
+    endDate,
+  } = req.body;
   // Check if token is provided
   if (!token) {
     return res.status(400).json({ message: "Token is required" });
@@ -275,6 +285,9 @@ app.post("/api/postGroup", async (req, res) => {
 
   const currentSchool = await Schools.findOne({ email: email });
   if (!currentSchool) {
+    const convertedStartDate = new Date(startDate);
+    const convertedEndDate = new Date(endDate);
+
     // New Group
     const newSchool = new Schools({
       nameGroup: name,
@@ -284,6 +297,9 @@ app.post("/api/postGroup", async (req, res) => {
       password: token,
       city: city,
       phone: phone,
+      peopleCount: numOfPeople,
+      startDate: convertedStartDate,
+      endDate: convertedEndDate,
     });
     console.log(" NEW GROUP:", newSchool);
 

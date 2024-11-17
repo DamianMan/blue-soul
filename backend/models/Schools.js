@@ -28,6 +28,15 @@ const schoolModel = new mongoose.Schema(
     phone: {
       type: String,
     },
+    peopleCount: {
+      type: Number,
+    },
+    startDate: {
+      type: Date,
+    },
+    endDate: {
+      type: Date,
+    },
   },
   { timestamps: true }
 );

@@ -40,6 +40,29 @@ export default function TabsLayout() {
           ),
         }}
       />
+
+      <Tabs.Screen
+        name="agendaUser"
+        options={{
+          title: "Agenda",
+          headerStyle: {
+            backgroundColor: "aliceblue",
+          },
+          tabBarStyle: { backgroundColor: "aliceblue" },
+
+          headerTitle: (props) => (
+            <Image
+              source={require("../../../assets/logo.png")}
+              resizeMode="contain"
+              style={{ width: 130, height: 130 }}
+            />
+          ),
+          headerRight: () => <LogoutBtn />,
+          tabBarIcon: ({ color }) => (
+            <FontAwesome name="list-ul" size={24} color={color} />
+          ),
+        }}
+      />
       <Tabs.Screen
         name="profileUser"
         options={{

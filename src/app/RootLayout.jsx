@@ -73,6 +73,7 @@ export default function RootLayout() {
           title: "Home",
         }}
       />
+
       <Stack.Screen
         name="addNewGroup"
         options={{
@@ -146,6 +147,13 @@ export default function RootLayout() {
         name="profileUser"
         options={{
           title: "Profile User",
+          headerRight: () => <LogoutBtn />,
+        }}
+      />
+      <Stack.Screen
+        name="agendaUser"
+        options={{
+          title: "Agenda User",
           headerRight: () => <LogoutBtn />,
         }}
       />
