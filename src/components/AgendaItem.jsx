@@ -13,10 +13,7 @@ function AgendaItem({ item }) {
   return (
     <TouchableOpacity onPress={itemPressed} style={styles.item}>
       <View>
-        <Text style={styles.itemDurationText}>{item.hour}</Text>
-      </View>
-      <View>
-        <Text style={styles.itemTitleText}>{item.name}</Text>
+        <Text style={styles.itemTitleText}>{item.hour}</Text>
         <Text style={styles.itemDurationText}>{item.data}</Text>
       </View>
       <View style={styles.itemButtonContainer}>
@@ -49,7 +46,7 @@ const styles = StyleSheet.create({
     color: "black",
   },
   itemDurationText: {
-    color: "grey",
+    color: "#393E46",
     fontSize: 12,
     marginTop: 4,
     marginLeft: 4,

@@ -140,18 +140,18 @@ function checkEditGroup(props) {
               phone={group.phone}
               city={group.city}
               token={group.tokenGroup}
-              numOfPeople={group.numOfPeople}
+              numOfPeople={group.peopleCount}
               startDate={group.startDate}
               endDate={group.endDate}
             />
           </View>
         )}
-        {user.length > 0 && (
+        {user.length > 0 && group && (
           <>
             <View style={{ paddingVertical: 10 }}>
               <Divider style={styles.divider} />
               <Text style={[styles.titleText, { paddingBottom: 20 }]}>
-                STUDENTS ({user.length}/{group.numOfPeople && group.numOfPeople}
+                STUDENTS ({user.length}/{group.peopleCount}
                 <Text style={{ fontSize: 10 }}>teacher incl.</Text>)
               </Text>
               <FlatList

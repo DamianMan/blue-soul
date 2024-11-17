@@ -4,6 +4,7 @@ const cors = require("cors");
 const Users = require("./models/Users");
 const Schools = require("./models/Schools");
 const Services = require("./models/Services");
+const Programs = require("./models/Programs");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const Service = require("./models/Services");
@@ -119,6 +120,16 @@ app.get("/api/getAllGroups", async (req, res) => {
   try {
     const allGroups = await Schools.find();
     res.json(allGroups);
+  } catch (error) {
+    res.json(error);
+  }
+});
+
+// Get Programs
+app.get("/api/getPrograms", async (req, res) => {
+  try {
+    const allPrograms = await Programs.find();
+    res.json(allPrograms);
   } catch (error) {
     res.json(error);
   }

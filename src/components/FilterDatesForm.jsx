@@ -67,7 +67,7 @@ function FilterDatesForm({ setFilteredGroups, setMessage }) {
         onConfirm={onConfirm}
       />
       <View style={styles.dateView}>
-        {date && <Text style={{ color: "#2185D5" }}>Selected Date</Text>}
+        {date && <Text style={{ color: "#2185D5" }}>Groups In Date</Text>}
 
         <Text style={styles.text}>
           {date && date.toLocaleDateString("de-De")}

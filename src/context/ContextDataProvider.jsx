@@ -10,6 +10,7 @@ function ContextDataProvider({ children }) {
   const [isNotification, setIsNotfication] = useState(false);
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState("damaino");
+  const [programs, setPrograms] = useState([]);
 
   useEffect(() => {
     // Get Services
@@ -22,6 +23,9 @@ function ContextDataProvider({ children }) {
     // Get All Users
 
     getUsers();
+
+    // Get Programs
+    getPrograms();
   }, []);
 
   // Get All Groups
@@ -74,6 +78,23 @@ function ContextDataProvider({ children }) {
     }
   };
 
+  // Get Programs
+  const getPrograms = async () => {
+    try {
+      await axios
+        .get("https://blue-soul-app.onrender.com/api/getPrograms")
+        .then((res) => {
+          setPrograms(res.data);
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.log("Error Responding Data:", err);
+        });
+    } catch (err) {
+      console.log("Error Request:", err);
+    }
+  };
+
   // Set Notification Status
   const getNotificationStatus = (notif) => {
     setIsNotfication(notif);
@@ -113,6 +134,7 @@ function ContextDataProvider({ children }) {
     users,
     services,
     groups,
+    programs,
     loading,
     getGroups,
     getUsers,
