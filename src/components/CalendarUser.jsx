@@ -8,39 +8,46 @@ import {
 } from "react-native-calendars";
 
 import AgendaItem from "./AgendaItem";
+import { useContext } from "react";
+import { ContextData } from "../context/ContextDataProvider";
 
 const { height, width } = Dimensions.get("window");
 // Example agenda data
-const ITEMS = {
-  "2024-11-16": [
-    { name: "Task1", data: "Hello World", hour: "09:00" },
+const ITEMS = (programs) => {
+  const data = {
+    "2024-11-16": [
+      { name: "Task1", title: "Hello World", hour: 9 },
 
-    { name: "Task2", data: "Hello World", hour: "12:00" },
-  ],
-  "2024-11-17": [
-    { name: "Task1", data: "Hello World", hour: "09:00" },
-    { name: "Task2", data: "Hello World", hour: "12:00" },
-  ],
-  "2024-11-29": [{ name: "Task1", data: "Hello World", hour: "09:00" }],
-  "2024-11-18": [{ name: "Task1", data: "Hello World", hour: "09:00" }],
-  "2024-11-11": [{ name: "Task1", data: "Hello World", hour: "09:00" }],
-  "2024-11-30": [{ name: "Task1", data: "Hello World", hour: "09:00" }],
-  "2024-12-01": [{ name: "Task1", data: "Hello World", hour: "09:00" }],
-  "2024-12-06": [{ name: "Task1", data: "Hello World", hour: "09:00" }],
-  "2024-12-12": [{ name: "Task1", data: "Hello World", hour: "09:00" }],
-  "2024-12-08": [{ name: "Task1", data: "Hello World", hour: "09:00" }],
-  "2024-12-09": [{ name: "Task1", data: "Hello World", hour: "09:00" }],
-  "2024-12-20": [{ name: "Task1", data: "Hello World", hour: "09:00" }],
+      { name: "Task2", title: "Hello World", hour: 12 },
+    ],
+    "2024-11-17": [
+      { name: "Task1", title: "Hello World", hour: 9 },
+      { name: "Task2", title: "Hello World", hour: 12 },
+    ],
+    "2024-11-29": programs,
+    "2024-11-18": programs,
+    "2024-11-11": programs,
+    "2024-11-30": programs,
+    "2024-12-01": programs,
+    "2024-12-06": programs,
+    "2024-12-12": programs,
+    "2024-12-08": programs,
+    "2024-12-09": programs,
+    "2024-12-20": programs,
+  };
+  return data;
 };
 
 function CalendarUser(props) {
+  const { programs, groups } = useContext(ContextData);
+  console.log("Programs:", programs);
   const today = new Date();
 
   return (
     <SafeAreaView style={{ flex: 1, width }}>
       <Agenda
         date={today}
-        items={ITEMS}
+        items={ITEMS(programs)}
         renderItem={(item) => <AgendaItem item={item} />}
       />
     </SafeAreaView>

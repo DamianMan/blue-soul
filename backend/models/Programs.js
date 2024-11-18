@@ -5,7 +5,7 @@ const ProgramsSchema = new mongoose.Schema({
     type: String,
   },
   hour: {
-    type: Number,
+    type: String,
   },
 });
 

@@ -1527,6 +1527,8 @@ PODS:
     - React-perflogger (= 0.74.5)
     - React-utils (= 0.74.5)
   - RecaptchaInterop (100.0.0)
+  - RNCPicker (2.7.5):
+    - React-Core
   - RNFBApp (20.5.0):
     - Firebase/CoreOnly (= 10.29.0)
     - React-Core
@@ -1710,6 +1712,7 @@ DEPENDENCIES:
   - React-runtimescheduler (from `../node_modules/react-native/ReactCommon/react/renderer/runtimescheduler`)
   - React-utils (from `../node_modules/react-native/ReactCommon/react/utils`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - "RNCPicker (from `../node_modules/@react-native-picker/picker`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBAuth (from `../node_modules/@react-native-firebase/auth`)"
   - RNFS (from `../node_modules/react-native-fs`)
@@ -1900,6 +1903,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/react/utils"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  RNCPicker:
+    :path: "../node_modules/@react-native-picker/picker"
   RNFBApp:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBAuth:
@@ -2010,6 +2015,7 @@ SPEC CHECKSUMS:
   React-utils: 3f1fcffc14893afb9a7e5b7c736353873cc5fc95
   ReactCommon: f79ae672224dc1e6c2d932062176883c98eebd57
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
+  RNCPicker: 3e2c37a8328f368ce14da050cdc8231deb5fc9f9
   RNFBApp: 5f87753a8d8b37d229adf85cd0ff37709ffdf008
   RNFBAuth: ecbb030e0fd3551b8bc36cc85e0ebb1bcfb7685e
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688

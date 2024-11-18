@@ -13,8 +13,10 @@ function AgendaItem({ item }) {
   return (
     <TouchableOpacity onPress={itemPressed} style={styles.item}>
       <View>
-        <Text style={styles.itemTitleText}>{item.hour}</Text>
-        <Text style={styles.itemDurationText}>{item.data}</Text>
+        <Text style={styles.itemTitleText}>
+          {item.hour < 10 ? `0${item.hour}` : item.hour}:00
+        </Text>
+        <Text style={styles.itemDurationText}>{item.title}</Text>
       </View>
       <View style={styles.itemButtonContainer}>
         <Button
