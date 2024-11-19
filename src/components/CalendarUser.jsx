@@ -12,35 +12,29 @@ import { useContext } from "react";
 import { ContextData } from "../context/ContextDataProvider";
 
 const { height, width } = Dimensions.get("window");
+
 // Example agenda data
 const ITEMS = (programs) => {
-  const data = {
-    "2024-11-16": [
-      { name: "Task1", title: "Hello World", hour: 9 },
-
-      { name: "Task2", title: "Hello World", hour: 12 },
-    ],
-    "2024-11-17": [
-      { name: "Task1", title: "Hello World", hour: 9 },
-      { name: "Task2", title: "Hello World", hour: 12 },
-    ],
-    "2024-11-29": programs,
-    "2024-11-18": programs,
-    "2024-11-11": programs,
-    "2024-11-30": programs,
-    "2024-12-01": programs,
-    "2024-12-06": programs,
-    "2024-12-12": programs,
-    "2024-12-08": programs,
-    "2024-12-09": programs,
-    "2024-12-20": programs,
+  let data = {
+    "2024-11-19": ["673b5ad113a096ad05640ca9", "673b5e2b13a096ad05640cb2"],
+    "2024-11-20": ["673b5d6a13a096ad05640cad", "673b5e7b13a096ad05640cb3"],
+    "2024-11-21": ["673b5b3a13a096ad05640caa", "673b5ead13a096ad05640cb4"],
+    "2024-11-22": ["673b5b3a13a096ad05640caa", "673b5e2b13a096ad05640cb2"],
+    "2024-11-23": ["673b5cd713a096ad05640cab", "673b5ead13a096ad05640cb4"],
+    "2024-11-24": ["673b5d6a13a096ad05640cad"],
   };
+  for (const [key, value] of Object.entries(data)) {
+    const newValues = value.map((item) =>
+      programs.find((pr) => item === pr._id)
+    );
+    data[key] = newValues;
+  }
+  console.log(data);
   return data;
 };
 
 function CalendarUser(props) {
   const { programs, groups } = useContext(ContextData);
-  console.log("Programs:", programs);
   const today = new Date();
 
   return (

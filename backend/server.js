@@ -287,6 +287,7 @@ app.post("/api/postGroup", async (req, res) => {
     numOfPeople,
     startDate,
     endDate,
+    programGroup,
   } = req.body;
   // Check if token is provided
   if (!token) {
@@ -311,6 +312,7 @@ app.post("/api/postGroup", async (req, res) => {
       peopleCount: parseInt(numOfPeople),
       startDate: convertedStartDate,
       endDate: convertedEndDate,
+      program: programGroup,
     });
     console.log(" NEW GROUP:", newSchool);
 

@@ -37,6 +37,9 @@ const schoolModel = new mongoose.Schema(
     endDate: {
       type: Date,
     },
+    program: {
+      type: Object,
+    },
   },
   { timestamps: true }
 );

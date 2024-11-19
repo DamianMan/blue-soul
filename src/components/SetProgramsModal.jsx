@@ -52,7 +52,6 @@ function SetProgramsModal({
         <View>
           <Text style={styles.modalText}>
             <FlatList
-              horizontal
               data={range}
               keyExtractor={(item) => item}
               renderItem={({ item }) => <SelectProgramItem item={item} />}

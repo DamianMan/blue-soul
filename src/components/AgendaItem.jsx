@@ -3,9 +3,8 @@ import { StyleSheet, Alert, View, Text, TouchableOpacity } from "react-native";
 import { Button } from "react-native-paper";
 
 function AgendaItem({ item }) {
-  console.log("item:", item);
   const itemPressed = () => {
-    Alert.alert(item.name);
+    Alert.alert(item.title);
   };
   const buttonPressed = () => {
     Alert.alert("Show me more");
@@ -13,9 +12,7 @@ function AgendaItem({ item }) {
   return (
     <TouchableOpacity onPress={itemPressed} style={styles.item}>
       <View>
-        <Text style={styles.itemTitleText}>
-          {item.hour < 10 ? `0${item.hour}` : item.hour}:00
-        </Text>
+        <Text style={styles.itemTitleText}>{item.hour}</Text>
         <Text style={styles.itemDurationText}>{item.title}</Text>
       </View>
       <View style={styles.itemButtonContainer}>

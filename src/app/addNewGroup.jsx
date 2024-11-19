@@ -38,9 +38,6 @@ function addNewGroup(props) {
     setIsValidEmail(emailPattern.test(text));
   };
 
-  // Programs Modal state
-  const [modalVisible, setModalVisible] = useState(false);
-
   const [infoGroup, setInfoGroup] = useState({
     name: "",
     fullName: "",
@@ -72,10 +69,23 @@ function addNewGroup(props) {
       dates.push(new Date(start));
       start.setDate(start.getDate() + 1);
     }
-    console.log(dates);
+    // const objectProgram = dates.map((item) => {
+    //   const date = item.toISOString().slice(0, 10);
+    //   return { [date]: [] };
+    // });
+    const objectProgram = {};
+    dates.forEach((item) => {
+      const date = item.toISOString().slice(0, 10);
+      objectProgram[date] = [];
+    });
+    console.log("Object:", objectProgram);
+    setProgramGroup(objectProgram);
     return dates;
   };
   const [rangeSelected, setRangeSelected] = useState();
+
+  // Setting Prgram Object per Group
+  const [programGroup, setProgramGroup] = useState({});
 
   const onDismiss = useCallback(() => {
     setOpen(false);
@@ -126,6 +136,7 @@ function addNewGroup(props) {
                 numOfPeople,
                 startDate,
                 endDate,
+                programGroup,
               },
               {
                 headers: { "Content-Type": "application/json" },
@@ -144,7 +155,7 @@ function addNewGroup(props) {
                 numOfPeople: 0,
               }));
               setRange({ startDate: undefined, endDate: undefined });
-              // signUp();
+              setProgramGroup([]);
               getGroups();
 
               setLoading(false);
@@ -175,7 +186,6 @@ function addNewGroup(props) {
             fontSize: 18,
             paddingBottom: 10,
             textAlign: "left",
-            paddingRight: 20,
             fontWeight: "bold",
           }}
         >
@@ -313,7 +323,24 @@ function addNewGroup(props) {
               }}
               icon={"calendar"}
             >
-              Pick Dates
+              {(!range.startDate || !range.endDate) && "Group Dates"}
+              {range.startDate && (
+                <Text>
+                  From{" "}
+                  <Text style={{ fontWeight: "bold", color: "#fff" }}>
+                    {range.startDate.toLocaleDateString("de-De")}
+                  </Text>
+                </Text>
+              )}
+              {range.endDate && (
+                <Text>
+                  {" "}
+                  - To{" "}
+                  <Text style={{ fontWeight: "bold", color: "#fff" }}>
+                    {range.endDate.toLocaleDateString("de-De")}
+                  </Text>
+                </Text>
+              )}
             </Button>
             <DatePickerModal
               locale="de"
@@ -324,24 +351,7 @@ function addNewGroup(props) {
               endDate={range.endDate}
               onConfirm={onConfirm}
             />
-            <View style={styles.dateView}>
-              {range.startDate && (
-                <View>
-                  <Text style={{ fontWeight: "bold", marginHorizontal: 10 }}>
-                    Start-Date
-                  </Text>
-                  <Text>{range.startDate.toLocaleDateString("de-De")}</Text>
-                </View>
-              )}
-              {range.endDate && (
-                <View>
-                  <Text style={{ fontWeight: "bold", marginHorizontal: 10 }}>
-                    End-Date{" "}
-                  </Text>
-                  <Text> {range.endDate.toLocaleDateString("de-De")}</Text>
-                </View>
-              )}
-            </View>
+
             {/* {range.startDate && range.endDate && (
             <SetProgramsModal
               setModalVisible={setModalVisible}
@@ -357,8 +367,20 @@ function addNewGroup(props) {
                   horizontal
                   data={rangeSelected}
                   keyExtractor={(item) => item}
-                  renderItem={({ item }) => <SelectProgramItem item={item} />}
-                  style={{ alignSelf: "center", padding: 1, marginLeft: 5 }}
+                  renderItem={({ item, index }) => (
+                    <SelectProgramItem
+                      date={item}
+                      index={index}
+                      programGroup={programGroup}
+                      setProgramGroup={setProgramGroup}
+                    />
+                  )}
+                  style={{
+                    alignSelf: "center",
+                    padding: 1,
+                    marginLeft: 10,
+                    marginVertical: 5,
+                  }}
                 />
                 <View>
                   <Button
@@ -389,7 +411,7 @@ export default addNewGroup;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 20,
+    paddingTop: 10,
     backgroundColor: "#F3F3F3",
     justifyContent: "flex-start",
     alignItems: "center",
@@ -415,11 +437,11 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.6,
-    marginBottom: 50,
+    marginBottom: 60,
     padding: 5,
   },
   generateBtn: {
-    backgroundColor: "dodgerblue",
+    backgroundColor: "steelblue",
     marginVertical: 5,
     borderRadius: 5,
     height: 50,

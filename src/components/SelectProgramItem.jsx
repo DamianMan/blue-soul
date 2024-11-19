@@ -23,22 +23,23 @@ const data = [
   { label: "Green", value: "green" },
   { label: "Orange", value: "orange" },
 ];
-function SelectProgramItem({ item }) {
+function SelectProgramItem({ date, setProgramGroup, programGroup, index }) {
+  const formattedDate = date.toISOString().slice(0, 10);
+
   const [selected, setSelected] = useState([]);
+  const [obj, setObj] = useState({});
   const { programs } = useContext(ContextData);
   const [isFocus, setIsFocus] = useState(false);
-
   const dataPrograms = () => {
     const newArray = programs.map((item) => ({
       label: `${item.hour} - ${item.title}`,
-      value: item.title,
+      value: item._id,
     }));
-    console.log("new array:", newArray);
     return newArray;
   };
   return (
     <View style={styles.container}>
-      <Text style={styles.textDate}>{item.toLocaleDateString("de-De")}</Text>
+      <Text style={styles.textDate}>{date.toLocaleDateString("de-De")}</Text>
       <MultiSelect
         style={[styles.dropdown, isFocus && { borderColor: "dodgerblue" }]}
         containerStyle={styles.containerStyle}
@@ -56,10 +57,19 @@ function SelectProgramItem({ item }) {
         placeholder="Select program"
         searchPlaceholder="Search..."
         onFocus={() => setIsFocus(true)}
-        onBlur={() => setIsFocus(false)}
+        onBlur={() => {
+          setIsFocus(false);
+          console.log("Date:", formattedDate);
+
+          const newObject = { ...programGroup, [formattedDate]: obj };
+          console.log("New object:", newObject);
+
+          setProgramGroup(newObject);
+        }}
         value={selected}
         onChange={(item) => {
           setSelected(item);
+          setObj(item);
           setIsFocus(false);
         }}
         renderLeftIcon={() => (
@@ -170,6 +180,7 @@ const styles = StyleSheet.create({
 
   containerStyle: {
     width: (width * 80) / 100,
+    height: height / 2,
   },
 });
 
