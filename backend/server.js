@@ -578,18 +578,14 @@ app.post("/api/editProgramDay", async (req, res) => {
     query = {
       _id: idGroup,
     };
-    await Schools.findOneAndUpdate(
-      query,
-      {
-        $set: {
-          [`program.${date}`]: newProgram,
-        },
-      },
-      {
-        new: true,
-      }
-    );
-
+    const currentGroup = await Schools.findOneAndUpdate(query);
+    console.log(currentGroup);
+    // Check if the key exists
+    if (!currentGroup.program.has(date)) {
+      throw new Error(`Key ${date} does not exist in programDates`);
+    }
+    currentGroup.program.set(date, newProgram);
+    await currentGroup.save();
     res.json({ message: "Program edited Succesfully!", status: "Success" });
   } catch (error) {
     res.json({
