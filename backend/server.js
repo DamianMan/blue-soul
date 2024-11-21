@@ -10,6 +10,7 @@ const bcrypt = require("bcrypt");
 const Service = require("./models/Services");
 const axios = require("axios");
 const admin = require("firebase-admin");
+const { id } = require("react-native-paper-dates");
 
 require("dotenv").config({ path: "../.env" });
 // require("../blue-soul-9434a-firebase-adminsdk-yau4q-0a78a8df74.json");
@@ -574,13 +575,21 @@ app.post("/api/editProgramDay", async (req, res) => {
   const { idGroup, date, newProgram } = req.body;
   console.log(req.body);
   try {
-    const currentGroup = await Schools.findById(idGroup);
-    // Check if the key exists
-    if (!currentGroup.program.has(date)) {
-      throw new Error(`Key ${date} does not exist in programDates`);
-    }
-    currentGroup.program.set(date, newProgram);
-    await currentGroup.save();
+    query = {
+      _id: idGroup,
+    };
+    await Schools.findOneAndUpdate(
+      query,
+      {
+        $set: {
+          [`program.${date}`]: newProgram,
+        },
+      },
+      {
+        new: true,
+      }
+    );
+
     res.json({ message: "Program edited Succesfully!", status: "Success" });
   } catch (error) {
     res.json({
