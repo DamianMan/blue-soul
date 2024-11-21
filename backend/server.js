@@ -569,6 +569,22 @@ app.post("/api/deleteNameService", async (req, res) => {
   }
 });
 
+// Edit Program day
+app.post("/api/editProgramDay", async (req, res) => {
+  const { idGroup, date, newProgram } = req.body;
+  try {
+    const currentGroup = await Schools.findById(idGroup);
+    currentGroup.program.set(date, newProgram);
+    await currentGroup.save();
+    res.json({ message: "Program edited Succesfully!", status: "Success" });
+  } catch (error) {
+    res.json({
+      message: "Group not found or edit not possibile!",
+      status: "Failed",
+    });
+  }
+});
+
 // Post User Device Push Token
 app.post("/api/postToken", async (req, res) => {
   const { token, userEmail } = req.body;

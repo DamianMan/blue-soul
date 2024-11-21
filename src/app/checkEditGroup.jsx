@@ -8,20 +8,22 @@ import {
   ActivityIndicator,
   ImageBackground,
   FlatList,
+  Modal,
 } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import TeacherCardItem from "../components/TeacherCardItem";
 import { ContextData } from "../context/ContextDataProvider";
 import CustomCarousel from "../components/CustomCarousel";
-import { Chip, Divider } from "react-native-paper";
+import { Button, Chip, Divider } from "react-native-paper";
 import StudentChipItem from "../components/StudentChipItem";
 import PdfButton from "../components/PdfButton";
 import FilterDatesForm from "../components/FilterDatesForm";
+import CalendarAdmin from "../components/CalendarAdmin";
 
 const { height } = Dimensions.get("window");
 
 function checkEditGroup(props) {
-  const { getUsers, getGroups, users, groups, loading } =
+  const { getUsers, getGroups, users, loading, programs, groups } =
     useContext(ContextData);
   console.log("loading staus:", loading);
   const [filteredGroups, setFilteredGroups] = useState([]);
@@ -29,7 +31,8 @@ function checkEditGroup(props) {
   const [user, setUser] = useState([]);
   const [groupToken, setGroupToken] = useState("");
   const [reload, setReload] = useState(false);
-  console.log("Groups per date:", filteredGroups);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [agendaList, setAgendaList] = useState();
 
   // Get All Groups
   useEffect(() => {
@@ -56,19 +59,34 @@ function checkEditGroup(props) {
     console.log("Token:", groupToken);
     console.log("Reload Users!");
   };
+  const ITEMS = (programs, data) => {
+    const transformedData = {}; // New object to store transformed values
+
+    for (const [key, value] of Object.entries(data)) {
+      const newValues = value.map((item) =>
+        programs.find((pr) => item === pr._id)
+      );
+      transformedData[key] = newValues;
+    }
+    return transformedData;
+  };
 
   const handlePress = (token) => {
-    const currentGroup = groups.find((item) => item.tokenGroup === token);
+    const currentGroup = filteredGroups.find(
+      (item) => item.tokenGroup === token
+    );
     setGroupToken(token);
     if (currentGroup) {
       setGroup(currentGroup);
+      console.log("Current GROUP:", currentGroup);
+      currentGroup.program &&
+        setAgendaList(ITEMS(programs, currentGroup.program));
     } else {
       alert("No Group Found!");
     }
     const currentUsers = users.filter((item) => item.tokenGroup === token);
     if (currentUsers.length > 0) {
       setUser(currentUsers);
-      console.log("Users:", currentUsers);
     } else {
       alert("No Users Found");
     }
@@ -76,61 +94,91 @@ function checkEditGroup(props) {
 
   return (
     <ScrollView style={styles.container}>
-      <ImageBackground
-        imageStyle={styles.image}
-        style={styles.image}
-        resizeMode="cover"
-        source={{
-          uri: "https://images.unsplash.com/photo-1669647561467-891414e9b140?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDF8fHxlbnwwfHx8fHw%3D",
-        }}
-      />
       {loading ? (
-        <ActivityIndicator
-          size={"large"}
-          color={"#2185D5"}
-          style={{ marginTop: 100 }}
-        />
-      ) : (
-        <View>
-          <FilterDatesForm setFilteredGroups={setFilteredGroups} />
-
-          {filteredGroups.length > 0 && (
-            <>
-              <Text
-                style={[
-                  styles.titleText,
-                  {
-                    letterSpacing: 0,
-                    padding: 10,
-                    marginTop: 20,
-                    fontSize: 18,
-                  },
-                ]}
-              >
-                Tap On The <Text style={styles.group}>Group</Text> To Check And
-                Edit
-              </Text>
-              <MaterialCommunityIcons
-                name="gesture-tap"
-                size={50}
-                color="#3FA2F6"
-                style={{ alignSelf: "center" }}
-              />
-
-              <CustomCarousel
-                data={filteredGroups || groups}
-                handlePress={handlePress}
-                setTeacher={setGroup}
-                setUsers={setUser}
-              />
-            </>
-          )}
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            flex: 1,
+          }}
+        >
+          <ActivityIndicator size={"large"} color={"#2185D5"} />
         </View>
+      ) : (
+        <>
+          <ImageBackground
+            imageStyle={styles.image}
+            style={styles.image}
+            resizeMode="cover"
+            source={{
+              uri: "https://images.unsplash.com/photo-1669647561467-891414e9b140?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDF8fHxlbnwwfHx8fHw%3D",
+            }}
+          />
+          <View>
+            <FilterDatesForm setFilteredGroups={setFilteredGroups} />
+
+            {filteredGroups.length > 0 && (
+              <>
+                <Text
+                  style={[
+                    styles.titleText,
+                    {
+                      letterSpacing: 0,
+                      padding: 10,
+                      marginTop: 20,
+                      fontSize: 18,
+                    },
+                  ]}
+                >
+                  Tap On The <Text style={styles.group}>Group</Text> To Check
+                  And Edit
+                </Text>
+                <MaterialCommunityIcons
+                  name="gesture-tap"
+                  size={50}
+                  color="#3FA2F6"
+                  style={{ alignSelf: "center" }}
+                />
+
+                <CustomCarousel
+                  data={filteredGroups || groups}
+                  handlePress={handlePress}
+                  setTeacher={setGroup}
+                  setUsers={setUser}
+                />
+              </>
+            )}
+          </View>
+        </>
       )}
 
       <View>
         {group && (
           <View>
+            <Button
+              icon={"calendar"}
+              mode="outlined"
+              textColor="#2185D5"
+              onPress={() => setModalVisible(!modalVisible)}
+              style={styles.programBtn}
+            >
+              Show Program
+            </Button>
+            <Modal
+              animationType="slide"
+              presentationStyle="fullScreen"
+              visible={modalVisible}
+              onRequestClose={() => {
+                Alert.alert("Modal has been closed.");
+                setModalVisible(!modalVisible);
+              }}
+            >
+              <CalendarAdmin
+                agendaList={agendaList}
+                setModalVisible={setModalVisible}
+                idGroup={group._id}
+              />
+            </Modal>
             <Text style={[styles.titleText, { color: "#2185D5" }]}>
               TEACHER
             </Text>
@@ -224,6 +272,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: "#303841",
     letterSpacing: 1,
+  },
+  programBtn: {
+    borderColor: "dodgerblue",
+    marginBottom: 20,
+    alignSelf: "center",
   },
 });
 

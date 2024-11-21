@@ -63,6 +63,7 @@ const CustomCarousel = ({ data, handlePress, setTeacher, setUsers }) => {
         enabled={group.length > 1 ? true : false}
         mode={group.length > 1 ? "parallax" : "default"}
         onSnapToItem={(item) => {
+          console.log("Token ITEM:", group[item]);
           handlePress(group[item].tokenGroup);
         }}
         renderItem={({ item, index }) => (
@@ -130,7 +131,7 @@ const CustomCarousel = ({ data, handlePress, setTeacher, setUsers }) => {
 
 const styles = StyleSheet.create({
   carousel: {
-    marginBottom: 30,
+    marginBottom: 10,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,

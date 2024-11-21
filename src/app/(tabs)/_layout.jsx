@@ -1,10 +1,8 @@
 import { Tabs } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Image, Pressable, Text } from "react-native";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Logout from "../../components/LogoutBtn";
 import LogoutBtn from "../../components/LogoutBtn";
-import { BlurView } from "expo-blur";
 
 import auth from "@react-native-firebase/auth";
 
@@ -13,7 +11,7 @@ export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: "#000",
+        tabBarActiveTintColor: "dodgerblue",
         tabBarInactiveTintColor: "grey",
       }}
     >
