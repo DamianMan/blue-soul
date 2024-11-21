@@ -7,6 +7,7 @@ import { Button } from "react-native-paper";
 const { width } = Dimensions.get("window");
 
 function CalendarAdmin({ agendaList, setModalVisible, idGroup }) {
+  console.log("grpuo id:", idGroup);
   const today = new Date();
   const [date, setDate] = useState();
 

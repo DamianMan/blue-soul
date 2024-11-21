@@ -12,7 +12,7 @@ const axios = require("axios");
 const admin = require("firebase-admin");
 
 require("dotenv").config({ path: "../.env" });
-// require("../blue-soul-9434a-firebase-adminsdk-yau4q-0a78a8df74.json")
+// require("../blue-soul-9434a-firebase-adminsdk-yau4q-0a78a8df74.json");
 const serviceAccount = JSON.parse(process.env.FIREBASE_ADMIN_SDK);
 
 admin.initializeApp({
@@ -572,8 +572,13 @@ app.post("/api/deleteNameService", async (req, res) => {
 // Edit Program day
 app.post("/api/editProgramDay", async (req, res) => {
   const { idGroup, date, newProgram } = req.body;
+  console.log(req.body);
   try {
     const currentGroup = await Schools.findById(idGroup);
+    // Check if the key exists
+    if (!currentGroup.program.has(date)) {
+      throw new Error(`Key ${date} does not exist in programDates`);
+    }
     currentGroup.program.set(date, newProgram);
     await currentGroup.save();
     res.json({ message: "Program edited Succesfully!", status: "Success" });

@@ -18,6 +18,7 @@ import axios from "axios";
 const { width, height } = Dimensions.get("window");
 
 export default function AgendaItemAdmin({ item, idGroup, date }) {
+  console.log(date);
   const [modalVisible, setModalVisible] = useState(false);
   const [value, setValue] = useState();
 
@@ -65,7 +66,7 @@ export default function AgendaItemAdmin({ item, idGroup, date }) {
           }
         )
         .then((res) => Alert.alert(res.data.status, res.data.message))
-        .catch((err) => Alert.alert(res.data.status, res.data.message));
+        .catch((err) => Alert.alert(err.data.status, err.data.message));
     } catch (error) {
       alert("Error making edit program day request");
     }
