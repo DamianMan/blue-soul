@@ -599,7 +599,7 @@ app.post("/api/editProgramDay", async (req, res) => {
 
 // Delete Program Day
 app.post("/api/deleteProgramDay", async (req, res) => {
-  const { idGroup, date, idPogram } = req.body;
+  const { idGroup, date, idProgram } = req.body;
   console.log(req.body);
   try {
     const fieldPath = `program.${date}`;
@@ -611,7 +611,7 @@ app.post("/api/deleteProgramDay", async (req, res) => {
       query,
       {
         $pull: {
-          [fieldPath]: idPogram,
+          [fieldPath]: idProgram,
         },
       },
       { new: true }
