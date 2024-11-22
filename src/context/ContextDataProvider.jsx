@@ -14,7 +14,6 @@ function ContextDataProvider({ children }) {
 
   useEffect(() => {
     // Get Services
-    setLoading(true);
 
     getServices();
     // Get All Groups
@@ -30,6 +29,8 @@ function ContextDataProvider({ children }) {
 
   // Get All Groups
   const getGroups = async () => {
+    setLoading(true);
+
     try {
       await axios
         .get("https://blue-soul-app.onrender.com/api/getAllGroups")
@@ -48,6 +49,8 @@ function ContextDataProvider({ children }) {
   // Get All Users
 
   const getUsers = async () => {
+    setLoading(true);
+
     try {
       await axios
         .get("https://blue-soul-app.onrender.com/api/getUsers")
@@ -63,6 +66,8 @@ function ContextDataProvider({ children }) {
   };
   // Get Services
   const getServices = async () => {
+    setLoading(true);
+
     try {
       await axios
         .get("https://blue-soul-app.onrender.com/api/getServices")

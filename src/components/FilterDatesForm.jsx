@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import { DatePickerModal } from "react-native-paper-dates";
@@ -7,11 +7,7 @@ import { de, registerTranslation } from "react-native-paper-dates";
 import { ContextData } from "../context/ContextDataProvider";
 registerTranslation("de", de);
 
-function FilterDatesForm({ setFilteredGroups, setMessage }) {
-  const { groups } = useContext(ContextData);
-  // Date Picker   const [range, setRange] = React.useState({ startDate: undefined, endDate: undefined });
-  const [date, setDate] = useState(undefined);
-
+function FilterDatesForm({ setFilteredGroups, groups, setDate, date }) {
   const [open, setOpen] = useState(false);
 
   const onDismiss = useCallback(() => {
@@ -40,7 +36,10 @@ function FilterDatesForm({ setFilteredGroups, setMessage }) {
     console.log("Filtered GROUPS:", filteredGroups);
     if (filteredGroups.length > 0) {
       setFilteredGroups(filteredGroups);
+      console.log(selectedDate);
       setDate(selectedDate);
+    } else if (!selectedDate) {
+      alert(`Please select a Date`);
     } else {
       alert(`No Groups In Date: ${selectedDate.toLocaleDateString("de-DE")}`);
     }

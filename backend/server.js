@@ -577,7 +577,7 @@ app.post("/api/editProgramDay", async (req, res) => {
     query = {
       _id: idGroup,
     };
-    await Schools.findOneAndUpdate(
+    const updatedGRoup = await Schools.findOneAndUpdate(
       query,
       {
         $set: {
@@ -586,6 +586,7 @@ app.post("/api/editProgramDay", async (req, res) => {
       },
       { new: true }
     );
+    console.log("Updated Group:", updatedGRoup);
 
     res.json({ message: "Program edited Succesfully!", status: "Success" });
   } catch (error) {

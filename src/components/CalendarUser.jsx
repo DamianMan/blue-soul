@@ -47,6 +47,7 @@ function CalendarUser(props) {
     <SafeAreaView style={{ flex: 1, width }}>
       <Agenda
         date={today}
+        showOnlySelectedDayItems={true}
         items={ITEMS(programs, program)}
         renderItem={(item) => <AgendaItem item={item} />}
       />

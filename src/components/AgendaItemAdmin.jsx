@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Modal,
   Dimensions,
+  ActivityIndicator,
 } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import { useState, useContext } from "react";
@@ -17,13 +18,14 @@ import axios from "axios";
 
 const { width, height } = Dimensions.get("window");
 
-export default function AgendaItemAdmin({ item, idGroup, date }) {
-  console.log(date);
+export default function AgendaItemAdmin({ item, idGroup, date, setReload }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [value, setValue] = useState();
 
-  const { programs, groups } = useContext(ContextData);
+  const { programs, groups, loading } = useContext(ContextData);
   const [isFocus, setIsFocus] = useState(false);
+
+  const currenGroup = groups.find((item) => item._id === idGroup);
 
   const dataPrograms = () => {
     const newArray = programs.map((item) => ({
@@ -38,11 +40,9 @@ export default function AgendaItemAdmin({ item, idGroup, date }) {
   };
   const buttonPressed = () => {
     setModalVisible(!modalVisible);
-    console.log("Item ID:", item._id);
   };
 
   const handleSave = async () => {
-    const currenGroup = groups.find((item) => item._id === idGroup);
     console.log("Old Program:", currenGroup.program);
     const newProgram = currenGroup.program[date].map((obj) => {
       if (obj === item._id) {
@@ -51,7 +51,6 @@ export default function AgendaItemAdmin({ item, idGroup, date }) {
         return obj;
       }
     });
-    console.log("New Program:", newProgram);
     try {
       await axios
         .post(
@@ -65,10 +64,18 @@ export default function AgendaItemAdmin({ item, idGroup, date }) {
             headers: { "Content-Type": "application/json" },
           }
         )
-        .then((res) => Alert.alert(res.data.status, res.data.message))
+        .then((res) => {
+          Alert.alert(res.data.status, res.data.message);
+
+          setReload();
+          setModalVisible(!modalVisible);
+        })
         .catch((err) => Alert.alert(err.data.status, err.data.message));
+      console.log("New Program:", newProgram);
     } catch (error) {
-      alert("Error making edit program day request");
+      alert(
+        "Error making edit: Please the day you want modify needs to be selected or error Request!"
+      );
     }
   };
   return (
@@ -87,6 +94,7 @@ export default function AgendaItemAdmin({ item, idGroup, date }) {
           Edit
         </Button>
       </View>
+
       <Modal
         animationType="slide"
         transparent={true}
@@ -98,57 +106,63 @@ export default function AgendaItemAdmin({ item, idGroup, date }) {
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Button
-              icon="close"
-              textColor="red"
-              onPress={() => setModalVisible(!modalVisible)}
-              style={styles.buttonClose}
-            ></Button>
-            <Dropdown
-              style={[
-                styles.dropdown,
-                isFocus && { borderColor: "dodgerblue" },
-              ]}
-              placeholderStyle={styles.placeholderStyle}
-              selectedTextStyle={styles.selectedTextStyle}
-              inputSearchStyle={styles.inputSearchStyle}
-              iconStyle={styles.iconStyle}
-              data={dataPrograms()}
-              search
-              maxHeight={300}
-              labelField="label"
-              valueField="value"
-              placeholder={!isFocus ? "Select item" : "..."}
-              searchPlaceholder="Search..."
-              value={value}
-              onFocus={() => setIsFocus(true)}
-              onBlur={() => {
-                setIsFocus(false);
-              }}
-              onChange={(item) => {
-                console.log("Selecetd:", item.value);
-                setValue(item.value);
-                setIsFocus(false);
-              }}
-              renderLeftIcon={() => (
-                <AntDesign
-                  style={styles.icon}
-                  color={isFocus ? "dodgerblue" : "black"}
-                  name="Safety"
-                  size={20}
+            {loading ? (
+              <ActivityIndicator size={"large"} color={"dodgerblue"} />
+            ) : (
+              <>
+                <Button
+                  icon="close"
+                  textColor="red"
+                  onPress={() => setModalVisible(!modalVisible)}
+                  style={styles.buttonClose}
+                ></Button>
+                <Dropdown
+                  style={[
+                    styles.dropdown,
+                    isFocus && { borderColor: "dodgerblue" },
+                  ]}
+                  placeholderStyle={styles.placeholderStyle}
+                  selectedTextStyle={styles.selectedTextStyle}
+                  inputSearchStyle={styles.inputSearchStyle}
+                  iconStyle={styles.iconStyle}
+                  data={dataPrograms()}
+                  search
+                  maxHeight={300}
+                  labelField="label"
+                  valueField="value"
+                  placeholder={!isFocus ? "Select item" : "..."}
+                  searchPlaceholder="Search..."
+                  value={value}
+                  onFocus={() => setIsFocus(true)}
+                  onBlur={() => {
+                    setIsFocus(false);
+                  }}
+                  onChange={(item) => {
+                    console.log("Selecetd:", item.value);
+                    setValue(item.value);
+                    setIsFocus(false);
+                  }}
+                  renderLeftIcon={() => (
+                    <AntDesign
+                      style={styles.icon}
+                      color={isFocus ? "dodgerblue" : "black"}
+                      name="Safety"
+                      size={20}
+                    />
+                  )}
                 />
-              )}
-            />
-            <Button
-              icon="file-document-edit-outline"
-              mode="elevated"
-              textColor="aliceblue"
-              buttonColor="dodgerblue"
-              style={styles.buttonSave}
-              onPress={handleSave}
-            >
-              Save
-            </Button>
+                <Button
+                  icon="file-document-edit-outline"
+                  mode="elevated"
+                  textColor="aliceblue"
+                  buttonColor="dodgerblue"
+                  style={styles.buttonSave}
+                  onPress={handleSave}
+                >
+                  Save
+                </Button>
+              </>
+            )}
           </View>
         </View>
       </Modal>

@@ -6,10 +6,10 @@ import { Button } from "react-native-paper";
 
 const { width } = Dimensions.get("window");
 
-function CalendarAdmin({ agendaList, setModalVisible, idGroup }) {
-  console.log("grpuo id:", idGroup);
+function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
   const today = new Date();
-  const [date, setDate] = useState();
+  const [date, setDate] = useState(today);
+  const [refresh, setRefresh] = useState(false);
 
   return (
     <View style={{ flex: 1, width, paddingTop: 50 }}>
@@ -33,9 +33,17 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup }) {
       <Agenda
         date={today}
         items={agendaList}
-        renderItem={(item) => (
-          <AgendaItemAdmin item={item} idGroup={idGroup} date={date} />
-        )}
+        showOnlySelectedDayItems={true}
+        renderItem={(item) => {
+          return (
+            <AgendaItemAdmin
+              item={item}
+              idGroup={idGroup}
+              date={date}
+              setReload={setReload}
+            />
+          );
+        }}
         onDayPress={(day) => {
           setDate(day.dateString); // Updates state with the selected date
         }}

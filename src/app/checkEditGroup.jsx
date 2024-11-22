@@ -25,7 +25,6 @@ const { height } = Dimensions.get("window");
 function checkEditGroup(props) {
   const { getUsers, getGroups, users, loading, programs, groups } =
     useContext(ContextData);
-  console.log("loading staus:", loading);
   const [filteredGroups, setFilteredGroups] = useState([]);
   const [group, setGroup] = useState();
   const [user, setUser] = useState([]);
@@ -33,31 +32,47 @@ function checkEditGroup(props) {
   const [reload, setReload] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [agendaList, setAgendaList] = useState();
+  const [date, setDate] = useState(undefined);
 
   // Get All Groups
+
   useEffect(() => {
-    const loadingData = async () => {
+    const loadAndHandlePress = async () => {
       try {
+        // Fetch data first
         await getUsers();
         await getGroups();
-        console.log("Loading in screen");
+        const filteredGroups = groups.filter((item) => {
+          const startDate = new Date(item.startDate);
+          const endDate = new Date(item.endDate);
+          if (item.startDate || item.endDate) {
+            if (date >= startDate && date <= endDate) {
+              return item;
+            }
+          }
+        });
+        if (filteredGroups.length > 0) {
+          setFilteredGroups(filteredGroups);
+        }
+        console.log("Filetered Groups:", filteredGroups);
+
+        // Then handle the group processing
+        if (groupToken !== "") {
+          handlePress(groupToken); // Trigger handlePress after data is loaded
+          console.log("Reloading!!!");
+        }
       } catch (error) {
-        console.error("Error loading data:", error);
-      } finally {
+        console.error("Error during load and handlePress:", error);
       }
     };
-    loadingData();
-    if (groupToken !== "") {
-      handlePress(groupToken);
-      console.log("Reloading!!!");
-    }
-  }, [reload]);
+
+    loadAndHandlePress();
+  }, [reload]); // Triggered when reload changes
 
   const toogleReload = async () => {
-    setReload(!reload);
-    console.log("Reload status:", !reload);
-    console.log("Token:", groupToken);
-    console.log("Reload Users!");
+    setReload((prevReload) => !prevReload); // Ensures state consistency
+
+    console.log("Reload toggled!");
   };
   const ITEMS = (programs, data) => {
     const transformedData = {}; // New object to store transformed values
@@ -75,15 +90,25 @@ function checkEditGroup(props) {
     const currentGroup = filteredGroups.find(
       (item) => item.tokenGroup === token
     );
-    setGroupToken(token);
-    if (currentGroup) {
-      setGroup(currentGroup);
-      console.log("Current GROUP:", currentGroup);
-      currentGroup.program &&
-        setAgendaList(ITEMS(programs, currentGroup.program));
-    } else {
+
+    if (!currentGroup) {
       alert("No Group Found!");
+      return;
     }
+
+    setGroupToken(token);
+    setGroup(currentGroup);
+
+    // Update agendaList using the latest program and programs
+    if (currentGroup.program) {
+      console.log("CurrentGroup program:", currentGroup.program);
+      const updatedAgenda = ITEMS(programs, currentGroup.program);
+      setAgendaList(updatedAgenda);
+    } else {
+      console.log("No program found for the current group");
+    }
+
+    // Update users related to the group
     const currentUsers = users.filter((item) => item.tokenGroup === token);
     if (currentUsers.length > 0) {
       setUser(currentUsers);
@@ -92,65 +117,69 @@ function checkEditGroup(props) {
     }
   };
 
+  if (loading) {
+    return (
+      <View
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          flex: 1,
+        }}
+      >
+        <ActivityIndicator size={"large"} color={"#2185D5"} />
+      </View>
+    );
+  }
   return (
     <ScrollView style={styles.container}>
-      {loading ? (
-        <View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            flex: 1,
-          }}
-        >
-          <ActivityIndicator size={"large"} color={"#2185D5"} />
-        </View>
-      ) : (
-        <>
-          <ImageBackground
-            imageStyle={styles.image}
-            style={styles.image}
-            resizeMode="cover"
-            source={{
-              uri: "https://images.unsplash.com/photo-1669647561467-891414e9b140?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDF8fHxlbnwwfHx8fHw%3D",
-            }}
-          />
-          <View>
-            <FilterDatesForm setFilteredGroups={setFilteredGroups} />
+      <ImageBackground
+        imageStyle={styles.image}
+        style={styles.image}
+        resizeMode="cover"
+        source={{
+          uri: "https://images.unsplash.com/photo-1669647561467-891414e9b140?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDF8fHxlbnwwfHx8fHw%3D",
+        }}
+      />
+      <View>
+        <FilterDatesForm
+          setFilteredGroups={setFilteredGroups}
+          groups={groups}
+          date={date}
+          setDate={setDate}
+        />
 
-            {filteredGroups.length > 0 && (
-              <>
-                <Text
-                  style={[
-                    styles.titleText,
-                    {
-                      letterSpacing: 0,
-                      padding: 10,
-                      marginTop: 20,
-                      fontSize: 18,
-                    },
-                  ]}
-                >
-                  Tap On The <Text style={styles.group}>Group</Text> To Check
-                  And Edit
-                </Text>
-                <MaterialCommunityIcons
-                  name="gesture-tap"
-                  size={50}
-                  color="#3FA2F6"
-                  style={{ alignSelf: "center" }}
-                />
+        {filteredGroups.length > 0 && (
+          <>
+            <Text
+              style={[
+                styles.titleText,
+                {
+                  letterSpacing: 0,
+                  padding: 10,
+                  marginTop: 20,
+                  fontSize: 18,
+                },
+              ]}
+            >
+              Tap On The <Text style={styles.group}>Group</Text> To Check And
+              Edit
+            </Text>
+            <MaterialCommunityIcons
+              name="gesture-tap"
+              size={50}
+              color="#3FA2F6"
+              style={{ alignSelf: "center" }}
+            />
 
-                <CustomCarousel
-                  data={filteredGroups || groups}
-                  handlePress={handlePress}
-                  setTeacher={setGroup}
-                  setUsers={setUser}
-                />
-              </>
-            )}
-          </View>
-        </>
-      )}
+            <CustomCarousel
+              data={filteredGroups || groups}
+              handlePress={handlePress}
+              setTeacher={setGroup}
+              setUsers={setUser}
+            />
+          </>
+        )}
+      </View>
 
       <View>
         {group && (
@@ -177,6 +206,7 @@ function checkEditGroup(props) {
                 agendaList={agendaList}
                 setModalVisible={setModalVisible}
                 idGroup={group._id}
+                setReload={toogleReload}
               />
             </Modal>
             <Text style={[styles.titleText, { color: "#2185D5" }]}>
