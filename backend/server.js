@@ -569,10 +569,41 @@ app.post("/api/deleteNameService", async (req, res) => {
   }
 });
 
+// Add Program Day
+app.post("/api/addProgramDay", async (req, res) => {
+  const { idGroup, date, value } = req.body;
+  console.log(req.body);
+  try {
+    const fieldPath = `program.${date}`;
+
+    query = {
+      _id: idGroup,
+    };
+    const updatedGRoup = await Schools.findOneAndUpdate(
+      query,
+      {
+        $push: {
+          [fieldPath]: value,
+        },
+      },
+      { new: true }
+    );
+    console.log("Added Program to Group:", updatedGRoup);
+
+    res.json({ message: "Program Added Succesfully!", status: "Success" });
+  } catch (error) {
+    res.json({
+      message: "Group not found or adding not possibile!",
+      status: "Failed",
+    });
+  }
+});
+
 // Edit Program day
 app.post("/api/editProgramDay", async (req, res) => {
   const { idGroup, date, newProgram } = req.body;
   console.log(req.body);
+
   try {
     query = {
       _id: idGroup,
