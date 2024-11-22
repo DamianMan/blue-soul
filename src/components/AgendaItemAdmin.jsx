@@ -51,7 +51,6 @@ export default function AgendaItemAdmin({ item, idGroup, date, setReload }) {
         return obj;
       }
     });
-    const idProgram = item._id;
     try {
       await axios
         .post(
@@ -59,7 +58,7 @@ export default function AgendaItemAdmin({ item, idGroup, date, setReload }) {
           {
             idGroup,
             date,
-            idProgram,
+            newProgram,
           },
           {
             headers: { "Content-Type": "application/json" },
@@ -87,14 +86,16 @@ export default function AgendaItemAdmin({ item, idGroup, date, setReload }) {
         return obj;
       }
     });
+    const idProgram = item._id;
+
     try {
       await axios
         .post(
-          "https://blue-soul-app-onrnder.com/api/deleteProgramDay",
+          "https://blue-soul-app.onrender.com/api/deleteProgramDay",
           {
             idGroup,
             date,
-            newProgram,
+            idProgram,
           },
           {
             headers: {
