@@ -51,6 +51,7 @@ export default function AgendaItemAdmin({ item, idGroup, date, setReload }) {
         return obj;
       }
     });
+    const idProgram = item._id;
     try {
       await axios
         .post(
@@ -58,15 +59,13 @@ export default function AgendaItemAdmin({ item, idGroup, date, setReload }) {
           {
             idGroup,
             date,
-            newProgram,
+            idProgram,
           },
           {
             headers: { "Content-Type": "application/json" },
           }
         )
         .then((res) => {
-          Alert.alert(res.data.status, res.data.message);
-
           setReload();
           setModalVisible(!modalVisible);
         })
@@ -78,14 +77,59 @@ export default function AgendaItemAdmin({ item, idGroup, date, setReload }) {
       );
     }
   };
+
+  const handleDelete = async () => {
+    console.log("Old Program:", currenGroup.program);
+    const newProgram = currenGroup.program[date].filter((obj) => {
+      if (obj !== item._id) {
+        return value;
+      } else {
+        return obj;
+      }
+    });
+    try {
+      await axios
+        .post(
+          "https://blue-soul-app-onrnder.com/api/deleteProgramDay",
+          {
+            idGroup,
+            date,
+            newProgram,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((res) => {
+          setReload();
+          Alert.alert(err.data.status, err.data.message);
+        })
+        .catch((err) => Alert.alert(err.data.status, err.data.message));
+    } catch (error) {
+      alert("Error making delete program day request1");
+    }
+  };
   return (
     <TouchableOpacity onPress={itemPressed} style={styles.item}>
+      <Button
+        icon={"delete"}
+        textColor="red"
+        onPress={handleDelete}
+        style={{
+          position: "absolute",
+          top: -10,
+          right: -20,
+        }}
+      ></Button>
       <View>
         <Text style={styles.itemTitleText}>{item.hour}</Text>
         <Text style={styles.itemDurationText}>{item.title}</Text>
       </View>
       <View style={styles.itemButtonContainer}>
         <Button
+          icon={"file-document-edit-outline"}
           mode="elevated"
           buttonColor={"#2185D5"}
           textColor="aliceblue"
@@ -197,6 +241,7 @@ const styles = StyleSheet.create({
   itemButtonContainer: {
     flex: 1,
     alignItems: "flex-end",
+    marginRight: 20,
   },
   emptyItem: {
     paddingLeft: 20,

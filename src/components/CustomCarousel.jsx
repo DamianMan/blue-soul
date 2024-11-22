@@ -63,8 +63,7 @@ const CustomCarousel = ({ data, handlePress, setTeacher, setUsers }) => {
         enabled={group.length > 1 ? true : false}
         mode={group.length > 1 ? "parallax" : "default"}
         onSnapToItem={(item) => {
-          console.log("Token ITEM:", group[item]);
-          handlePress(group[item].tokenGroup);
+          handlePress(group[item].tokenGroup, data);
         }}
         renderItem={({ item, index }) => (
           <Pressable
@@ -83,7 +82,7 @@ const CustomCarousel = ({ data, handlePress, setTeacher, setUsers }) => {
               elevation: 5,
             }}
             onPress={() => {
-              handlePress(item.tokenGroup);
+              handlePress(item.tokenGroup, data);
             }}
           >
             <ImageBackground

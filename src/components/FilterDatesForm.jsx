@@ -33,7 +33,6 @@ function FilterDatesForm({ setFilteredGroups, groups, setDate, date }) {
         }
       }
     });
-    console.log("Filtered GROUPS:", filteredGroups);
     if (filteredGroups.length > 0) {
       setFilteredGroups(filteredGroups);
       console.log(selectedDate);

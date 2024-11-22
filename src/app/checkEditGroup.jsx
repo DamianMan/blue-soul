@@ -35,6 +35,29 @@ function checkEditGroup(props) {
   const [date, setDate] = useState(undefined);
 
   // Get All Groups
+  useEffect(() => {
+    console.log("Groups state updated:");
+    const filteredGroups = groups.filter((item) => {
+      const startDate = new Date(item.startDate);
+      const endDate = new Date(item.endDate);
+      if (item.startDate || item.endDate) {
+        if (date >= startDate && date <= endDate) {
+          return item;
+        }
+      }
+    });
+    if (filteredGroups.length > 0) {
+      setFilteredGroups(filteredGroups);
+
+      handlePress(groupToken, filteredGroups); // Trigger handlePress after data is loaded
+
+      console.log("Filetere Group 1:", filteredGroups[0].program);
+    }
+  }, [groups]);
+
+  useEffect(() => {
+    console.log("FilteredGroups state updated:");
+  }, [filteredGroups]);
 
   useEffect(() => {
     const loadAndHandlePress = async () => {
@@ -42,23 +65,10 @@ function checkEditGroup(props) {
         // Fetch data first
         await getUsers();
         await getGroups();
-        const filteredGroups = groups.filter((item) => {
-          const startDate = new Date(item.startDate);
-          const endDate = new Date(item.endDate);
-          if (item.startDate || item.endDate) {
-            if (date >= startDate && date <= endDate) {
-              return item;
-            }
-          }
-        });
-        if (filteredGroups.length > 0) {
-          setFilteredGroups(filteredGroups);
-        }
-        console.log("Filetered Groups:", filteredGroups);
 
         // Then handle the group processing
         if (groupToken !== "") {
-          handlePress(groupToken); // Trigger handlePress after data is loaded
+          // handlePress(groupToken, filteredGroups); // Trigger handlePress after data is loaded
           console.log("Reloading!!!");
         }
       } catch (error) {
@@ -86,7 +96,7 @@ function checkEditGroup(props) {
     return transformedData;
   };
 
-  const handlePress = (token) => {
+  const handlePress = (token, filteredGroups) => {
     const currentGroup = filteredGroups.find(
       (item) => item.tokenGroup === token
     );

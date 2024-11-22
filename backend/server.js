@@ -597,6 +597,36 @@ app.post("/api/editProgramDay", async (req, res) => {
   }
 });
 
+// Delete Program Day
+app.post("/api/deleteProgramDay", async (req, res) => {
+  const { idGroup, date, idPogram } = req.body;
+  console.log(req.body);
+  try {
+    const fieldPath = `program.${date}`;
+
+    query = {
+      _id: idGroup,
+    };
+    const updatedGRoup = await Schools.findOneAndUpdate(
+      query,
+      {
+        $pull: {
+          [fieldPath]: idPogram,
+        },
+      },
+      { new: true }
+    );
+    console.log("Updated Group:", updatedGRoup);
+
+    res.json({ message: "Program deleted Succesfully!", status: "Success" });
+  } catch (error) {
+    res.json({
+      message: "Group not found or edit not possibile!",
+      status: "Failed",
+    });
+  }
+});
+
 // Post User Device Push Token
 app.post("/api/postToken", async (req, res) => {
   const { token, userEmail } = req.body;
