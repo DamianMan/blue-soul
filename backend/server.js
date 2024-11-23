@@ -570,8 +570,8 @@ app.post("/api/deleteNameService", async (req, res) => {
 });
 
 // Add Program Day
-app.post("/api/addProgramDay", async (req, res) => {
-  const { idGroup, date, value } = req.body;
+app.post("/api/addProgramDayDrag", async (req, res) => {
+  const { idGroup, date, newArray } = req.body;
   console.log(req.body);
   try {
     const fieldPath = `program.${date}`;
@@ -582,15 +582,18 @@ app.post("/api/addProgramDay", async (req, res) => {
     const updatedGRoup = await Schools.findOneAndUpdate(
       query,
       {
-        $push: {
-          [fieldPath]: value,
+        $set: {
+          [fieldPath]: newArray,
         },
       },
       { new: true }
     );
-    console.log("Added Program to Group:", updatedGRoup);
+    console.log("Added & Ordered Program to Group:", updatedGRoup);
 
-    res.json({ message: "Program Added Succesfully!", status: "Success" });
+    res.json({
+      message: "Program Added & Ordered Succesfully!",
+      status: "Success",
+    });
   } catch (error) {
     res.json({
       message: "Group not found or adding not possibile!",

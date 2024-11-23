@@ -15,6 +15,7 @@ import { Dropdown } from "react-native-element-dropdown";
 import { ContextData } from "../context/ContextDataProvider";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import axios from "axios";
+import ModalDraggable from "./ModalDraggable";
 
 const { width, height } = Dimensions.get("window");
 
@@ -25,6 +26,8 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
   const [isModal, setIsModal] = useState(false);
   const [isFocus, setIsFocus] = useState(false);
   const [value, setValue] = useState();
+  const [isDraggableModal, setIsDraggableModal] = useState(false);
+  const [draggableList, setDraggableList] = useState([]);
 
   const currenGroup = groups.find((item) => item._id === idGroup);
 
@@ -53,7 +56,6 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
         .then((res) => {
           setReload();
           setIsModal(!isModal);
-          Alert.alert(res.data.status, res.data.message);
         })
         .catch((err) => Alert.alert(err.data.status, err.data.message));
     } catch (error) {
@@ -139,7 +141,7 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
               maxHeight={300}
               labelField="label"
               valueField="value"
-              placeholder={!isFocus ? "Select item" : "..."}
+              placeholder={!isFocus ? "Select Program" : "..."}
               searchPlaceholder="Search..."
               value={value}
               onFocus={() => setIsFocus(true)}
@@ -165,11 +167,31 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
               mode="elevated"
               buttonColor="dodgerblue"
               textColor="aliceblue"
-              onPress={handleAddProgram}
+              onPress={() => {
+                setIsDraggableModal(!isDraggableModal);
+                const newDragList = [...currenGroup.program[date], value];
+                const convertedList = newDragList.map((item) => {
+                  const obj = programs.find((i) => i._id === item);
+                  if (obj) {
+                    return obj;
+                  }
+                });
+
+                console.log("List:", convertedList);
+                setDraggableList(convertedList);
+              }}
               style={{ marginTop: 20 }}
             >
-              Save
+              Add
             </Button>
+            <ModalDraggable
+              setIsDraggableModal={setIsDraggableModal}
+              isDraggableModal={isDraggableModal}
+              draggableList={draggableList}
+              idGroup={idGroup}
+              date={date}
+              setReload={setReload}
+            />
           </View>
         </View>
       </Modal>
