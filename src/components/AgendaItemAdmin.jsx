@@ -105,7 +105,6 @@ export default function AgendaItemAdmin({ item, idGroup, date, setReload }) {
         )
         .then((res) => {
           setReload();
-          Alert.alert(res.data.status, res.data.message);
         })
         .catch((err) => Alert.alert(err.data.status, err.data.message));
     } catch (error) {

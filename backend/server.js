@@ -583,7 +583,7 @@ app.post("/api/addProgramDayDrag", async (req, res) => {
       query,
       {
         $set: {
-          [fieldPath]: newArray,
+          [`program.${date}`]: newArray,
         },
       },
       { new: true }

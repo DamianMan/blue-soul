@@ -191,6 +191,8 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
               idGroup={idGroup}
               date={date}
               setReload={setReload}
+              setIsModal={setIsModal}
+              isModal={isModal}
             />
           </View>
         </View>

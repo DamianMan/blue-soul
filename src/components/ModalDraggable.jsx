@@ -18,6 +18,7 @@ import { Button } from "react-native-paper";
 import { useContext, useState, useEffect } from "react";
 import { ContextData } from "../context/ContextDataProvider";
 import DragList, { DragListRenderItemInfo } from "react-native-draglist";
+import axios from "axios";
 
 const { width, height } = Dimensions.get("window");
 
@@ -28,9 +29,12 @@ function ModalDraggable({
   idGroup,
   date,
   setReload,
+  setIsModal,
+  isModal,
 }) {
   const { programs } = useContext(ContextData);
   const [data, setData] = useState(draggableList);
+  console.log("DATE:", date);
   useEffect(() => {
     setData(draggableList);
   }, [draggableList]);
@@ -61,6 +65,7 @@ function ModalDraggable({
         .then((res) => {
           setReload();
           setIsDraggableModal(!isDraggableModal);
+          setIsModal(!isModal);
         })
         .catch((err) => Alert.alert(err.data.status, err.data.message));
     } catch (error) {
@@ -127,7 +132,7 @@ function ModalDraggable({
           <Text
             style={{
               paddingTop: 10,
-              color: "dodgerblue",
+              color: "gray",
               fontSize: 16,
             }}
           >
