@@ -30,6 +30,7 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
   const [draggableList, setDraggableList] = useState([]);
 
   const currenGroup = groups.find((item) => item._id === idGroup);
+  console.log("Agenda LISt in Calendar:", agendaList);
 
   const dataPrograms = () => {
     const newArray = programs.map((item) => ({
@@ -83,9 +84,12 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
       </View>
 
       <Agenda
-        date={today}
+        key={date} // Forces re-render
+        date={date || today}
         items={agendaList}
+        selected={date}
         showOnlySelectedDayItems={true}
+        keyExtractor={(item, index) => item._id + date + index}
         renderItem={(item) => {
           return (
             <AgendaItemAdmin
@@ -96,8 +100,26 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
             />
           );
         }}
+        loadItemsForMonth={(month) => {
+          console.log("Loading items for month:", month);
+          // Optionally load more items dynamically based on `month`
+        }}
         onDayPress={(day) => {
-          setDate(day.dateString); // Updates state with the selected date
+          console.log("DAY:", day.dateString);
+          setDate((prev) => day.dateString); // Updates state with the selected date
+        }}
+        renderEmptyData={() => {
+          return (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text>No Progams In This Date!</Text>
+            </View>
+          );
         }}
       />
       <View>
@@ -168,17 +190,21 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
               buttonColor="dodgerblue"
               textColor="aliceblue"
               onPress={() => {
-                setIsDraggableModal(!isDraggableModal);
-                const newDragList = [...currenGroup.program[date], value];
-                const convertedList = newDragList.map((item) => {
-                  const obj = programs.find((i) => i._id === item);
-                  if (obj) {
-                    return obj;
-                  }
-                });
+                if (value) {
+                  setIsDraggableModal(!isDraggableModal);
+                  const newDragList = [...currenGroup.program[date], value];
+                  const convertedList = newDragList.map((item) => {
+                    const obj = programs.find((i) => i._id === item);
+                    if (obj) {
+                      return obj;
+                    }
+                  });
 
-                console.log("List:", convertedList);
-                setDraggableList(convertedList);
+                  console.log("List:", convertedList);
+                  setDraggableList(convertedList);
+                } else {
+                  alert("Please Select a Program!");
+                }
               }}
               style={{ marginTop: 20 }}
             >

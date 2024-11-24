@@ -32,12 +32,13 @@ function ModalDraggable({
   setIsModal,
   isModal,
 }) {
-  const { programs } = useContext(ContextData);
-  const [data, setData] = useState(draggableList);
-  console.log("DATE:", date);
   useEffect(() => {
     setData(draggableList);
   }, [draggableList]);
+
+  const { programs } = useContext(ContextData);
+  const [data, setData] = useState(draggableList);
+  console.log("DATE:", date);
 
   async function onReordered(fromIndex, toIndex) {
     const copy = [...data]; // Don't modify react data in-place

@@ -1,11 +1,6 @@
-import React, { useRef, useCallback } from "react";
+import React, { useState } from "react";
 import { StyleSheet, View, Text, SafeAreaView, Dimensions } from "react-native";
-import {
-  Agenda,
-  DateData,
-  AgendaEntry,
-  AgendaSchedule,
-} from "react-native-calendars";
+import { Agenda } from "react-native-calendars";
 
 import AgendaItem from "./AgendaItem";
 import { useContext } from "react";
@@ -16,6 +11,7 @@ const { height, width } = Dimensions.get("window");
 
 // Example agenda data
 const ITEMS = (programs, data) => {
+  transformedData = {};
   // let data = {
   //   "2024-11-19": ["673b5ad113a096ad05640ca9", "673b5e2b13a096ad05640cb2"],
   //   "2024-11-20": ["673b5d6a13a096ad05640cad", "673b5e7b13a096ad05640cb3"],
@@ -28,9 +24,9 @@ const ITEMS = (programs, data) => {
     const newValues = value.map((item) =>
       programs.find((pr) => item === pr._id)
     );
-    data[key] = newValues;
+    transformedData[key] = newValues;
   }
-  return data;
+  return transformedData;
 };
 
 function CalendarUser(props) {
@@ -42,14 +38,34 @@ function CalendarUser(props) {
     (item) => item.tokenGroup === userDb.tokenGroup
   );
   const { program } = currentGroup;
-
+  console.log(currentGroup);
+  const [date, setDate] = useState(today);
+  const [items, setItems] = useState(ITEMS(programs, program));
   return (
     <SafeAreaView style={{ flex: 1, width }}>
       <Agenda
-        date={today}
+        key={date}
+        date={date || today}
+        selected={date}
         showOnlySelectedDayItems={true}
-        items={ITEMS(programs, program)}
+        items={items}
         renderItem={(item) => <AgendaItem item={item} />}
+        onDayPress={(day) => {
+          setDate(day.dateString);
+        }}
+        renderEmptyData={() => {
+          return (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text>No Progams In This Date!</Text>
+            </View>
+          );
+        }}
       />
     </SafeAreaView>
   );

@@ -19,6 +19,7 @@ import axios from "axios";
 const { width, height } = Dimensions.get("window");
 
 export default function AgendaItemAdmin({ item, idGroup, date, setReload }) {
+  console.log("ITEM RENDERED:", item);
   const [modalVisible, setModalVisible] = useState(false);
   const [value, setValue] = useState();
 
@@ -130,9 +131,8 @@ export default function AgendaItemAdmin({ item, idGroup, date, setReload }) {
       <View style={styles.itemButtonContainer}>
         <Button
           icon={"file-document-edit-outline"}
-          mode="elevated"
-          buttonColor={"#2185D5"}
-          textColor="aliceblue"
+          mode="outlined"
+          textColor="dodgerblue"
           onPress={buttonPressed}
         >
           Edit

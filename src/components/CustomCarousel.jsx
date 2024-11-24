@@ -13,6 +13,7 @@ import { BlurView } from "expo-blur";
 import { IconButton } from "react-native-paper";
 import axios from "axios";
 import { ContextData } from "../context/ContextDataProvider";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 const { width } = Dimensions.get("window");
 
@@ -120,6 +121,26 @@ const CustomCarousel = ({ data, handlePress, setTeacher, setUsers }) => {
               >
                 <Text style={styles.textCarousel}>{item.nameGroup}</Text>
               </BlurView>
+              <View
+                style={{
+                  position: "absolute",
+                  bottom: 5,
+                  alignSelf: "center",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: "aliceblue",
+                  borderBottomLeftRadius: 14,
+                  borderBottomRightRadius: 14,
+
+                  width: (width * 90) / 100,
+                }}
+              >
+                <FontAwesome name="hotel" size={30} color="dodgerblue" />
+                <Text style={{ fontSize: 22, marginLeft: 10 }}>
+                  {item.hotel}
+                </Text>
+              </View>
             </ImageBackground>
           </Pressable>
         )}

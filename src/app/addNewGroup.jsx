@@ -46,6 +46,7 @@ function addNewGroup(props) {
     city: "",
     phone: "",
     numOfPeople: 0,
+    hotel: "",
   });
 
   const [loading, setLoading] = useState(false);
@@ -137,6 +138,7 @@ function addNewGroup(props) {
                 startDate,
                 endDate,
                 programGroup,
+                hotel,
               },
               {
                 headers: { "Content-Type": "application/json" },
@@ -152,6 +154,7 @@ function addNewGroup(props) {
                 token: "",
                 city: "",
                 phone: "",
+                hotel: "",
                 numOfPeople: 0,
               }));
               setRange({ startDate: undefined, endDate: undefined });
@@ -238,6 +241,18 @@ function addNewGroup(props) {
               label="City"
               onChangeText={(text) =>
                 setInfoGroup({ ...infoGroup, city: text })
+              }
+              style={styles.userInput}
+            />
+            <TextInput
+              value={infoGroup.hotel}
+              mode="outlined"
+              textColor="#3A4750"
+              activeOutlineColor="#2185D5"
+              autoCapitalize="none"
+              label="Hotel Name"
+              onChangeText={(text) =>
+                setInfoGroup({ ...infoGroup, hotel: text })
               }
               style={styles.userInput}
             />

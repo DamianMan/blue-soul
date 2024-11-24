@@ -111,8 +111,9 @@ function checkEditGroup(props) {
 
     // Update agendaList using the latest program and programs
     if (currentGroup.program) {
-      console.log("CurrentGroup program:", currentGroup.program);
       const updatedAgenda = ITEMS(programs, currentGroup.program);
+      console.log("UPDATED program:", updatedAgenda);
+
       setAgendaList(updatedAgenda);
     } else {
       console.log("No program found for the current group");
@@ -256,16 +257,6 @@ function checkEditGroup(props) {
                 }
                 keyExtractor={(item) => item._id}
               />
-              {/* {user.map(
-                  (item) =>
-                    item.role === "Student" && (
-                      <StudentChipItem
-                        toogleReload={toogleReload}
-                        key={item.tokenGroup + item.fullName}
-                        data={item}
-                      />
-                    )
-                )} */}
             </View>
             <PdfButton currentUsers={user} />
           </>

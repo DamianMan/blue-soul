@@ -288,6 +288,7 @@ app.post("/api/postGroup", async (req, res) => {
     startDate,
     endDate,
     programGroup,
+    hotel,
   } = req.body;
   // Check if token is provided
   if (!token) {
@@ -308,6 +309,7 @@ app.post("/api/postGroup", async (req, res) => {
       tokenGroup: token,
       password: token,
       city: city,
+      hotel,
       phone: phone,
       peopleCount: parseInt(numOfPeople),
       startDate: convertedStartDate,
