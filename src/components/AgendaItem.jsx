@@ -1,8 +1,12 @@
-import React from "react";
+import React, { memo } from "react";
 import { StyleSheet, Alert, View, Text, TouchableOpacity } from "react-native";
-import { Button } from "react-native-paper";
+import { Button, RadioButton } from "react-native-paper";
+import { useState } from "react";
 
-function AgendaItem({ item }) {
+function AgendaItem({ item, setValue, value }) {
+  const [checked, setChecked] = useState(false);
+  const [selected, setSelected] = useState();
+
   const itemPressed = () => {
     Alert.alert(item.title);
   };
@@ -16,14 +20,22 @@ function AgendaItem({ item }) {
         <Text style={styles.itemDurationText}>{item.title}</Text>
       </View>
       <View style={styles.itemButtonContainer}>
-        <Button
-          mode="elevated"
-          buttonColor={"#2185D5"}
-          textColor="aliceblue"
-          onPress={buttonPressed}
+        <RadioButton
+          value={item}
+          status={checked ? "checked" : "unchecked"}
+          color="dodgerblue"
+          onPress={() => {
+            setChecked((prev) => !prev);
+
+            setValue((prev) =>
+              !checked
+                ? [...prev, item._id]
+                : prev.filter((elem) => elem !== item._id)
+            );
+          }}
         >
           Info
-        </Button>
+        </RadioButton>
       </View>
     </TouchableOpacity>
   );

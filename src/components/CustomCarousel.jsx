@@ -130,8 +130,8 @@ const CustomCarousel = ({ data, handlePress, setTeacher, setUsers }) => {
                   justifyContent: "center",
                   alignItems: "center",
                   backgroundColor: "aliceblue",
-                  borderBottomLeftRadius: 14,
-                  borderBottomRightRadius: 14,
+                  borderBottomLeftRadius: 58,
+                  borderBottomRightRadius: 58,
 
                   width: (width * 90) / 100,
                 }}

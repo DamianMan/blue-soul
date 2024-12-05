@@ -7,6 +7,9 @@ const ProgramsSchema = new mongoose.Schema({
   hour: {
     type: String,
   },
+  isOptional: {
+    type: Boolean,
+  },
 });
 
 const ProgramsModel = mongoose.model("Program", ProgramsSchema);

@@ -10,7 +10,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { Button, TextInput } from "react-native-paper";
-import { useState, useContext } from "react";
+import { useState, useContext, memo } from "react";
 import { Dropdown } from "react-native-element-dropdown";
 import { ContextData } from "../context/ContextDataProvider";
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -18,7 +18,7 @@ import axios from "axios";
 
 const { width, height } = Dimensions.get("window");
 
-export default function AgendaItemAdmin({ item, idGroup, date, setReload }) {
+function AgendaItemAdmin({ item, idGroup, date, setReload }) {
   console.log("ITEM RENDERED:", item);
   const [modalVisible, setModalVisible] = useState(false);
   const [value, setValue] = useState();
@@ -37,7 +37,7 @@ export default function AgendaItemAdmin({ item, idGroup, date, setReload }) {
   };
 
   const itemPressed = () => {
-    Alert.alert(`${item._id} - ${item.hour} - ${item.title} - ${idGroup}`);
+    Alert.alert(`${item._id} - ${item.hour} - ${item.title} `);
   };
   const buttonPressed = () => {
     setModalVisible(!modalVisible);
@@ -133,6 +133,7 @@ export default function AgendaItemAdmin({ item, idGroup, date, setReload }) {
           icon={"file-document-edit-outline"}
           mode="outlined"
           textColor="dodgerblue"
+          buttonColor="#fff"
           onPress={buttonPressed}
         >
           Edit
@@ -359,3 +360,5 @@ const styles = StyleSheet.create({
     height: height / 2,
   },
 });
+
+export default AgendaItemAdmin;

@@ -1,11 +1,19 @@
-import React, { useState } from "react";
-import { StyleSheet, View, Text, SafeAreaView, Dimensions } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  StyleSheet,
+  View,
+  Text,
+  SafeAreaView,
+  Dimensions,
+  ActivityIndicator,
+} from "react-native";
 import { Agenda } from "react-native-calendars";
 
 import AgendaItem from "./AgendaItem";
 import { useContext } from "react";
 import { ContextData } from "../context/ContextDataProvider";
 import auth from "@react-native-firebase/auth";
+import { Button } from "react-native-paper";
 
 const { height, width } = Dimensions.get("window");
 
@@ -30,7 +38,16 @@ const ITEMS = (programs, data) => {
 };
 
 function CalendarUser(props) {
-  const { programs, groups, users } = useContext(ContextData);
+  const { programs, groups, users, getGroups, loading } =
+    useContext(ContextData);
+
+  useEffect(() => {
+    // const loadGroups = async () => {
+    //   await getGroups();
+    // };
+    // loadGroups();
+    console.log("Groups changed!");
+  }, [groups]);
   const today = new Date();
   const user = auth().currentUser;
   const userDb = users.find((item) => item.email === user.email);
@@ -41,6 +58,19 @@ function CalendarUser(props) {
   console.log(currentGroup);
   const [date, setDate] = useState(today);
   const [items, setItems] = useState(ITEMS(programs, program));
+  const [value, setValue] = useState([]);
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size={"large"} color={"dodgerblue"} />
+      </View>
+    );
+  }
+
+  const handleSave = () => {
+    alert(`Value Selected: ${value} - DAte: ${date}`);
+  };
   return (
     <SafeAreaView style={{ flex: 1, width }}>
       <Agenda
@@ -49,9 +79,12 @@ function CalendarUser(props) {
         selected={date}
         showOnlySelectedDayItems={true}
         items={items}
-        renderItem={(item) => <AgendaItem item={item} />}
+        renderItem={(item) => (
+          <AgendaItem item={item} setValue={setValue} value={value} />
+        )}
         onDayPress={(day) => {
           setDate(day.dateString);
+          setValue([]);
         }}
         renderEmptyData={() => {
           return (
@@ -67,6 +100,35 @@ function CalendarUser(props) {
           );
         }}
       />
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          marginHorizontal: 20,
+          marginBottom: 20,
+        }}
+      >
+        <Button
+          icon={"calendar-text-outline"}
+          textColor="dodgerblue"
+          mode="elevated"
+          buttonColor="#fff"
+          style={styles.saveButton}
+          onPress={handleSave}
+        >
+          Save Programs
+        </Button>
+        <Button
+          icon={"food-fork-drink"}
+          textColor="dodgerblue"
+          mode="elevated"
+          buttonColor="#fff"
+          style={styles.saveButton}
+          onPress={handleSave}
+        >
+          Pick You Dinner
+        </Button>
+      </View>
     </SafeAreaView>
   );
 }
@@ -82,6 +144,10 @@ const styles = StyleSheet.create({
   section: {
     color: "grey",
     textTransform: "capitalize",
+  },
+  saveButton: {
+    height: 60,
+    justifyContent: "center",
   },
 });
 

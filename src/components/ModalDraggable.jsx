@@ -100,25 +100,31 @@ function ModalDraggable({
       }}
     >
       <View style={styles.modalView}>
-        <Button
-          icon={"database-edit-outline"}
-          mode="outlined"
-          textColor="dodgerblue"
-          onPress={handleDragSave}
-          style={styles.buttonSave}
-        >
-          Save
-        </Button>
-        <Button
-          icon="close"
-          mode="outlined"
-          textColor="red"
-          onPress={() => setIsDraggableModal(!isDraggableModal)}
-          style={styles.buttonClose}
-        >
-          Close
-        </Button>
         <View style={{ marginTop: 30 }}>
+          <View
+            style={{
+              justifyContent: "space-between",
+              alignItems: "center",
+              flexDirection: "row",
+            }}
+          >
+            <Button
+              icon={"database-edit-outline"}
+              mode="outlined"
+              textColor="dodgerblue"
+              onPress={handleDragSave}
+            >
+              Save
+            </Button>
+            <Button
+              icon="close"
+              mode="outlined"
+              textColor="red"
+              onPress={() => setIsDraggableModal(!isDraggableModal)}
+            >
+              Close
+            </Button>
+          </View>
           <Text
             style={{
               paddingTop: 120,
@@ -166,8 +172,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    justifyContent: "center",
-    alignItems: "center",
+    alignSelf: "center",
   },
   button: {
     borderRadius: 20,

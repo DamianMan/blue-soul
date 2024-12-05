@@ -41,8 +41,8 @@ const { width, height } = Dimensions.get("window");
 const HeightIMG = height / 2;
 
 export default function MyCarousel() {
-  const { services, users, getUsers, loading } = useContext(ContextData);
-  console.log("loading:", loading);
+  const { services, users, getUsers, loading, getGroups } =
+    useContext(ContextData);
   const user = auth().currentUser;
   const scrollRef = useAnimatedRef();
   const [isNotification, setIsNotification] = useState(false);
@@ -56,6 +56,7 @@ export default function MyCarousel() {
   useEffect(() => {
     const loadUsers = async () => {
       await getUsers();
+      await getGroups();
     };
     loadUsers();
   }, [notification]);
@@ -226,6 +227,19 @@ export default function MyCarousel() {
     };
   });
 
+  if (loading) {
+    return (
+      <Animated.ScrollView
+        style={styles.container}
+        ref={scrollRef}
+        scrollEventThrottle={16}
+        entering={FadeIn}
+      >
+        <ActivityIndicator size={"large"} color={"#2185D5"} />
+      </Animated.ScrollView>
+    );
+  }
+
   return (
     <Animated.ScrollView
       style={styles.container}
@@ -254,26 +268,23 @@ export default function MyCarousel() {
             Fun 🤩!
           </Text>
         </View>
-        {loading ? (
-          <ActivityIndicator size={"large"} color={"#2185D5"} />
-        ) : (
-          <FlatList
-            horizontal
-            data={services}
-            renderItem={({ item }) => (
-              <InfoUserCardItem
-                key={item.name}
-                src={item.images[0]}
-                title={item.name}
-                nameActivity={item.url}
-                text={item.subTitle}
-                description={item.description}
-              />
-            )}
-            keyExtractor={(item) => item._id}
-            showsHorizontalScrollIndicator={false} // Disable scrolling
-          />
-        )}
+
+        <FlatList
+          horizontal
+          data={services}
+          renderItem={({ item }) => (
+            <InfoUserCardItem
+              key={item.name}
+              src={item.images[0]}
+              title={item.name}
+              nameActivity={item.url}
+              text={item.subTitle}
+              description={item.description}
+            />
+          )}
+          keyExtractor={(item) => item._id}
+          showsHorizontalScrollIndicator={false} // Disable scrolling
+        />
         {/* {services.map((item) => (
           <InfoUserCardItem
             key={item.name}

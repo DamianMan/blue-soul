@@ -13,6 +13,7 @@ import { Button } from "react-native-paper";
 import { MultiSelect } from "react-native-element-dropdown";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { ContextData } from "../context/ContextDataProvider";
+import DropdownItem from "./DropdownItem";
 
 const { height, width } = Dimensions.get("window");
 
@@ -34,6 +35,7 @@ function SelectProgramItem({ date, setProgramGroup, programGroup, index }) {
     const newArray = programs.map((item) => ({
       label: `${item.hour} - ${item.title}`,
       value: item._id,
+      isOptional: true,
     }));
     return newArray;
   };
@@ -49,7 +51,6 @@ function SelectProgramItem({ date, setProgramGroup, programGroup, index }) {
         iconStyle={styles.iconStyle}
         visibleSelectedItem={false}
         activeColor="lightblue"
-        search
         mode="modal"
         data={dataPrograms()}
         labelField="label"
@@ -68,6 +69,7 @@ function SelectProgramItem({ date, setProgramGroup, programGroup, index }) {
         }}
         value={selected}
         onChange={(item) => {
+          console.log("Selecete Item:", item);
           setSelected(item);
           setObj(item);
           setIsFocus(false);
@@ -81,6 +83,7 @@ function SelectProgramItem({ date, setProgramGroup, programGroup, index }) {
           />
         )}
         selectedStyle={styles.selectedStyle}
+        renderItem={(item) => <DropdownItem item={item} />}
       />
     </View>
   );

@@ -113,7 +113,7 @@ function addNewGroup(props) {
   };
 
   const handleSubmit = async () => {
-    const { name, fullName, email, token, city, phone, numOfPeople } =
+    const { name, fullName, email, token, city, phone, numOfPeople, hotel } =
       infoGroup;
     const { startDate, endDate } = range;
     setLoading(true);
@@ -177,6 +177,14 @@ function addNewGroup(props) {
     validateEmail(text);
     setInfoGroup({ ...infoGroup, email: text });
   };
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size={"large"} color="dodgerblue" />
+      </View>
+    );
+  }
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : height}
@@ -194,180 +202,169 @@ function addNewGroup(props) {
         >
           Please fill all the fields with the info group
         </Text>
-        {!loading ? (
-          <View style={styles.form}>
-            <TextInput
-              value={infoGroup.name}
-              mode="outlined"
-              textColor="#3A4750"
-              activeOutlineColor="#2185D5"
-              autoCapitalize="none"
-              label="Group Name"
-              onChangeText={(text) =>
-                setInfoGroup({ ...infoGroup, name: text })
-              }
-              style={styles.userInput}
-            />
-            <TextInput
-              value={infoGroup.fullName}
-              mode="outlined"
-              textColor="#3A4750"
-              activeOutlineColor="#2185D5"
-              label="Full Name Teacher In Charge"
-              autoCapitalize="none"
-              onChangeText={(text) =>
-                setInfoGroup({ ...infoGroup, fullName: text })
-              }
-              style={styles.userInput}
-            />
-            <TextInput
-              value={infoGroup.email}
-              mode="outlined"
-              autoCapitalize="none"
-              textColor="#3A4750"
-              activeOutlineColor="#2185D5"
-              label="Email"
-              error={!isValidEmail}
-              keyboardType="email-address"
-              onChangeText={handleEmail}
-              style={styles.userInput}
-            />
+        <View style={styles.form}>
+          <TextInput
+            value={infoGroup.name}
+            mode="outlined"
+            textColor="#3A4750"
+            activeOutlineColor="#2185D5"
+            autoCapitalize="none"
+            label="Group Name"
+            onChangeText={(text) => setInfoGroup({ ...infoGroup, name: text })}
+            style={styles.userInput}
+          />
+          <TextInput
+            value={infoGroup.fullName}
+            mode="outlined"
+            textColor="#3A4750"
+            activeOutlineColor="#2185D5"
+            label="Full Name Teacher In Charge"
+            autoCapitalize="none"
+            onChangeText={(text) =>
+              setInfoGroup({ ...infoGroup, fullName: text })
+            }
+            style={styles.userInput}
+          />
+          <TextInput
+            value={infoGroup.email}
+            mode="outlined"
+            autoCapitalize="none"
+            textColor="#3A4750"
+            activeOutlineColor="#2185D5"
+            label="Email"
+            error={!isValidEmail}
+            keyboardType="email-address"
+            onChangeText={handleEmail}
+            style={styles.userInput}
+          />
 
-            <TextInput
-              value={infoGroup.city}
-              mode="outlined"
-              textColor="#3A4750"
-              activeOutlineColor="#2185D5"
-              label="City"
-              onChangeText={(text) =>
-                setInfoGroup({ ...infoGroup, city: text })
-              }
-              style={styles.userInput}
-            />
-            <TextInput
-              value={infoGroup.hotel}
-              mode="outlined"
-              textColor="#3A4750"
-              activeOutlineColor="#2185D5"
-              autoCapitalize="none"
-              label="Hotel Name"
-              onChangeText={(text) =>
-                setInfoGroup({ ...infoGroup, hotel: text })
-              }
-              style={styles.userInput}
-            />
-            <TextInput
-              value={infoGroup.phone}
-              autoCapitalize="none"
-              mode="outlined"
-              textColor="#3A4750"
-              activeOutlineColor="#2185D5"
-              label="Phone numer"
-              placeholder="+49 69 1234 5678"
-              onChangeText={(text) =>
-                setInfoGroup({ ...infoGroup, phone: text })
-              }
-              style={styles.userInput}
-            />
-            <TextInput
-              value={infoGroup.numOfPeople}
-              autoCapitalize="none"
-              mode="outlined"
-              textColor="#3A4750"
-              activeOutlineColor="#2185D5"
-              label="Number Of People"
-              keyboardType="numeric"
-              onChangeText={(num) =>
-                setInfoGroup({ ...infoGroup, numOfPeople: num })
-              }
-              style={styles.userInput}
-            />
+          <TextInput
+            value={infoGroup.city}
+            mode="outlined"
+            textColor="#3A4750"
+            activeOutlineColor="#2185D5"
+            label="City"
+            onChangeText={(text) => setInfoGroup({ ...infoGroup, city: text })}
+            style={styles.userInput}
+          />
+          <TextInput
+            value={infoGroup.hotel}
+            mode="outlined"
+            textColor="#3A4750"
+            activeOutlineColor="#2185D5"
+            autoCapitalize="none"
+            label="Hotel Name"
+            onChangeText={(text) => setInfoGroup({ ...infoGroup, hotel: text })}
+            style={styles.userInput}
+          />
+          <TextInput
+            value={infoGroup.phone}
+            autoCapitalize="none"
+            mode="outlined"
+            textColor="#3A4750"
+            activeOutlineColor="#2185D5"
+            label="Phone numer"
+            placeholder="+49 69 1234 5678"
+            onChangeText={(text) => setInfoGroup({ ...infoGroup, phone: text })}
+            style={styles.userInput}
+          />
+          <TextInput
+            value={infoGroup.numOfPeople}
+            autoCapitalize="none"
+            mode="outlined"
+            textColor="#3A4750"
+            activeOutlineColor="#2185D5"
+            label="Number Of People"
+            keyboardType="numeric"
+            onChangeText={(num) =>
+              setInfoGroup({ ...infoGroup, numOfPeople: num })
+            }
+            style={styles.userInput}
+          />
 
-            {infoGroup.token === "" ? (
-              <Button
-                icon={
-                  infoGroup.token === ""
-                    ? () => (
-                        <Icon name="barcode" size={30} color={"aliceblue"} />
-                      )
-                    : null
-                }
-                mode="contained-total"
-                labelStyle={{
-                  color: "aliceblue",
-                  fontSize: 14,
-                }}
-                onPress={handleToken}
-                style={styles.generateBtn}
-              >
-                {infoGroup.token === ""
-                  ? "Press to generate group code"
-                  : infoGroup.token}
-              </Button>
-            ) : (
-              <Button
-                icon={() => (
-                  <MaterialIcons
-                    name="content-copy"
-                    size={24}
-                    color="aliceblue"
-                  />
-                )}
-                mode="contained-total"
-                labelStyle={{
-                  color: "aliceblue",
-                  fontSize: 14,
-                }}
-                style={styles.generateBtn}
-                onPress={copyToClipboard}
-              >
-                <Text>{infoGroup.token}</Text>
-              </Button>
-            )}
+          {infoGroup.token === "" ? (
             <Button
-              onPress={() => setOpen(true)}
-              uppercase={false}
-              mode="elevated"
-              buttonColor="lightseagreen"
-              textColor="aliceblue"
-              style={{
-                borderRadius: 5,
-                padding: 5,
-                marginTop: 5,
-                width: (width * 90) / 100,
+              icon={
+                infoGroup.token === ""
+                  ? () => <Icon name="barcode" size={30} color={"aliceblue"} />
+                  : null
+              }
+              mode="contained-total"
+              labelStyle={{
+                color: "aliceblue",
+                fontSize: 14,
               }}
-              icon={"calendar"}
+              onPress={handleToken}
+              style={styles.generateBtn}
             >
-              {(!range.startDate || !range.endDate) && "Group Dates"}
-              {range.startDate && (
-                <Text>
-                  From{" "}
-                  <Text style={{ fontWeight: "bold", color: "#fff" }}>
-                    {range.startDate.toLocaleDateString("de-De")}
-                  </Text>
-                </Text>
-              )}
-              {range.endDate && (
-                <Text>
-                  {" "}
-                  - To{" "}
-                  <Text style={{ fontWeight: "bold", color: "#fff" }}>
-                    {range.endDate.toLocaleDateString("de-De")}
-                  </Text>
-                </Text>
-              )}
+              {infoGroup.token === ""
+                ? "Press to generate group code"
+                : infoGroup.token}
             </Button>
-            <DatePickerModal
-              locale="de"
-              mode="range"
-              visible={open}
-              onDismiss={onDismiss}
-              startDate={range.startDate}
-              endDate={range.endDate}
-              onConfirm={onConfirm}
-            />
+          ) : (
+            <Button
+              icon={() => (
+                <MaterialIcons
+                  name="content-copy"
+                  size={24}
+                  color="aliceblue"
+                />
+              )}
+              mode="contained-total"
+              labelStyle={{
+                color: "aliceblue",
+                fontSize: 14,
+              }}
+              style={styles.generateBtn}
+              onPress={copyToClipboard}
+            >
+              <Text>{infoGroup.token}</Text>
+            </Button>
+          )}
+          <Button
+            onPress={() => setOpen(true)}
+            uppercase={false}
+            mode="elevated"
+            buttonColor="lightseagreen"
+            textColor="aliceblue"
+            style={{
+              borderRadius: 5,
+              padding: 5,
+              marginTop: 5,
+              width: (width * 90) / 100,
+            }}
+            icon={"calendar"}
+          >
+            {(!range.startDate || !range.endDate) && "Group Dates"}
+            {range.startDate && (
+              <Text>
+                From{" "}
+                <Text style={{ fontWeight: "bold", color: "#fff" }}>
+                  {range.startDate.toLocaleDateString("de-De")}
+                </Text>
+              </Text>
+            )}
+            {range.endDate && (
+              <Text>
+                {" "}
+                - To{" "}
+                <Text style={{ fontWeight: "bold", color: "#fff" }}>
+                  {range.endDate.toLocaleDateString("de-De")}
+                </Text>
+              </Text>
+            )}
+          </Button>
+          <DatePickerModal
+            locale="de"
+            mode="range"
+            visible={open}
+            onDismiss={onDismiss}
+            startDate={range.startDate}
+            endDate={range.endDate}
+            onConfirm={onConfirm}
+          />
 
-            {/* {range.startDate && range.endDate && (
+          {/* {range.startDate && range.endDate && (
             <SetProgramsModal
               setModalVisible={setModalVisible}
               modalVisible={modalVisible}
@@ -375,47 +372,44 @@ function addNewGroup(props) {
               endDate={range.endDate}
             />
           )} */}
-            {rangeSelected && (
-              <>
-                <FlatList
-                  showsHorizontalScrollIndicator={false}
-                  horizontal
-                  data={rangeSelected}
-                  keyExtractor={(item) => item}
-                  renderItem={({ item, index }) => (
-                    <SelectProgramItem
-                      date={item}
-                      index={index}
-                      programGroup={programGroup}
-                      setProgramGroup={setProgramGroup}
-                    />
+          {rangeSelected && (
+            <>
+              <FlatList
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                data={rangeSelected}
+                keyExtractor={(item) => item}
+                renderItem={({ item, index }) => (
+                  <SelectProgramItem
+                    date={item}
+                    index={index}
+                    programGroup={programGroup}
+                    setProgramGroup={setProgramGroup}
+                  />
+                )}
+                style={{
+                  alignSelf: "center",
+                  padding: 1,
+                  marginLeft: 10,
+                  marginBottom: 10,
+                }}
+              />
+              <View>
+                <Button
+                  mode="elevated"
+                  labelStyle={{ color: "#ffff", fontSize: 15 }}
+                  icon={({ size, color }) => (
+                    <Icon name="database-plus" size={30} color="#fff" /> // Custom icon color
                   )}
-                  style={{
-                    alignSelf: "center",
-                    padding: 1,
-                    marginLeft: 10,
-                    marginVertical: 5,
-                  }}
-                />
-                <View>
-                  <Button
-                    mode="elevated"
-                    labelStyle={{ color: "#ffff", fontSize: 15 }}
-                    icon={({ size, color }) => (
-                      <Icon name="database-plus" size={30} color="#fff" /> // Custom icon color
-                    )}
-                    style={styles.submitBtn}
-                    onPress={handleSubmit}
-                  >
-                    Save
-                  </Button>
-                </View>
-              </>
-            )}
-          </View>
-        ) : (
-          <ActivityIndicator />
-        )}
+                  style={styles.submitBtn}
+                  onPress={handleSubmit}
+                >
+                  Save
+                </Button>
+              </View>
+            </>
+          )}
+        </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -459,7 +453,6 @@ const styles = StyleSheet.create({
     backgroundColor: "steelblue",
     marginVertical: 5,
     borderRadius: 5,
-    height: 50,
     width: (width * 90) / 100,
     justifyContent: "center",
     alignItems: "center",

@@ -24,6 +24,8 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
   const today = new Date();
   const [date, setDate] = useState(today);
   const [isModal, setIsModal] = useState(false);
+  const [isModalDinner, setIsModalDinner] = useState(false);
+
   const [isFocus, setIsFocus] = useState(false);
   const [value, setValue] = useState();
   const [isDraggableModal, setIsDraggableModal] = useState(false);
@@ -122,16 +124,35 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
           );
         }}
       />
-      <View>
+      <View
+        style={{
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexDirection: "row",
+          width,
+          padding: 30,
+        }}
+      >
         <Button
           icon={"plus"}
+          mode="elevated"
           textColor="dodgerblue"
-          style={{ height: 60, justifyContent: "center" }}
           onPress={() => setIsModal(!isModal)}
         >
           Add Program
         </Button>
+        <Button
+          icon={"food-fork-drink"}
+          mode="elevated"
+          textColor="dodgerblue"
+          onPress={() => setIsModalDinner(!isModalDinner)}
+        >
+          Add Dinner
+        </Button>
       </View>
+
+      {/* MODAL ADD PROGRAM AND RE-ORDER */}
+
       <Modal
         animationType="slide"
         transparent={true}
@@ -185,7 +206,7 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
               )}
             />
             <Button
-              icon={"plus"}
+              icon={"calendar"}
               mode="elevated"
               buttonColor="dodgerblue"
               textColor="aliceblue"
@@ -208,7 +229,7 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
               }}
               style={{ marginTop: 20 }}
             >
-              Add
+              Save Program
             </Button>
             <ModalDraggable
               setIsDraggableModal={setIsDraggableModal}
@@ -220,6 +241,74 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
               setIsModal={setIsModal}
               isModal={isModal}
             />
+          </View>
+        </View>
+      </Modal>
+
+      {/* MODAL ADD DINNER TO DATE */}
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isModalDinner}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setIsModalDinner(!isModal);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Button
+              icon="close"
+              textColor="red"
+              onPress={() => setIsModalDinner(!isModalDinner)}
+              style={styles.buttonClose}
+            ></Button>
+            {/* <Dropdown
+              style={[
+                styles.dropdown,
+                isFocus && { borderColor: "dodgerblue" },
+              ]}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              inputSearchStyle={styles.inputSearchStyle}
+              iconStyle={styles.iconStyle}
+              data={dataPrograms()}
+              search
+              maxHeight={300}
+              labelField="label"
+              valueField="value"
+              placeholder={!isFocus ? "Select Program" : "..."}
+              searchPlaceholder="Search..."
+              value={value}
+              onFocus={() => setIsFocus(true)}
+              onBlur={() => {
+                setIsFocus(false);
+              }}
+              onChange={(item) => {
+                console.log("Selecetd:", item.value);
+                setValue(item.value);
+                setIsFocus(false);
+              }}
+              renderLeftIcon={() => (
+                <AntDesign
+                  style={styles.icon}
+                  color={isFocus ? "dodgerblue" : "black"}
+                  name="Safety"
+                  size={20}
+                />
+              )}
+            /> */}
+            <Button
+              icon={"food-fork-drink"}
+              mode="elevated"
+              buttonColor="dodgerblue"
+              textColor="aliceblue"
+              onPress={() => alert("Dinner Saved!")}
+              style={{ marginTop: 20 }}
+            >
+              Save Dinner
+            </Button>
           </View>
         </View>
       </Modal>
