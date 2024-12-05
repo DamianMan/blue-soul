@@ -230,7 +230,7 @@ export default function MyCarousel() {
   if (loading) {
     return (
       <Animated.ScrollView
-        style={styles.container}
+        contentContainerStyle={[styles.container, { justifyContent: "center" }]}
         ref={scrollRef}
         scrollEventThrottle={16}
         entering={FadeIn}

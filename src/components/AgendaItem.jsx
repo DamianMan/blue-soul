@@ -2,10 +2,12 @@ import React, { memo } from "react";
 import { StyleSheet, Alert, View, Text, TouchableOpacity } from "react-native";
 import { Button, RadioButton } from "react-native-paper";
 import { useState } from "react";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 function AgendaItem({ item, setValue, value }) {
   const [checked, setChecked] = useState(false);
   const [selected, setSelected] = useState();
+  const [editedItem, setEditedItem] = useState(item);
 
   const itemPressed = () => {
     Alert.alert(item.title);
@@ -19,24 +21,40 @@ function AgendaItem({ item, setValue, value }) {
         <Text style={styles.itemTitleText}>{item.hour}</Text>
         <Text style={styles.itemDurationText}>{item.title}</Text>
       </View>
-      <View style={styles.itemButtonContainer}>
-        <RadioButton
-          value={item}
-          status={checked ? "checked" : "unchecked"}
-          color="dodgerblue"
-          onPress={() => {
-            setChecked((prev) => !prev);
+      {item.isOptional && (
+        <View style={styles.itemButtonContainer}>
+          <Text>{!checked ? "NOT JOINED" : "JOINED"}</Text>
+          <RadioButton
+            value={item}
+            status={checked ? "checked" : "unchecked"}
+            color="dodgerblue"
+            onPress={() => {
+              console.warn("First Edited Item:", editedItem);
 
-            setValue((prev) =>
-              !checked
-                ? [...prev, item._id]
-                : prev.filter((elem) => elem !== item._id)
-            );
-          }}
-        >
-          Info
-        </RadioButton>
-      </View>
+              const newEditItem = {
+                ...editedItem,
+                isOptional: !editedItem.isOptional,
+              };
+              console.log("Second Edited Item:", newEditItem);
+
+              setEditedItem(newEditItem);
+
+              setChecked((prev) => !prev);
+
+              setValue((prev) =>
+                !checked
+                  ? [...prev, newEditItem]
+                  : prev.filter((elem) => elem.id !== item.id)
+              );
+            }}
+          >
+            Info
+          </RadioButton>
+          <Text style={styles.itemRadioText}>
+            Tap to confirm or leave blank to denie your presence.
+          </Text>
+        </View>
+      )}
     </TouchableOpacity>
   );
 }
@@ -56,6 +74,11 @@ const styles = StyleSheet.create({
   itemHourText: {
     color: "black",
   },
+  itemRadioText: {
+    fontSize: 10,
+    paddingLeft: 30,
+    color: "grey",
+  },
   itemDurationText: {
     color: "#393E46",
     fontSize: 12,
@@ -70,6 +93,7 @@ const styles = StyleSheet.create({
   },
   itemButtonContainer: {
     flex: 1,
+    justifyContent: "flex-end",
     alignItems: "flex-end",
   },
   emptyItem: {

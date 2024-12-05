@@ -180,7 +180,6 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
               inputSearchStyle={styles.inputSearchStyle}
               iconStyle={styles.iconStyle}
               data={dataPrograms()}
-              search
               maxHeight={300}
               labelField="label"
               valueField="value"

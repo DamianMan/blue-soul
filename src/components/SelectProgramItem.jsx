@@ -34,8 +34,8 @@ function SelectProgramItem({ date, setProgramGroup, programGroup, index }) {
   const dataPrograms = () => {
     const newArray = programs.map((item) => ({
       label: `${item.hour} - ${item.title}`,
-      value: item._id,
-      isOptional: true,
+      value: item,
+      isOptional: item.isOptional,
     }));
     return newArray;
   };

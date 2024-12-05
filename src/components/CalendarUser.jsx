@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   Dimensions,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import { Agenda } from "react-native-calendars";
 
@@ -14,6 +15,7 @@ import { useContext } from "react";
 import { ContextData } from "../context/ContextDataProvider";
 import auth from "@react-native-firebase/auth";
 import { Button } from "react-native-paper";
+import axios from "axios";
 
 const { height, width } = Dimensions.get("window");
 
@@ -32,7 +34,7 @@ const ITEMS = (programs, data) => {
     const newValues = value.map((item) =>
       programs.find((pr) => item === pr._id)
     );
-    transformedData[key] = newValues;
+    transformedData[key] = value;
   }
   return transformedData;
 };
@@ -55,7 +57,6 @@ function CalendarUser(props) {
     (item) => item.tokenGroup === userDb.tokenGroup
   );
   const { program } = currentGroup;
-  console.log(currentGroup);
   const [date, setDate] = useState(today);
   const [items, setItems] = useState(ITEMS(programs, program));
   const [value, setValue] = useState([]);
@@ -68,8 +69,26 @@ function CalendarUser(props) {
     );
   }
 
-  const handleSave = () => {
-    alert(`Value Selected: ${value} - DAte: ${date}`);
+  const handleSave = async () => {
+    const idGroup = currentGroup._id;
+    try {
+      await axios
+        .post(
+          "https://blue-soul-app.onrender.com/api/postDailyProgramByUser",
+          { idGroup, date, value },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((res) => Alert.alert(res.data.status, res.data.message))
+        .catch((err) => Alert.alert(err.data.status, err.data.message));
+    } catch (error) {
+      alert("Error making request to update program by user!");
+    }
+    // console.log("Values:", value);
+    // alert(`Date ${date} - values: ${value}`);
   };
   return (
     <SafeAreaView style={{ flex: 1, width }}>
@@ -116,7 +135,7 @@ function CalendarUser(props) {
           style={styles.saveButton}
           onPress={handleSave}
         >
-          Save Programs
+          Save Program
         </Button>
         <Button
           icon={"food-fork-drink"}

@@ -663,6 +663,33 @@ app.post("/api/deleteProgramDay", async (req, res) => {
   }
 });
 
+// Edit Program By User choice in calendar
+app.post("/api/postDailyProgramByUser", async (res, req) => {
+  const { idGroup, date, value } = req.body;
+  try {
+    const fieldPath = `program.${date}`;
+
+    query = {
+      _id: idGroup,
+    };
+    const updatedGroup = await Schools.findOneAndUpdate(
+      query,
+      {
+        [fieldPath]: value,
+      },
+      { new: true }
+    );
+
+    console.log("Updated Group:", updatedGroup);
+    res.json({
+      status: "Success!",
+      message: "Succesfully Confirm Program Choice",
+    });
+  } catch (error) {
+    res.json({ status: "Failed!", message: "Error Editing Program" });
+  }
+});
+
 // Post User Device Push Token
 app.post("/api/postToken", async (req, res) => {
   const { token, userEmail } = req.body;
