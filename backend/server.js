@@ -664,7 +664,7 @@ app.post("/api/deleteProgramDay", async (req, res) => {
 });
 
 // Edit Program By User choice in calendar
-app.post("/api/postDailyProgramByUser", async (res, req) => {
+app.post("/api/postDailyProgramByUser", async (req, res) => {
   const { idGroup, date, value } = req.body;
   try {
     const fieldPath = `program.${date}`;

@@ -56,6 +56,8 @@ function CalendarUser(props) {
   const currentGroup = groups.find(
     (item) => item.tokenGroup === userDb.tokenGroup
   );
+  const idGroup = currentGroup._id;
+
   const { program } = currentGroup;
   const [date, setDate] = useState(today);
   const [items, setItems] = useState(ITEMS(programs, program));
@@ -70,8 +72,9 @@ function CalendarUser(props) {
   }
 
   const handleSave = async () => {
-    const idGroup = currentGroup._id;
     try {
+      console.log("Group ID:", idGroup);
+
       await axios
         .post(
           "https://blue-soul-app.onrender.com/api/postDailyProgramByUser",

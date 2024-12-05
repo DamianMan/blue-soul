@@ -29,7 +29,7 @@ function AgendaItem({ item, setValue, value }) {
             status={checked ? "checked" : "unchecked"}
             color="dodgerblue"
             onPress={() => {
-              console.warn("First Edited Item:", editedItem);
+              console.log("First Edited Item:", editedItem);
 
               const newEditItem = {
                 ...editedItem,
