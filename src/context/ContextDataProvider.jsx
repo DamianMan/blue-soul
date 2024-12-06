@@ -89,6 +89,7 @@ function ContextDataProvider({ children }) {
       await axios
         .get("https://blue-soul-app.onrender.com/api/getPrograms")
         .then((res) => {
+          console.log("Programs:", res.data);
           setPrograms(res.data);
           setLoading(false);
         })

@@ -38,7 +38,7 @@ function ModalDraggable({
 
   const { programs } = useContext(ContextData);
   const [data, setData] = useState(draggableList);
-  console.log("DATE:", date);
+  console.log("DATa:", data);
 
   async function onReordered(fromIndex, toIndex) {
     const copy = [...data]; // Don't modify react data in-place
@@ -49,7 +49,8 @@ function ModalDraggable({
   }
 
   const handleDragSave = async () => {
-    const newArray = data.map((item) => item._id);
+    const newArray = data.map((item) => item);
+    console.log("NEW ARRAY:", newArray);
     try {
       await axios
         .post(

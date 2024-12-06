@@ -35,6 +35,7 @@ const ITEMS = (programs, data) => {
       programs.find((pr) => item === pr._id)
     );
     transformedData[key] = value;
+    console.log("Program:", transformedData);
   }
   return transformedData;
 };
@@ -51,6 +52,7 @@ function CalendarUser(props) {
     console.log("Groups changed!");
   }, [groups]);
   const today = new Date();
+  const formattedDate = today.toISOString().split("T")[0];
   const user = auth().currentUser;
   const userDb = users.find((item) => item.email === user.email);
   const currentGroup = groups.find(
@@ -59,9 +61,11 @@ function CalendarUser(props) {
   const idGroup = currentGroup._id;
 
   const { program } = currentGroup;
-  const [date, setDate] = useState(today);
+  console.log("program:", program);
+  const [date, setDate] = useState(formattedDate);
   const [items, setItems] = useState(ITEMS(programs, program));
   const [value, setValue] = useState([]);
+  const [noOption, setNoOption] = useState(false);
 
   if (loading) {
     return (
@@ -106,6 +110,10 @@ function CalendarUser(props) {
         )}
         onDayPress={(day) => {
           setDate(day.dateString);
+          const noOptionItems = items[day.dateString].some(
+            (item) => item.isOptional
+          );
+          setNoOption(noOptionItems);
           setValue([]);
         }}
         renderEmptyData={() => {
@@ -130,16 +138,18 @@ function CalendarUser(props) {
           marginBottom: 20,
         }}
       >
-        <Button
-          icon={"calendar-text-outline"}
-          textColor="dodgerblue"
-          mode="elevated"
-          buttonColor="#fff"
-          style={styles.saveButton}
-          onPress={handleSave}
-        >
-          Save Program
-        </Button>
+        {noOption && (
+          <Button
+            icon={"calendar-text-outline"}
+            textColor="dodgerblue"
+            mode="elevated"
+            buttonColor="#fff"
+            style={styles.saveButton}
+            onPress={handleSave}
+          >
+            Save Program
+          </Button>
+        )}
         <Button
           icon={"food-fork-drink"}
           textColor="dodgerblue"

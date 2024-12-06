@@ -91,7 +91,7 @@ function checkEditGroup(props) {
       const newValues = value.map((item) =>
         programs.find((pr) => item === pr._id)
       );
-      transformedData[key] = newValues;
+      transformedData[key] = value;
     }
     return transformedData;
   };

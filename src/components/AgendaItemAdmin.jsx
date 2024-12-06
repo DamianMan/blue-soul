@@ -31,7 +31,7 @@ function AgendaItemAdmin({ item, idGroup, date, setReload }) {
   const dataPrograms = () => {
     const newArray = programs.map((item) => ({
       label: `${item.hour} - ${item.title}`,
-      value: item._id,
+      value: item,
     }));
     return newArray;
   };
@@ -39,7 +39,7 @@ function AgendaItemAdmin({ item, idGroup, date, setReload }) {
   const itemPressed = () => {
     Alert.alert(`${item._id} - ${item.hour} - ${item.title} `);
   };
-  const buttonPressed = () => {
+  const handleEdit = () => {
     setModalVisible(!modalVisible);
   };
 
@@ -81,13 +81,13 @@ function AgendaItemAdmin({ item, idGroup, date, setReload }) {
   const handleDelete = async () => {
     console.log("Old Program:", currenGroup.program);
     const newProgram = currenGroup.program[date].filter((obj) => {
-      if (obj !== item._id) {
-        return value;
-      } else {
+      if (obj._id !== item._id) {
         return obj;
+      } else {
+        return value;
       }
     });
-    const idProgram = item._id;
+    console.log("NEW PROGRMA:", newProgram);
 
     try {
       await axios
@@ -96,7 +96,7 @@ function AgendaItemAdmin({ item, idGroup, date, setReload }) {
           {
             idGroup,
             date,
-            idProgram,
+            newProgram,
           },
           {
             headers: {
@@ -134,7 +134,7 @@ function AgendaItemAdmin({ item, idGroup, date, setReload }) {
           mode="outlined"
           textColor="dodgerblue"
           buttonColor="#fff"
-          onPress={buttonPressed}
+          onPress={handleEdit}
         >
           Edit
         </Button>
@@ -183,7 +183,7 @@ function AgendaItemAdmin({ item, idGroup, date, setReload }) {
                     setIsFocus(false);
                   }}
                   onChange={(item) => {
-                    console.log("Selecetd:", item.value);
+                    console.log("SelecITEM:", item);
                     setValue(item.value);
                     setIsFocus(false);
                   }}

@@ -635,7 +635,7 @@ app.post("/api/editProgramDay", async (req, res) => {
 
 // Delete Program Day
 app.post("/api/deleteProgramDay", async (req, res) => {
-  const { idGroup, date, idProgram } = req.body;
+  const { idGroup, date, newProgram } = req.body;
   console.log(req.body);
   try {
     const fieldPath = `program.${date}`;
@@ -646,8 +646,8 @@ app.post("/api/deleteProgramDay", async (req, res) => {
     const updatedGRoup = await Schools.findOneAndUpdate(
       query,
       {
-        $pull: {
-          [fieldPath]: idProgram,
+        $set: {
+          [fieldPath]: newProgram,
         },
       },
       { new: true }

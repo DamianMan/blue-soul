@@ -24,32 +24,35 @@ function AgendaItem({ item, setValue, value }) {
       {item.isOptional && (
         <View style={styles.itemButtonContainer}>
           <Text>{!checked ? "NOT JOINED" : "JOINED"}</Text>
-          <RadioButton
-            value={item}
-            status={checked ? "checked" : "unchecked"}
-            color="dodgerblue"
-            onPress={() => {
-              console.log("First Edited Item:", editedItem);
+          <View style={styles.radioBtn}>
+            <RadioButton
+              value={item}
+              status={checked ? "checked" : "unchecked"}
+              color="dodgerblue"
+              onPress={() => {
+                console.log("First Edited Item:", editedItem);
 
-              const newEditItem = {
-                ...editedItem,
-                isOptional: !editedItem.isOptional,
-              };
-              console.log("Second Edited Item:", newEditItem);
+                const newEditItem = {
+                  ...editedItem,
+                  isOptional: !editedItem.isOptional,
+                };
+                console.log("Second Edited Item:", newEditItem);
 
-              setEditedItem(newEditItem);
+                setEditedItem(newEditItem);
 
-              setChecked((prev) => !prev);
+                setChecked((prev) => !prev);
 
-              setValue((prev) =>
-                !checked
-                  ? [...prev, newEditItem]
-                  : prev.filter((elem) => elem.id !== item.id)
-              );
-            }}
-          >
-            Info
-          </RadioButton>
+                setValue((prev) =>
+                  !checked
+                    ? [...prev, newEditItem]
+                    : prev.filter((elem) => elem.id !== item.id)
+                );
+              }}
+            >
+              Info
+            </RadioButton>
+          </View>
+
           <Text style={styles.itemRadioText}>
             Tap to confirm or leave blank to denie your presence.
           </Text>
@@ -106,5 +109,9 @@ const styles = StyleSheet.create({
   emptyItemText: {
     color: "lightgrey",
     fontSize: 14,
+  },
+  radioBtn: {
+    backgroundColor: "aliceblue",
+    borderRadius: 50,
   },
 });

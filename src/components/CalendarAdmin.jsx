@@ -37,9 +37,27 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
   const dataPrograms = () => {
     const newArray = programs.map((item) => ({
       label: `${item.hour} - ${item.title}`,
-      value: item._id,
+      value: item,
     }));
     return newArray;
+  };
+
+  const handleSaveProgram = () => {
+    if (value) {
+      setIsDraggableModal(!isDraggableModal);
+      const newDragList = [...currenGroup.program[date], value];
+      // const convertedList = newDragList.map((item) => {
+      //   const obj = programs.find((i) => i._id === item.id);
+      //   if (obj) {
+      //     return obj;
+      //   }
+      // });
+
+      console.log("DRAGGABLE List:", newDragList);
+      setDraggableList(newDragList);
+    } else {
+      alert("Please Select a Program!");
+    }
   };
 
   const handleAddProgram = async () => {
@@ -209,23 +227,7 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
               mode="elevated"
               buttonColor="dodgerblue"
               textColor="aliceblue"
-              onPress={() => {
-                if (value) {
-                  setIsDraggableModal(!isDraggableModal);
-                  const newDragList = [...currenGroup.program[date], value];
-                  const convertedList = newDragList.map((item) => {
-                    const obj = programs.find((i) => i._id === item);
-                    if (obj) {
-                      return obj;
-                    }
-                  });
-
-                  console.log("List:", convertedList);
-                  setDraggableList(convertedList);
-                } else {
-                  alert("Please Select a Program!");
-                }
-              }}
+              onPress={handleSaveProgram}
               style={{ marginTop: 20 }}
             >
               Save Program
