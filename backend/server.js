@@ -674,7 +674,7 @@ app.post("/api/postDailyProgramByUser", async (req, res) => {
     const updatedGroup = await Users.findOneAndUpdate(
       query,
       {
-        [`program.${date}`]: value,
+        $set: { [`program.${date}`]: value },
       },
       { new: true }
     );
