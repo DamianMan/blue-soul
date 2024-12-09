@@ -667,9 +667,10 @@ app.post("/api/deleteProgramDay", async (req, res) => {
 // Edit Program By User choice in calendar
 app.post("/api/postDailyProgramByUser", async (req, res) => {
   const { idGroup, date, value } = req.body;
+  console.log("Body:", req.body);
   try {
     query = {
-      _id: idGroup,
+      tokenGroup: idGroup,
     };
     const updatedGroup = await Users.findOneAndUpdate(
       query,

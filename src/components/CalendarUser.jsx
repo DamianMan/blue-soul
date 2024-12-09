@@ -52,7 +52,7 @@ function CalendarUser(props) {
   const currentGroup = groups.find(
     (item) => item.tokenGroup === userDb.tokenGroup
   );
-  const idGroup = currentGroup?._id;
+  const idGroup = currentGroup?.tokenGroup;
 
   const { program } = currentGroup;
   const [date, setDate] = useState(formattedDate);
@@ -75,6 +75,8 @@ function CalendarUser(props) {
   const handleSave = async () => {
     try {
       console.log("List:", value);
+      console.log("Date:", date);
+      console.log("ID:", idGroup);
 
       await axios
         .post(
