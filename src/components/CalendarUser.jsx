@@ -35,7 +35,6 @@ const ITEMS = (programs, data) => {
       programs.find((pr) => item === pr._id)
     );
     transformedData[key] = value;
-    console.log("Program:", transformedData);
   }
   return transformedData;
 };
@@ -44,28 +43,25 @@ function CalendarUser(props) {
   const { programs, groups, users, getGroups, loading } =
     useContext(ContextData);
 
-  useEffect(() => {
-    // const loadGroups = async () => {
-    //   await getGroups();
-    // };
-    // loadGroups();
-    console.log("Groups changed!");
-  }, [groups]);
   const today = new Date();
   const formattedDate = today.toISOString().split("T")[0];
   const user = auth().currentUser;
   const userDb = users.find((item) => item.email === user.email);
+
   const currentGroup = groups.find(
     (item) => item.tokenGroup === userDb.tokenGroup
   );
-  const idGroup = currentGroup._id;
+  const idGroup = currentGroup?._id;
 
   const { program } = currentGroup;
-  console.log("program:", program);
   const [date, setDate] = useState(formattedDate);
-  const [items, setItems] = useState(ITEMS(programs, program));
+  const [items, setItems] = useState(
+    ITEMS(programs, userDb.program || program)
+  );
   const [value, setValue] = useState([]);
   const [noOption, setNoOption] = useState(false);
+  const [selected, setSelected] = useState([]);
+  const [saved, setSaved] = useState(false);
 
   if (loading) {
     return (
@@ -89,13 +85,14 @@ function CalendarUser(props) {
             },
           }
         )
-        .then((res) => Alert.alert(res.data.status, res.data.message))
+        .then((res) => {
+          Alert.alert(res.data.status, res.data.message);
+          setSaved((prev) => !prev);
+        })
         .catch((err) => Alert.alert(err.data.status, err.data.message));
     } catch (error) {
       alert("Error making request to update program by user!");
     }
-    // console.log("Values:", value);
-    // alert(`Date ${date} - values: ${value}`);
   };
   return (
     <SafeAreaView style={{ flex: 1, width }}>
@@ -106,12 +103,21 @@ function CalendarUser(props) {
         showOnlySelectedDayItems={true}
         items={items}
         renderItem={(item) => (
-          <AgendaItem item={item} setValue={setValue} value={value} />
+          <AgendaItem
+            item={item}
+            setValue={setValue}
+            value={value}
+            items={items}
+            date={date}
+            setSelected={setSelected}
+            selected={selected}
+            saved={saved}
+          />
         )}
         onDayPress={(day) => {
           setDate(day.dateString);
-          const noOptionItems = items[day.dateString].some(
-            (item) => item.isOptional
+          const noOptionItems = items[day.dateString]?.some(
+            (item) => item.isConfirmed === false
           );
           setNoOption(noOptionItems);
           setValue([]);

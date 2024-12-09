@@ -4,9 +4,17 @@ import { Button, RadioButton } from "react-native-paper";
 import { useState } from "react";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
-function AgendaItem({ item, setValue, value }) {
-  const [checked, setChecked] = useState(false);
-  const [selected, setSelected] = useState();
+function AgendaItem({
+  item,
+  setValue,
+  value,
+  items,
+  date,
+  setSelected,
+  selected,
+  saved,
+}) {
+  const [checked, setChecked] = useState(selected?.includes(item._id) || false);
   const [editedItem, setEditedItem] = useState(item);
 
   const itemPressed = () => {
@@ -15,13 +23,56 @@ function AgendaItem({ item, setValue, value }) {
   const buttonPressed = () => {
     Alert.alert("Show me more");
   };
+  const handlePress = () => {
+    console.log("First Edited Item:", editedItem);
+
+    const newEditItem = {
+      ...editedItem,
+      isOptional: !editedItem.isOptional,
+    };
+    console.log("Second Edited Item:", newEditItem);
+
+    setEditedItem(newEditItem);
+    setSelected((prev) => {
+      if (!checked) {
+        return [...prev, item._id];
+      } else {
+        return prev.filter((elem) => elem === item._id);
+      }
+    });
+    setChecked((prev) => !prev);
+
+    const filteredChoiceArray = items[date].filter(
+      (elem) => elem.isOptional === true
+    );
+    let newValue = [];
+    let userChoiseElem = [];
+    if (!checked) {
+      userChoiseElem = filteredChoiceArray.find(
+        (elem) => elem._id === item._id
+      );
+      console.log("userChoiseElem:", userChoiseElem);
+
+      newValue.push({ ...userChoiseElem, isConfirmed: true });
+    } else {
+      newValue.filter((elem) => elem._id === item._id);
+    }
+
+    const filterNoChoice = items[date].filter(
+      (elem) => elem.isOptional === false
+    );
+
+    filterNoChoice.length > 0 && newValue.push(filterNoChoice);
+    console.log("EDITED VALUES:", newValue);
+    setValue(newValue);
+  };
   return (
     <TouchableOpacity onPress={itemPressed} style={styles.item}>
       <View>
         <Text style={styles.itemTitleText}>{item.hour}</Text>
         <Text style={styles.itemDurationText}>{item.title}</Text>
       </View>
-      {item.isOptional && (
+      {item.isConfirmed === false && (
         <View style={styles.itemButtonContainer}>
           <Text>{!checked ? "NOT JOINED" : "JOINED"}</Text>
           <View style={styles.radioBtn}>
@@ -29,25 +80,7 @@ function AgendaItem({ item, setValue, value }) {
               value={item}
               status={checked ? "checked" : "unchecked"}
               color="dodgerblue"
-              onPress={() => {
-                console.log("First Edited Item:", editedItem);
-
-                const newEditItem = {
-                  ...editedItem,
-                  isOptional: !editedItem.isOptional,
-                };
-                console.log("Second Edited Item:", newEditItem);
-
-                setEditedItem(newEditItem);
-
-                setChecked((prev) => !prev);
-
-                setValue((prev) =>
-                  !checked
-                    ? [...prev, newEditItem]
-                    : prev.filter((elem) => elem.id !== item.id)
-                );
-              }}
+              onPress={handlePress}
             >
               Info
             </RadioButton>

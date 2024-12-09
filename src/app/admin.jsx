@@ -5,10 +5,14 @@ import {
   FlatList,
   ImageBackground,
   Dimensions,
+  ActivityIndicator,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import TaskItem from "../components/TaskItem";
 import auth from "@react-native-firebase/auth";
+import { useContext } from "react";
+import { ContextData } from "../context/ContextDataProvider";
+import Loader from "../components/Loader";
 const Tasks = [
   {
     name: "Add New Group",
@@ -36,8 +40,12 @@ const Tasks = [
 const { width, height } = Dimensions.get("window");
 
 function AdminPanel(props) {
+  const { loading } = useContext(ContextData);
+  if (loading) {
+    return <Loader />;
+  }
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <ImageBackground
         style={styles.logoImage}
         source={require("../../assets/logo.png")}

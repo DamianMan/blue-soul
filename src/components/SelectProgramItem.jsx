@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Alert,
   Modal,
@@ -25,20 +25,84 @@ const data = [
   { label: "Orange", value: "orange" },
 ];
 function SelectProgramItem({ date, setProgramGroup, programGroup, index }) {
+  useEffect(() => {
+    const dataPrograms = () => {
+      const newArray = programs.map((item) => ({
+        label: `${item.hour} - ${item.title}`,
+        value: item,
+      }));
+      console.log("DATA ARRAY:", newArray);
+      setData(newArray);
+    };
+    dataPrograms();
+  }, [data]);
+
   const formattedDate = date.toISOString().slice(0, 10);
 
   const [selected, setSelected] = useState([]);
-  const [obj, setObj] = useState({});
+  const [obj, setObj] = useState([]);
   const { programs } = useContext(ContextData);
   const [isFocus, setIsFocus] = useState(false);
-  const dataPrograms = () => {
-    const newArray = programs.map((item) => ({
-      label: `${item.hour} - ${item.title}`,
-      value: item,
-      isOptional: item.isOptional,
-    }));
-    return newArray;
+  const [itemOptional, setItemOptional] = useState([]);
+  const [data, setData] = useState();
+
+  const toogleIsOptional = (check, itemId) => {
+    if (check) {
+      const newArray = [...itemOptional, itemId];
+      console.log("Added in List Optional:", newArray);
+      setItemOptional(newArray);
+    } else {
+      const filteredArray = itemOptional.filter((elem) => elem !== itemId);
+      console.log("Removed from List Optional:", filteredArray);
+
+      setItemOptional(filteredArray);
+    }
   };
+
+  const editData = () => {
+    const newData = data.map((item) => {
+      if (itemOptional.includes(item.value._id)) {
+        return {
+          ...item,
+          value: { ...item.value, isOptional: !item.value.isOptional },
+        };
+      } else {
+        return item;
+      }
+    });
+    console.log("EDIT DATA:", newData);
+    setData(newData);
+  };
+
+  const handleBlur = () => {
+    setIsFocus(false);
+    console.log("OBj Item:", obj);
+    console.log("List CHECK:", itemOptional);
+    const newObj = obj.map((elem) => {
+      if (itemOptional.includes(elem._id)) {
+        console.log("Elem found!");
+        return { ...elem, isOptional: !elem.isOptional, isConfirmed: false };
+      } else {
+        console.log("Elem NOT found!");
+        return elem;
+      }
+    });
+    // editData(); // Edit data in Multiselect
+
+    const newObject = { ...programGroup, [formattedDate]: newObj };
+    console.log("New object:", newObject);
+
+    setProgramGroup(newObject);
+  };
+
+  const handleChange = (item) => {
+    console.log("Selecete Item:", item);
+
+    setSelected(item);
+    setObj(item);
+    setIsFocus(false);
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.textDate}>{date.toLocaleDateString("de-De")}</Text>
@@ -52,28 +116,15 @@ function SelectProgramItem({ date, setProgramGroup, programGroup, index }) {
         visibleSelectedItem={false}
         activeColor="lightblue"
         mode="modal"
-        data={dataPrograms()}
+        data={data}
         labelField="label"
         valueField="value"
         placeholder="Select program"
         searchPlaceholder="Search..."
         onFocus={() => setIsFocus(true)}
-        onBlur={() => {
-          setIsFocus(false);
-          console.log("Date:", formattedDate);
-
-          const newObject = { ...programGroup, [formattedDate]: obj };
-          console.log("New object:", newObject);
-
-          setProgramGroup(newObject);
-        }}
+        onBlur={handleBlur}
         value={selected}
-        onChange={(item) => {
-          console.log("Selecete Item:", item);
-          setSelected(item);
-          setObj(item);
-          setIsFocus(false);
-        }}
+        onChange={(item) => handleChange(item)}
         renderLeftIcon={() => (
           <AntDesign
             style={styles.icon}
@@ -83,7 +134,13 @@ function SelectProgramItem({ date, setProgramGroup, programGroup, index }) {
           />
         )}
         selectedStyle={styles.selectedStyle}
-        renderItem={(item) => <DropdownItem item={item} />}
+        renderItem={(item) => (
+          <DropdownItem
+            item={item}
+            toggleOption={toogleIsOptional}
+            itemOptional={itemOptional}
+          />
+        )}
       />
     </View>
   );

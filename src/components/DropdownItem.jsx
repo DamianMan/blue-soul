@@ -6,32 +6,39 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 const { width, height } = Dimensions.get("window");
 
-function DropdownItem({ item }) {
-  const [checked, setChecked] = useState(false);
-  const [selected, setSelected] = useState();
+function DropdownItem({ item, toggleOption, itemOptional }) {
+  const [checked, setChecked] = useState(
+    itemOptional.includes(item.value._id) || false
+  );
+
+  const handlePress = () => {
+    console.log("DROPDOWN ITEM:", item);
+    setChecked((prev) => !prev);
+    toggleOption(!checked, item.value._id);
+  };
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>{item.label}</Text>
-      {item.isOptional && (
-        <View style={styles.radioView}>
-          <Text style={{ color: "grey" }}>
-            Option
-            <MaterialCommunityIcons
-              name="gesture-tap"
-              size={24}
-              color="dodgerblue"
-            />
-          </Text>
-          <RadioButton
-            value={item}
-            status={checked ? "checked" : "unchecked"}
+      <View>
+        <Text style={styles.text}>{item.label}</Text>
+      </View>
+
+      <View style={styles.radioView}>
+        <Text style={{ color: "grey", fontSize: 10, alignItems: "center" }}>
+          Option
+          <MaterialCommunityIcons
+            name={checked ? "check-decagram" : "progress-question"}
+            size={16}
             color="dodgerblue"
-            onPress={() => {
-              setChecked((prev) => !prev);
-            }}
+            style={{ paddingLeft: 3 }}
           />
-        </View>
-      )}
+        </Text>
+        <RadioButton
+          value={item}
+          status={checked ? "checked" : "unchecked"}
+          color="dodgerblue"
+          onPress={handlePress}
+        />
+      </View>
     </View>
   );
 }
@@ -39,11 +46,9 @@ function DropdownItem({ item }) {
 const styles = StyleSheet.create({
   container: {
     justifyContent: "space-between",
-    alignItems: "center",
-    flexDirection: "row",
-    marginHorizontal: 10,
+    alignItems: "flex-start",
     marginVertical: 5,
-    padding: 10,
+    padding: 5,
     borderColor: "grey",
     borderRadius: 10,
     marginTop: 10,
@@ -51,6 +56,11 @@ const styles = StyleSheet.create({
   text: {
     paddingHorizontal: 10,
   },
-  radioView: {},
+  radioView: {
+    justifyContent: "flex-end",
+    alignItems: "center",
+    alignSelf: "flex-end",
+    flexDirection: "row",
+  },
 });
 export default memo(DropdownItem);

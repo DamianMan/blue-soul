@@ -31,7 +31,7 @@ function AgendaItemAdmin({ item, idGroup, date, setReload }) {
   const dataPrograms = () => {
     const newArray = programs.map((item) => ({
       label: `${item.hour} - ${item.title}`,
-      value: item,
+      value: item._id,
     }));
     return newArray;
   };
@@ -45,13 +45,15 @@ function AgendaItemAdmin({ item, idGroup, date, setReload }) {
 
   const handleSave = async () => {
     console.log("Old Program:", currenGroup.program);
+    const programToAdd = programs.find((item) => item._id === value);
     const newProgram = currenGroup.program[date].map((obj) => {
-      if (obj === item._id) {
-        return value;
+      if (obj._id === item._id) {
+        return programToAdd;
       } else {
         return obj;
       }
     });
+    console.log("New PRogram:", newProgram);
     try {
       await axios
         .post(
@@ -171,7 +173,6 @@ function AgendaItemAdmin({ item, idGroup, date, setReload }) {
                   inputSearchStyle={styles.inputSearchStyle}
                   iconStyle={styles.iconStyle}
                   data={dataPrograms()}
-                  search
                   maxHeight={300}
                   labelField="label"
                   valueField="value"

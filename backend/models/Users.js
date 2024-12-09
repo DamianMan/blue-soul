@@ -44,6 +44,9 @@ const userModel = new mongoose.Schema(
     tripFoodDrink: {
       type: Array,
     },
+    program: {
+      type: Object,
+    },
   },
   { timestamps: true }
 );
