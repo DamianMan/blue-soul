@@ -614,7 +614,7 @@ app.post("/api/editProgramDay", async (req, res) => {
     query = {
       _id: idGroup,
     };
-    const updatedGRoup = await Users.findOneAndUpdate(
+    const updatedGRoup = await Schools.findOneAndUpdate(
       query,
       {
         $set: {
@@ -673,7 +673,7 @@ app.post("/api/postDailyProgramByUser", async (req, res) => {
     query = {
       _id: idGroup,
     };
-    const updatedGroup = await Schools.findOneAndUpdate(
+    const updatedGroup = await Users.findOneAndUpdate(
       query,
       {
         [fieldPath]: value,
