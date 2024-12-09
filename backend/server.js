@@ -332,6 +332,7 @@ app.post("/api/postGroup", async (req, res) => {
       isPassport: false,
       tokenGroup: token,
       role: "Teacher",
+      program: programGroup,
     });
 
     await studentUser.save();

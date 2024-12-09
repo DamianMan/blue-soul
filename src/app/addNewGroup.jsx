@@ -160,6 +160,7 @@ function addNewGroup(props) {
               setRange({ startDate: undefined, endDate: undefined });
               setProgramGroup([]);
               getGroups();
+              setRangeSelected();
 
               setLoading(false);
             })

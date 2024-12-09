@@ -47,6 +47,7 @@ function CalendarUser(props) {
   const formattedDate = today.toISOString().split("T")[0];
   const user = auth().currentUser;
   const userDb = users.find((item) => item.email === user.email);
+  console.log("USER PROGRAM:", userDb.program);
 
   const currentGroup = groups.find(
     (item) => item.tokenGroup === userDb.tokenGroup
