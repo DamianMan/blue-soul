@@ -74,7 +74,7 @@ function CalendarUser(props) {
 
   const handleSave = async () => {
     try {
-      console.log("Group ID:", idGroup);
+      console.log("List:", value);
 
       await axios
         .post(

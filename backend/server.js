@@ -668,15 +668,13 @@ app.post("/api/deleteProgramDay", async (req, res) => {
 app.post("/api/postDailyProgramByUser", async (req, res) => {
   const { idGroup, date, value } = req.body;
   try {
-    const fieldPath = `program.${date}`;
-
     query = {
       _id: idGroup,
     };
     const updatedGroup = await Users.findOneAndUpdate(
       query,
       {
-        [fieldPath]: value,
+        [`program.${date}`]: value,
       },
       { new: true }
     );
