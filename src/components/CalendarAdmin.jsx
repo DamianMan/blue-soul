@@ -20,7 +20,7 @@ import ModalDraggable from "./ModalDraggable";
 const { width, height } = Dimensions.get("window");
 
 function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
-  const { programs, groups, loading } = useContext(ContextData);
+  const { programs, groups, loading, users } = useContext(ContextData);
   const today = new Date();
   const [date, setDate] = useState(today);
   const [isModal, setIsModal] = useState(false);
@@ -32,6 +32,9 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
   const [draggableList, setDraggableList] = useState([]);
 
   const currenGroup = groups.find((item) => item._id === idGroup);
+  const usersFilterdeByGroup = users.filter(
+    (item) => item.tokenGroup === currenGroup.tokenGroup
+  );
   console.log("Agenda LISt in Calendar:", agendaList);
 
   const dataPrograms = () => {
@@ -82,6 +85,16 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
     } catch (error) {
       alert("Error adding request!");
     }
+  };
+
+  const handlePeople = () => {
+    const countConfirmed = usersFilterdeByGroup[0].program[date].reduce(
+      (total, item) => total + item.isConfirmed,
+      0
+    );
+    countConfirmed
+      ? alert(`Total People ${countConfirmed}`)
+      : alert("No people confirmed or not event optionable!");
   };
 
   return (
@@ -145,9 +158,7 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
       <View
         style={{
           justifyContent: "space-between",
-          alignItems: "center",
           flexDirection: "row",
-          width,
           padding: 30,
         }}
       >
@@ -155,17 +166,28 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
           icon={"plus"}
           mode="elevated"
           textColor="dodgerblue"
+          style={styles.buttonCalendar}
           onPress={() => setIsModal(!isModal)}
         >
-          Add Program
+          Event
         </Button>
         <Button
           icon={"food-fork-drink"}
           mode="elevated"
           textColor="dodgerblue"
+          style={styles.buttonCalendar}
           onPress={() => setIsModalDinner(!isModalDinner)}
         >
-          Add Dinner
+          Dinner
+        </Button>
+        <Button
+          icon={"format-list-numbered"}
+          mode="elevated"
+          textColor="dodgerblue"
+          style={styles.buttonCalendar}
+          onPress={handlePeople}
+        >
+          People
         </Button>
       </View>
 
@@ -201,7 +223,7 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
               maxHeight={300}
               labelField="label"
               valueField="value"
-              placeholder={!isFocus ? "Select Program" : "..."}
+              placeholder={!value ? "Select Program" : value.title}
               searchPlaceholder="Search..."
               value={value}
               onFocus={() => setIsFocus(true)}
@@ -230,7 +252,7 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
               onPress={handleSaveProgram}
               style={{ marginTop: 20 }}
             >
-              Save Program
+              Save Event
             </Button>
             <ModalDraggable
               setIsDraggableModal={setIsDraggableModal}
@@ -241,6 +263,8 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
               setReload={setReload}
               setIsModal={setIsModal}
               isModal={isModal}
+              value={value}
+              usersFilterdeByGroup={usersFilterdeByGroup}
             />
           </View>
         </View>
@@ -347,7 +371,9 @@ const styles = StyleSheet.create({
     padding: 10,
     elevation: 2,
   },
-
+  buttonCalendar: {
+    marginHorizontal: 5,
+  },
   textStyle: {
     color: "white",
     fontWeight: "bold",

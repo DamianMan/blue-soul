@@ -31,14 +31,31 @@ function ModalDraggable({
   setReload,
   setIsModal,
   isModal,
+  value,
+  usersFilterdeByGroup,
 }) {
   useEffect(() => {
     setData(draggableList);
+    const checkItemIn = () => {
+      usersFilterdeByGroup.forEach((i) => {
+        Object.entries(i.program).forEach(([key, item]) => {
+          console.log("item:", item);
+          const isValueIn = item.find((elem) => elem._id === value._id);
+          if (isValueIn) {
+            setDateUSerItem(key);
+            setItemInUserAgenda(isValueIn);
+          }
+          console.log(`Elem found in date ${key}:`, isValueIn);
+        });
+      });
+    };
+    checkItemIn();
   }, [draggableList]);
 
-  const { programs } = useContext(ContextData);
   const [data, setData] = useState(draggableList);
-  console.log("DATa:", data);
+  const [itemInUserAgenda, setItemInUserAgenda] = useState();
+  const [dateUsetItem, setDateUSerItem] = useState();
+  console.log("usersFilterdeByGroup:", usersFilterdeByGroup);
 
   async function onReordered(fromIndex, toIndex) {
     const copy = [...data]; // Don't modify react data in-place
@@ -50,29 +67,32 @@ function ModalDraggable({
 
   const handleDragSave = async () => {
     const newArray = data.map((item) => item);
-    console.log("NEW ARRAY:", newArray);
-    try {
-      await axios
-        .post(
-          "https://blue-soul-app.onrender.com/api/addProgramDayDrag",
-          {
-            idGroup,
-            date,
-            newArray,
-          },
-          {
-            headers: { "Content-Type": "application/json" },
-          }
-        )
-        .then((res) => {
-          setReload();
-          setIsDraggableModal(!isDraggableModal);
-          setIsModal(!isModal);
-        })
-        .catch((err) => Alert.alert(err.data.status, err.data.message));
-    } catch (error) {
-      alert("Error adding request!");
-    }
+
+    console.log(`User item in date ${dateUsetItem}`, itemInUserAgenda);
+
+    console.log(`"NEW ARRAY:" in date ${date}`, newArray);
+    // try {
+    //   await axios
+    //     .post(
+    //       "https://blue-soul-app.onrender.com/api/addProgramDayDrag",
+    //       {
+    //         idGroup,
+    //         date,
+    //         newArray,
+    //       },
+    //       {
+    //         headers: { "Content-Type": "application/json" },
+    //       }
+    //     )
+    //     .then((res) => {
+    //       setReload();
+    //       setIsDraggableModal(!isDraggableModal);
+    //       setIsModal(!isModal);
+    //     })
+    //     .catch((err) => Alert.alert(err.data.status, err.data.message));
+    // } catch (error) {
+    //   alert("Error adding request!");
+    // }
   };
 
   function renderItem(info) {

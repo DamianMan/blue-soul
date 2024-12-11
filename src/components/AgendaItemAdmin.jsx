@@ -22,9 +22,11 @@ function AgendaItemAdmin({ item, idGroup, date, setReload }) {
   console.log("ITEM RENDERED:", item);
   const [modalVisible, setModalVisible] = useState(false);
   const [value, setValue] = useState();
+  const [dateValue, setDateValue] = useState();
 
   const { programs, groups, loading } = useContext(ContextData);
   const [isFocus, setIsFocus] = useState(false);
+  const [isFocusDate, setIsFocusDate] = useState(false);
 
   const currenGroup = groups.find((item) => item._id === idGroup);
 
@@ -34,6 +36,20 @@ function AgendaItemAdmin({ item, idGroup, date, setReload }) {
       value: item._id,
     }));
     return newArray;
+  };
+
+  const datesProgram = () => {
+    let displyDates = [];
+    Object.entries(currenGroup.program).forEach(([key, value]) => {
+      console.log(key);
+      displyDates.push(key);
+    });
+    const newDates = displyDates.map((elem) => ({
+      label: elem,
+      value: elem,
+    }));
+    console.log("Dates:", newDates);
+    return newDates;
   };
 
   const itemPressed = () => {
@@ -176,7 +192,9 @@ function AgendaItemAdmin({ item, idGroup, date, setReload }) {
                   maxHeight={300}
                   labelField="label"
                   valueField="value"
-                  placeholder={!isFocus ? "Select item" : "..."}
+                  placeholder={
+                    !isFocus ? `${item.hour} - ${item.title}` : "..."
+                  }
                   searchPlaceholder="Search..."
                   value={value}
                   onFocus={() => setIsFocus(true)}
@@ -192,6 +210,40 @@ function AgendaItemAdmin({ item, idGroup, date, setReload }) {
                     <AntDesign
                       style={styles.icon}
                       color={isFocus ? "dodgerblue" : "black"}
+                      name="Safety"
+                      size={20}
+                    />
+                  )}
+                />
+                <Dropdown
+                  style={[
+                    styles.dropdown,
+                    isFocus && { borderColor: "dodgerblue" },
+                  ]}
+                  placeholderStyle={styles.placeholderStyle}
+                  selectedTextStyle={styles.selectedTextStyle}
+                  inputSearchStyle={styles.inputSearchStyle}
+                  iconStyle={styles.iconStyle}
+                  data={datesProgram()}
+                  maxHeight={300}
+                  labelField="label"
+                  valueField="value"
+                  placeholder={!isFocusDate ? "Select item" : "..."}
+                  searchPlaceholder="Search..."
+                  value={dateValue}
+                  onFocus={() => setIsFocusDate(true)}
+                  onBlur={() => {
+                    setIsFocusDate(false);
+                  }}
+                  onChange={(item) => {
+                    console.log("SelecITEM:", item);
+                    setDateValue(item.value);
+                    setIsFocusDate(false);
+                  }}
+                  renderLeftIcon={() => (
+                    <AntDesign
+                      style={styles.icon}
+                      color={isFocusDate ? "dodgerblue" : "black"}
                       name="Safety"
                       size={20}
                     />

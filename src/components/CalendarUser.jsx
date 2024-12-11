@@ -20,6 +20,30 @@ import axios from "axios";
 const { height, width } = Dimensions.get("window");
 
 // Example agenda data
+// const ITEMS = (program, userProgram) => {
+//   transformedData = {};
+//   for (const [key, value] of Object.entries(program)) {
+//     const hasConfirmedUser = userProgram[key].some(
+//       (item) => item.isConfirmed === true
+//     );
+//     const hasConfirmedGroup = value.some((item) => item.isConfirmed === true);
+//     console.log("User program has confirmed?", hasConfirmedUser);
+
+//     console.log("Value in ITems for agenda:", value);
+//     const optionalFalseList = value.filter((elem) => elem.isOptional === false);
+//     let mergedList = [...userProgram[key], ...optionalFalseList];
+//     console.log("MErged List:", mergedList);
+//     if (hasConfirmedGroup && hasConfirmedUser) {
+//       transformedData[key] = mergedList;
+//     } else if (!hasConfirmedGroup && hasConfirmedUser) {
+//       mergedList = [...optionalFalseList];
+//       transformedData[key] = mergedList;
+//     } else {
+//       transformedData[key] = value;
+//     }
+//   }
+//   return transformedData;
+// };
 const ITEMS = (programs, data) => {
   transformedData = {};
   // let data = {
@@ -31,9 +55,6 @@ const ITEMS = (programs, data) => {
   //   "2024-11-24": ["673b5d6a13a096ad05640cad"],
   // };
   for (const [key, value] of Object.entries(data)) {
-    const newValues = value.map((item) =>
-      programs.find((pr) => item === pr._id)
-    );
     transformedData[key] = value;
   }
   return transformedData;
@@ -56,9 +77,7 @@ function CalendarUser(props) {
 
   const { program } = currentGroup;
   const [date, setDate] = useState(formattedDate);
-  const [items, setItems] = useState(
-    ITEMS(programs, userDb.program || program)
-  );
+  const [items, setItems] = useState(ITEMS(programs, program));
   const [value, setValue] = useState([]);
   const [noOption, setNoOption] = useState(false);
   const [selected, setSelected] = useState([]);

@@ -574,11 +574,10 @@ app.post("/api/deleteNameService", async (req, res) => {
 
 // Add Program Day
 app.post("/api/addProgramDayDrag", async (req, res) => {
-  const { idGroup, date, newArray } = req.body;
+  const { idGroup, date, newArray, dateUsetItem, itemInUserAgenda } = req.body;
   console.log(req.body);
   try {
-    const fieldPath = `program.${date}`;
-
+    // Update Group Program Admin
     query = {
       _id: idGroup,
     };
@@ -592,6 +591,23 @@ app.post("/api/addProgramDayDrag", async (req, res) => {
       { new: true }
     );
     console.log("Added & Ordered Program to Group:", updatedGRoup);
+
+    // Update Users Program
+    if (newArray && dateUsetItem) {
+      const updateUsers = await Users.updateMany(
+        { _id: idGroup },
+        {
+          $pull: {
+            [`program.${dateUsetItem}`]: { _id: itemInUserAgenda._id },
+          },
+          $set: {
+            [`program.${date}`]: itemInUserAgenda,
+          },
+        }
+      );
+
+      console.log("Updated Users program:", updateUsers);
+    }
 
     res.json({
       message: "Program Added & Ordered Succesfully!",
