@@ -595,7 +595,7 @@ app.post("/api/addProgramDayDrag", async (req, res) => {
     // Update Users Program
     if (newArray && dateUsetItem) {
       const updateUsers = await Users.updateMany(
-        { _id: idGroup },
+        { tokenGroup: idGroup },
         {
           $pull: {
             [`program.${dateUsetItem}`]: { _id: itemInUserAgenda._id },

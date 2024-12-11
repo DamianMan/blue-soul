@@ -30,7 +30,13 @@ const getRandomColor = () => {
   return COLORS[randomColor];
 };
 
-const CustomCarousel = ({ data, handlePress, setTeacher, setUsers }) => {
+const CustomCarousel = ({
+  data,
+  handlePress,
+  setTeacher,
+  setUsers,
+  setFilteredGroups,
+}) => {
   const { removeItemComplexArray } = useContext(ContextData);
   const [group, setGroup] = useState(data);
 
@@ -47,6 +53,7 @@ const CustomCarousel = ({ data, handlePress, setTeacher, setUsers }) => {
           removeItemComplexArray(setGroup, group, id);
           setTeacher();
           setUsers([]);
+          setFilteredGroups([]);
         })
         .catch((err) => Alert.alert(err.data.status, err.data.message));
     } catch (error) {

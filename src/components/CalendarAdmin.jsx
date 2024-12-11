@@ -92,8 +92,11 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
       (total, item) => total + item.isConfirmed,
       0
     );
+    const currentEvent = usersFilterdeByGroup[0].program[date].find(
+      (item) => item.isConfirmed
+    );
     countConfirmed
-      ? alert(`Total People ${countConfirmed}`)
+      ? alert(`Total People ${countConfirmed} on Event: ${currentEvent.title}`)
       : alert("No people confirmed or not event optionable!");
   };
 

@@ -49,7 +49,7 @@ function ModalDraggable({
         });
       });
     };
-    checkItemIn();
+    value && checkItemIn();
   }, [draggableList]);
 
   const [data, setData] = useState(draggableList);
@@ -71,28 +71,30 @@ function ModalDraggable({
     console.log(`User item in date ${dateUsetItem}`, itemInUserAgenda);
 
     console.log(`"NEW ARRAY:" in date ${date}`, newArray);
-    // try {
-    //   await axios
-    //     .post(
-    //       "https://blue-soul-app.onrender.com/api/addProgramDayDrag",
-    //       {
-    //         idGroup,
-    //         date,
-    //         newArray,
-    //       },
-    //       {
-    //         headers: { "Content-Type": "application/json" },
-    //       }
-    //     )
-    //     .then((res) => {
-    //       setReload();
-    //       setIsDraggableModal(!isDraggableModal);
-    //       setIsModal(!isModal);
-    //     })
-    //     .catch((err) => Alert.alert(err.data.status, err.data.message));
-    // } catch (error) {
-    //   alert("Error adding request!");
-    // }
+    try {
+      await axios
+        .post(
+          "https://blue-soul-app.onrender.com/api/addProgramDayDrag",
+          {
+            idGroup,
+            date,
+            newArray,
+            dateUsetItem,
+            itemInUserAgenda,
+          },
+          {
+            headers: { "Content-Type": "application/json" },
+          }
+        )
+        .then((res) => {
+          setReload();
+          setIsDraggableModal(!isDraggableModal);
+          setIsModal(!isModal);
+        })
+        .catch((err) => Alert.alert(err.data.status, err.data.message));
+    } catch (error) {
+      alert("Error adding request!");
+    }
   };
 
   function renderItem(info) {

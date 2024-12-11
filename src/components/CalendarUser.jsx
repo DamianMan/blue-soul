@@ -77,7 +77,9 @@ function CalendarUser(props) {
 
   const { program } = currentGroup;
   const [date, setDate] = useState(formattedDate);
-  const [items, setItems] = useState(ITEMS(programs, program));
+  const [items, setItems] = useState(
+    ITEMS(programs, userDb.program || program)
+  );
   const [value, setValue] = useState([]);
   const [noOption, setNoOption] = useState(false);
   const [selected, setSelected] = useState([]);
