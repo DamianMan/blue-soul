@@ -94,16 +94,13 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
       console.log("Evente:", elem.program[date]);
       const nums = elem.program[date].reduce((tot, objItem) => {
         const isConf = objItem.isConfirmed ? 1 : 0;
+        console.log("Adding:", isConf);
         return tot + isConf;
       }, 0);
       count += nums;
     });
     console.log("COunt:", count);
 
-    const countConfirmed = usersFilterdeByGroup[0].program[date].reduce(
-      (total, item) => total + item.isConfirmed,
-      0
-    );
     const currentEvent = usersFilterdeByGroup[0].program[date].find(
       (item) => item.isConfirmed
     );

@@ -96,26 +96,26 @@ function CalendarUser(props) {
 
   const handleSave = async () => {
     console.log("VALUES:", value);
-    // try {
-    //   await axios
-    //     .post(
-    //       "https://blue-soul-app.onrender.com/api/postDailyProgramByUser",
-    //       { email, date, value },
-    //       {
-    //         headers: {
-    //           "Content-Type": "application/json",
-    //         },
-    //       }
-    //     )
-    //     .then((res) => {
-    //       Alert.alert(res.data.status, res.data.message);
-    //       setSaved((prev) => !prev);
-    //       fetchData();
-    //     })
-    //     .catch((err) => Alert.alert(err.data.status, err.data.message));
-    // } catch (error) {
-    //   alert("Error making request to update program by user!");
-    // }
+    try {
+      await axios
+        .post(
+          "https://blue-soul-app.onrender.com/api/postDailyProgramByUser",
+          { email, date, value },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((res) => {
+          Alert.alert(res.data.status, res.data.message);
+          setSaved((prev) => !prev);
+          fetchData();
+        })
+        .catch((err) => Alert.alert(err.data.status, err.data.message));
+    } catch (error) {
+      alert("Error making request to update program by user!");
+    }
   };
   return (
     <SafeAreaView style={{ flex: 1, width }}>

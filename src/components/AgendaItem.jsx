@@ -16,6 +16,7 @@ function AgendaItem({
 }) {
   const [checked, setChecked] = useState(selected?.includes(item._id) || false);
   const [editedItem, setEditedItem] = useState(item);
+  const [disabled, setDisabled] = useState(false);
 
   const itemPressed = () => {
     Alert.alert(item.title);
@@ -66,13 +67,14 @@ function AgendaItem({
     console.log("EDITED VALUES:", newValue);
     setValue(newValue);
   };
+
   return (
     <TouchableOpacity onPress={itemPressed} style={styles.item}>
       <View>
         <Text style={styles.itemTitleText}>{item.hour}</Text>
         <Text style={styles.itemDurationText}>{item.title}</Text>
       </View>
-      {item.isConfirmed === false && (
+      {!item.isConfirmed && item.isOptional && (
         <View style={styles.itemButtonContainer}>
           <Text>{!checked ? "NOT JOINED" : "JOINED"}</Text>
           <View style={styles.radioBtn}>
