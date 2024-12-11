@@ -27,6 +27,7 @@ function ModalDraggable({
   isDraggableModal,
   draggableList,
   idGroup,
+  tokenGroup,
   date,
   setReload,
   setIsModal,
@@ -77,6 +78,7 @@ function ModalDraggable({
           "https://blue-soul-app.onrender.com/api/addProgramDayDrag",
           {
             idGroup,
+            tokenGroup,
             date,
             newArray,
             dateUsetItem,

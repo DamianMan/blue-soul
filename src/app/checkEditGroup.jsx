@@ -187,6 +187,7 @@ function checkEditGroup(props) {
               handlePress={handlePress}
               setTeacher={setGroup}
               setUsers={setUser}
+              setFilteredGroups={setFilteredGroups}
             />
           </>
         )}

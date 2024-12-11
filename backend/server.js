@@ -574,7 +574,14 @@ app.post("/api/deleteNameService", async (req, res) => {
 
 // Add Program Day
 app.post("/api/addProgramDayDrag", async (req, res) => {
-  const { idGroup, date, newArray, dateUsetItem, itemInUserAgenda } = req.body;
+  const {
+    idGroup,
+    tokenGroup,
+    date,
+    newArray,
+    dateUsetItem,
+    itemInUserAgenda,
+  } = req.body;
   console.log(req.body);
   try {
     // Update Group Program Admin
@@ -595,7 +602,7 @@ app.post("/api/addProgramDayDrag", async (req, res) => {
     // Update Users Program
     if (newArray && dateUsetItem) {
       const updateUsers = await Users.updateMany(
-        { tokenGroup: idGroup },
+        { tokenGroup },
         {
           $pull: {
             [`program.${dateUsetItem}`]: { _id: itemInUserAgenda._id },

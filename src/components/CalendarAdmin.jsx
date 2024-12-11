@@ -262,6 +262,7 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
               isDraggableModal={isDraggableModal}
               draggableList={draggableList}
               idGroup={idGroup}
+              tokenGroup={currenGroup.tokenGroup}
               date={date}
               setReload={setReload}
               setIsModal={setIsModal}
