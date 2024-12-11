@@ -61,7 +61,7 @@ const ITEMS = (programs, data) => {
 };
 
 function CalendarUser(props) {
-  const { programs, groups, users, getGroups, loading } =
+  const { programs, groups, users, getGroups, getUsers, loading, fetchData } =
     useContext(ContextData);
 
   const today = new Date();
@@ -95,10 +95,6 @@ function CalendarUser(props) {
 
   const handleSave = async () => {
     try {
-      console.log("List:", value);
-      console.log("Date:", date);
-      console.log("ID:", idGroup);
-
       await axios
         .post(
           "https://blue-soul-app.onrender.com/api/postDailyProgramByUser",
@@ -112,6 +108,7 @@ function CalendarUser(props) {
         .then((res) => {
           Alert.alert(res.data.status, res.data.message);
           setSaved((prev) => !prev);
+          fetchData();
         })
         .catch((err) => Alert.alert(err.data.status, err.data.message));
     } catch (error) {

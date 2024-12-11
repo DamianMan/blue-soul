@@ -142,7 +142,7 @@ function AgendaItemAdmin({ item, idGroup, date, setReload }) {
           right: -20,
         }}
       ></Button>
-      <View>
+      <View style={{ justifyContent: "flex-start", alignItems: "flex-start" }}>
         <Text style={styles.itemTitleText}>{item.hour}</Text>
         <Text style={styles.itemDurationText}>{item.title}</Text>
       </View>
@@ -284,11 +284,9 @@ const styles = StyleSheet.create({
     color: "#393E46",
     fontSize: 12,
     marginTop: 4,
-    marginLeft: 4,
   },
   itemTitleText: {
     color: "black",
-    marginLeft: 16,
     fontWeight: "bold",
     fontSize: 16,
   },

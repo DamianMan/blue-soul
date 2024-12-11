@@ -88,6 +88,18 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
   };
 
   const handlePeople = () => {
+    console.log("users:", usersFilterdeByGroup);
+    let count = 0;
+    usersFilterdeByGroup.forEach((elem) => {
+      console.log("Evente:", elem.program[date]);
+      const nums = elem.program[date].reduce((tot, objItem) => {
+        const isConf = objItem.isConfirmed ? 1 : 0;
+        return tot + isConf;
+      }, 0);
+      count += nums;
+    });
+    console.log("COunt:", count);
+
     const countConfirmed = usersFilterdeByGroup[0].program[date].reduce(
       (total, item) => total + item.isConfirmed,
       0
@@ -95,8 +107,8 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
     const currentEvent = usersFilterdeByGroup[0].program[date].find(
       (item) => item.isConfirmed
     );
-    countConfirmed
-      ? alert(`Total People ${countConfirmed} on Event: ${currentEvent.title}`)
+    count > 0
+      ? alert(`Total People ${count} on Event: ${currentEvent.title}`)
       : alert("No people confirmed or not event optionable!");
   };
 

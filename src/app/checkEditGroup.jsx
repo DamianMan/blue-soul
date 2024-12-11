@@ -153,6 +153,7 @@ function checkEditGroup(props) {
       />
       <View>
         <FilterDatesForm
+          filteredGroup={filteredGroups}
           setFilteredGroups={setFilteredGroups}
           groups={groups}
           date={date}

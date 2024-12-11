@@ -12,7 +12,7 @@ function ContextDataProvider({ children }) {
   const [user, setUser] = useState("damaino");
   const [programs, setPrograms] = useState([]);
 
-  useEffect(() => {
+  const fetchData = () => {
     // Get Services
 
     getServices();
@@ -25,6 +25,10 @@ function ContextDataProvider({ children }) {
 
     // Get Programs
     getPrograms();
+  };
+
+  useEffect(() => {
+    fetchData();
   }, []);
 
   // Get All Groups
@@ -134,6 +138,7 @@ function ContextDataProvider({ children }) {
   };
 
   const appValues = {
+    fetchData,
     user,
     addUserAuth,
     removeUserAuth,

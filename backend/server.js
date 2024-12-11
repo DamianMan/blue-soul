@@ -600,6 +600,14 @@ app.post("/api/addProgramDayDrag", async (req, res) => {
     console.log("Added & Ordered Program to Group:", updatedGRoup);
 
     // Update Users Program
+
+    const editNewArray = newArray.map((item) => {
+      if (item._id === itemInUserAgenda._id) {
+        return itemInUserAgenda;
+      } else {
+        return item;
+      }
+    });
     if (newArray && dateUsetItem) {
       const updateUsers = await Users.updateMany(
         { tokenGroup },
@@ -608,7 +616,7 @@ app.post("/api/addProgramDayDrag", async (req, res) => {
             [`program.${dateUsetItem}`]: { _id: itemInUserAgenda._id },
           },
           $push: {
-            [`program.${date}`]: itemInUserAgenda,
+            [`program.${date}`]: editNewArray,
           },
         }
       );
@@ -689,11 +697,11 @@ app.post("/api/deleteProgramDay", async (req, res) => {
 
 // Edit Program By User choice in calendar
 app.post("/api/postDailyProgramByUser", async (req, res) => {
-  const { idGroup, date, value } = req.body;
+  const { email, date, value } = req.body;
   console.log("Body:", req.body);
   try {
     query = {
-      tokenGroup: idGroup,
+      email,
     };
     const updatedGroup = await Users.findOneAndUpdate(
       query,
