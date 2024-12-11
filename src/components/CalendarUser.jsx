@@ -67,6 +67,7 @@ function CalendarUser(props) {
   const today = new Date();
   const formattedDate = today.toISOString().split("T")[0];
   const user = auth().currentUser;
+  const { email } = user;
   const userDb = users.find((item) => item.email === user.email);
   console.log("USER PROGRAM:", userDb.program);
 
@@ -94,26 +95,27 @@ function CalendarUser(props) {
   }
 
   const handleSave = async () => {
-    try {
-      await axios
-        .post(
-          "https://blue-soul-app.onrender.com/api/postDailyProgramByUser",
-          { idGroup, date, value },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        )
-        .then((res) => {
-          Alert.alert(res.data.status, res.data.message);
-          setSaved((prev) => !prev);
-          fetchData();
-        })
-        .catch((err) => Alert.alert(err.data.status, err.data.message));
-    } catch (error) {
-      alert("Error making request to update program by user!");
-    }
+    console.log("VALUES:", value);
+    // try {
+    //   await axios
+    //     .post(
+    //       "https://blue-soul-app.onrender.com/api/postDailyProgramByUser",
+    //       { email, date, value },
+    //       {
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //         },
+    //       }
+    //     )
+    //     .then((res) => {
+    //       Alert.alert(res.data.status, res.data.message);
+    //       setSaved((prev) => !prev);
+    //       fetchData();
+    //     })
+    //     .catch((err) => Alert.alert(err.data.status, err.data.message));
+    // } catch (error) {
+    //   alert("Error making request to update program by user!");
+    // }
   };
   return (
     <SafeAreaView style={{ flex: 1, width }}>

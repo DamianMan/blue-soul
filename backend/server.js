@@ -169,6 +169,7 @@ app.post("/api/signUpUser", async (req, res) => {
           password: password,
           tokenGroup: password,
           role: "Student",
+          program: isInGroup.program,
         });
         await newUser.save();
 
