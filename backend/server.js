@@ -607,7 +607,7 @@ app.post("/api/addProgramDayDrag", async (req, res) => {
           $pull: {
             [`program.${dateUsetItem}`]: { _id: itemInUserAgenda._id },
           },
-          $set: {
+          $push: {
             [`program.${date}`]: itemInUserAgenda,
           },
         }
