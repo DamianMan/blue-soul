@@ -22,6 +22,13 @@ const Tasks = [
       "https://images.unsplash.com/photo-1536869338989-e7ffd2297454?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHN0dWRlbnRzJTIwc2VhfGVufDB8fDB8fHww",
   },
   {
+    name: "Add Program Event",
+    url: "events",
+    icon: "plus-square",
+    image:
+      "https://images.unsplash.com/photo-1484981184820-2e84ea0af397?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  },
+  {
     name: "Check & Edit Group",
     url: "checkEditGroup",
     icon: "edit",

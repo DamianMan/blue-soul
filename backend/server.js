@@ -722,6 +722,36 @@ app.post("/api/postDailyProgramByUser", async (req, res) => {
   }
 });
 
+// Add Program Event
+app.post("/api/postProgram", async (req, res) => {
+  const { getHour, event, isOptional } = req.body;
+  try {
+    const newEvent = new Programs({
+      hour: getHour,
+      title: event,
+      isOptional,
+    });
+
+    await newEvent.save();
+    console.log("New event posted:", newEvent);
+    res.json({ status: "Success", message: "New event created successfully." });
+  } catch (error) {
+    res.json({ status: "Error adding Event!" });
+  }
+});
+
+// Delete Program Event
+app.post("/api/deleteEvent", async (req, res) => {
+  const { id } = req.body;
+  try {
+    const deletedEvent = await Programs.deleteOne({ _id: id });
+    console.log("Deleted event:", deletedEvent);
+    res.json({ status: "Success", message: "Event deleted successfully." });
+  } catch (error) {
+    res.json({ status: "Failed", message: "No matching event to delete!" });
+  }
+});
+
 // Post User Device Push Token
 app.post("/api/postToken", async (req, res) => {
   const { token, userEmail } = req.body;

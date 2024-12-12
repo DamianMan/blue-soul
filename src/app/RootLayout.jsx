@@ -87,6 +87,23 @@ export default function RootLayout() {
         }}
       />
       <Stack.Screen
+        name="events"
+        options={{
+          title: "Add Program Event",
+          headerTitleAlign: "center",
+
+          headerShown: true,
+          headerRight: () => <LogoutBtn />,
+          headerStyle: {
+            backgroundColor: "aliceblue",
+          },
+          headerTintColor: "#303841",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+        }}
+      />
+      <Stack.Screen
         name="checkEditGroup"
         options={{
           title: "Group",

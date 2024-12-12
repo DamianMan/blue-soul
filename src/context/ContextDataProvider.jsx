@@ -12,19 +12,19 @@ function ContextDataProvider({ children }) {
   const [user, setUser] = useState("damaino");
   const [programs, setPrograms] = useState([]);
 
-  const fetchData = () => {
+  const fetchData = async () => {
     // Get Services
 
-    getServices();
+    await getServices();
     // Get All Groups
 
-    getGroups();
+    await getGroups();
     // Get All Users
 
-    getUsers();
+    await getUsers();
 
     // Get Programs
-    getPrograms();
+    await getPrograms();
   };
 
   useEffect(() => {
@@ -93,8 +93,13 @@ function ContextDataProvider({ children }) {
       await axios
         .get("https://blue-soul-app.onrender.com/api/getPrograms")
         .then((res) => {
-          console.log("Programs:", res.data);
-          setPrograms(res.data);
+          const sortedArray = res.data.sort((a, b) => {
+            const numA = parseInt(a.hour.split(":")[0]);
+            const numB = parseInt(b.hour.split(":")[0]);
+            return numA - numB;
+          });
+          console.log("SORTED PROGRAMS:", sortedArray);
+          setPrograms(sortedArray);
           setLoading(false);
         })
         .catch((err) => {

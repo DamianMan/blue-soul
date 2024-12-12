@@ -152,6 +152,21 @@ function checkEditGroup(props) {
         }}
       />
       <View>
+        <Button
+          icon={"plus"}
+          buttonColor="dodgerblue"
+          textColor="aliceblue"
+          mode="elevated"
+          onPress={() => alert("Event created")}
+          style={{
+            borderRadius: 5,
+            padding: 5,
+            marginHorizontal: 15,
+            marginTop: 20,
+          }}
+        >
+          Event
+        </Button>
         <FilterDatesForm
           filteredGroup={filteredGroups}
           setFilteredGroups={setFilteredGroups}

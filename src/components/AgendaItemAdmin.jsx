@@ -48,7 +48,6 @@ function AgendaItemAdmin({ item, idGroup, date, setReload }) {
       label: elem,
       value: elem,
     }));
-    console.log("Dates:", newDates);
     return newDates;
   };
 

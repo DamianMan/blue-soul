@@ -8,7 +8,11 @@ import { useState } from "react";
 import * as Print from "expo-print";
 import { shareAsync } from "expo-sharing";
 
-function PdfButton({ currentUsers }) {
+function PdfButton({
+  currentUsers,
+  textBtn = "Generate PDF",
+  event = "Check-In",
+}) {
   const [selectedPrinter, setSelectedPrinter] = useState();
 
   const generateUserHTML = (users) => {
@@ -24,7 +28,7 @@ function PdfButton({ currentUsers }) {
               </style>
             </head>
             <body>
-              <h1>Documents Info Users</h1>
+              <h1>Documents Users ${event}</h1>
               <table>
                 <tr>
                     <th>Name</th>
@@ -117,7 +121,7 @@ function PdfButton({ currentUsers }) {
       textColor="aliceblue"
       style={{ margin: 30 }}
     >
-      Generate PDF
+      {textBtn}
     </Button>
   );
 }

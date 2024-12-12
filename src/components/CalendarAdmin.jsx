@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Dimensions,
   Pressable,
@@ -16,11 +16,22 @@ import { ContextData } from "../context/ContextDataProvider";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import axios from "axios";
 import ModalDraggable from "./ModalDraggable";
+import DialogCountPeople from "./DialogCountPeople";
 
 const { width, height } = Dimensions.get("window");
 
 function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
   const { programs, groups, loading, users } = useContext(ContextData);
+  useEffect(() => {
+    const dataPrograms = () => {
+      const newArray = programs.map((item) => ({
+        label: `${item.hour} - ${item.title}`,
+        value: item,
+      }));
+      return newArray;
+    };
+    setData(dataPrograms());
+  }, [data]);
   const today = new Date();
   const [date, setDate] = useState(today);
   const [isModal, setIsModal] = useState(false);
@@ -30,20 +41,19 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
   const [value, setValue] = useState();
   const [isDraggableModal, setIsDraggableModal] = useState(false);
   const [draggableList, setDraggableList] = useState([]);
+  const [visible, setVisible] = useState(false);
+  const [count, setCount] = useState();
+  const [event, setEvent] = useState();
+  const [confPeople, setConfPeople] = useState([]);
+  const [data, setData] = useState();
+
+  const hideDialog = () => setVisible((prev) => !prev);
 
   const currenGroup = groups.find((item) => item._id === idGroup);
   const usersFilterdeByGroup = users.filter(
     (item) => item.tokenGroup === currenGroup.tokenGroup
   );
   console.log("Agenda LISt in Calendar:", agendaList);
-
-  const dataPrograms = () => {
-    const newArray = programs.map((item) => ({
-      label: `${item.hour} - ${item.title}`,
-      value: item,
-    }));
-    return newArray;
-  };
 
   const handleSaveProgram = () => {
     if (value) {
@@ -90,11 +100,15 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
   const handlePeople = () => {
     console.log("users:", usersFilterdeByGroup);
     let count = 0;
+    let confirmedPeople = [];
     usersFilterdeByGroup.forEach((elem) => {
       console.log("Evente:", elem.program[date]);
       const nums = elem.program[date].reduce((tot, objItem) => {
         const isConf = objItem.isConfirmed ? 1 : 0;
         console.log("Adding:", isConf);
+        if (isConf === 1) {
+          confirmedPeople.push(elem);
+        }
         return tot + isConf;
       }, 0);
       count += nums;
@@ -104,9 +118,16 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
     const currentEvent = usersFilterdeByGroup[0].program[date].find(
       (item) => item.isConfirmed
     );
-    count > 0
-      ? alert(`Total People ${count} on Event: ${currentEvent.title}`)
-      : alert("No people confirmed or not event optionable!");
+    console.log("Info Confirmed People:", confirmedPeople);
+
+    if (count > 0) {
+      setVisible((prev) => !prev);
+      setConfPeople(confirmedPeople);
+      setCount(count);
+      setEvent(currentEvent.title);
+    } else {
+      alert("No people confirmed or not event optionable!");
+    }
   };
 
   return (
@@ -167,41 +188,51 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
           );
         }}
       />
-      <View
-        style={{
-          justifyContent: "space-between",
-          flexDirection: "row",
-          padding: 30,
-        }}
-      >
-        <Button
-          icon={"plus"}
-          mode="elevated"
-          textColor="dodgerblue"
-          style={styles.buttonCalendar}
-          onPress={() => setIsModal(!isModal)}
+      {Object.keys(agendaList).includes(date) && (
+        <View
+          style={{
+            justifyContent: "space-between",
+            flexDirection: "row",
+            padding: 30,
+          }}
         >
-          Event
-        </Button>
-        <Button
-          icon={"food-fork-drink"}
-          mode="elevated"
-          textColor="dodgerblue"
-          style={styles.buttonCalendar}
-          onPress={() => setIsModalDinner(!isModalDinner)}
-        >
-          Dinner
-        </Button>
-        <Button
-          icon={"format-list-numbered"}
-          mode="elevated"
-          textColor="dodgerblue"
-          style={styles.buttonCalendar}
-          onPress={handlePeople}
-        >
-          People
-        </Button>
-      </View>
+          <Button
+            icon={"plus"}
+            mode="elevated"
+            textColor="dodgerblue"
+            style={styles.buttonCalendar}
+            onPress={() => setIsModal(!isModal)}
+          >
+            Event
+          </Button>
+          <Button
+            icon={"food-fork-drink"}
+            mode="elevated"
+            textColor="dodgerblue"
+            style={styles.buttonCalendar}
+            onPress={() => setIsModalDinner(!isModalDinner)}
+          >
+            Dinner
+          </Button>
+          <Button
+            icon={"format-list-numbered"}
+            mode="elevated"
+            textColor="dodgerblue"
+            style={styles.buttonCalendar}
+            onPress={handlePeople}
+          >
+            People
+          </Button>
+          <DialogCountPeople
+            visible={visible}
+            hideDialog={hideDialog}
+            count={count}
+            total={currenGroup.peopleCount}
+            event={event}
+            peopleList={confPeople}
+          />
+        </View>
+      )}
 
       {/* MODAL ADD PROGRAM AND RE-ORDER */}
 
@@ -231,7 +262,7 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
               selectedTextStyle={styles.selectedTextStyle}
               inputSearchStyle={styles.inputSearchStyle}
               iconStyle={styles.iconStyle}
-              data={dataPrograms()}
+              data={data}
               maxHeight={300}
               labelField="label"
               valueField="value"
