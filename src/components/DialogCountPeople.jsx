@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
     color: "dodgerblue",
+    fontSize: 18,
   },
   centeredView: {
     flex: 1,

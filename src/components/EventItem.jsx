@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { View, Text, StyleSheet, Dimensions, Alert } from "react-native";
 import { Button } from "react-native-paper";
 import axios from "axios";
+import { ContextData } from "../context/ContextDataProvider";
 
 const { width } = Dimensions.get("window");
 function EventItem({ title, hour, id }) {
+  const { fetchData } = useContext(ContextData);
   const handleDelete = async () => {
     try {
       await axios
@@ -19,7 +21,10 @@ function EventItem({ title, hour, id }) {
             },
           }
         )
-        .then((res) => Alert.alert(res.data.status, res.data.message))
+        .then((res) => {
+          Alert.alert(res.data.status, res.data.message);
+          fetchData();
+        })
         .catch((res) => Alert.alert(res.data.status, res.data.message));
     } catch (error) {
       alert("Error making request to delete event!");

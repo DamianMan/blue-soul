@@ -94,11 +94,14 @@ function ContextDataProvider({ children }) {
         .get("https://blue-soul-app.onrender.com/api/getPrograms")
         .then((res) => {
           const sortedArray = res.data.sort((a, b) => {
-            const numA = parseInt(a.hour.split(":")[0]);
-            const numB = parseInt(b.hour.split(":")[0]);
-            return numA - numB;
+            const [hoursA, minutesA] = a.hour.split(":").map(Number);
+            const [hoursB, minutesB] = b.hour.split(":").map(Number);
+
+            const floatA = hoursA + minutesA / 60;
+            const floatB = hoursB + minutesB / 60;
+
+            return floatA - floatB; // Ascending order
           });
-          console.log("SORTED PROGRAMS:", sortedArray);
           setPrograms(sortedArray);
           setLoading(false);
         })

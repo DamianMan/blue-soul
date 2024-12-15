@@ -19,6 +19,7 @@ import StudentChipItem from "../components/StudentChipItem";
 import PdfButton from "../components/PdfButton";
 import FilterDatesForm from "../components/FilterDatesForm";
 import CalendarAdmin from "../components/CalendarAdmin";
+import SearchStudent from "../components/SearchStudent";
 
 const { height } = Dimensions.get("window");
 
@@ -33,6 +34,8 @@ function checkEditGroup(props) {
   const [modalVisible, setModalVisible] = useState(false);
   const [agendaList, setAgendaList] = useState();
   const [date, setDate] = useState(undefined);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchedStudent, setSearchedStudent] = useState();
 
   // Get All Groups
   useEffect(() => {
@@ -152,21 +155,6 @@ function checkEditGroup(props) {
         }}
       />
       <View>
-        <Button
-          icon={"plus"}
-          buttonColor="dodgerblue"
-          textColor="aliceblue"
-          mode="elevated"
-          onPress={() => alert("Event created")}
-          style={{
-            borderRadius: 5,
-            padding: 5,
-            marginHorizontal: 15,
-            marginTop: 20,
-          }}
-        >
-          Event
-        </Button>
         <FilterDatesForm
           filteredGroup={filteredGroups}
           setFilteredGroups={setFilteredGroups}
@@ -260,22 +248,21 @@ function checkEditGroup(props) {
                 STUDENTS ({user.length}/{group.peopleCount}
                 <Text style={{ fontSize: 10 }}>teacher incl.</Text>)
               </Text>
-              <FlatList
-                horizontal
-                data={user}
-                renderItem={({ item }) =>
-                  item.role == "Student" && (
-                    <StudentChipItem
-                      toogleReload={toogleReload}
-                      key={item.tokenGroup + item.fullName}
-                      data={item}
-                    />
-                  )
-                }
-                keyExtractor={(item) => item._id}
+              <SearchStudent
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                user={user}
+                setSearchedStudent={setSearchedStudent}
               />
+              {searchedStudent && (
+                <StudentChipItem
+                  toogleReload={toogleReload}
+                  key={searchedStudent.tokenGroup + searchedStudent.fullName}
+                  data={searchedStudent}
+                />
+              )}
+              <PdfButton currentUsers={user} />
             </View>
-            <PdfButton currentUsers={user} />
           </>
         )}
       </View>

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useContext } from "react";
 import { StyleSheet, Text, Dimensions, Alert } from "react-native";
 import {
   Button,
@@ -10,11 +10,13 @@ import {
 } from "react-native-paper";
 import { TimePickerModal } from "react-native-paper-dates";
 import { de, registerTranslation } from "react-native-paper-dates";
+import { ContextData } from "../context/ContextDataProvider";
 registerTranslation("de", de);
 
 const { width } = Dimensions.get("window");
 
 function DialogAddEvent({ visible, hideDialog }) {
+  const { fetchData } = useContext(ContextData);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [time, setTime] = useState({ hours: undefined, minutes: undefined });
   const [event, setEvent] = useState("");
@@ -60,6 +62,8 @@ function DialogAddEvent({ visible, hideDialog }) {
         )
         .then((res) => {
           Alert.alert(res.data.status, res.data.message);
+          fetchData();
+          hideDialog();
         })
         .catch((res) => {
           Alert.alert(res.data.status, res.data.message);

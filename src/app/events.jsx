@@ -10,16 +10,21 @@ import { ContextData } from "../context/ContextDataProvider";
 import EventItem from "../components/EventItem";
 import { Button } from "react-native-paper";
 import DialogAddEvent from "../components/DialogAddEvent";
+import Loader from "../components/Loader";
 
 const { height, width } = Dimensions.get("window");
 
 function events(props) {
-  const { programs } = useContext(ContextData);
+  const { programs, loading } = useContext(ContextData);
   const [visible, setVisible] = useState(false);
 
   const handlePress = () => {
     setVisible((prev) => !prev);
   };
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <View style={styles.container}>
@@ -55,11 +60,12 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "flex-start",
     width,
+    backgroundColor: "aliceblue",
   },
   list: {
     padding: 15,
 
-    height: height / 2,
+    height: height / 1.5,
     backgroundColor: "#fff",
   },
   addButtonView: {

@@ -7,16 +7,18 @@ import {
   StyleSheet,
   Text,
   Alert,
+  FlatList,
 } from "react-native";
 import { Agenda } from "react-native-calendars";
 import AgendaItemAdmin from "./AgendaItemAdmin";
-import { Button } from "react-native-paper";
+import { Button, IconButton, TextInput } from "react-native-paper";
 import { Dropdown } from "react-native-element-dropdown";
 import { ContextData } from "../context/ContextDataProvider";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import axios from "axios";
 import ModalDraggable from "./ModalDraggable";
 import DialogCountPeople from "./DialogCountPeople";
+import DinnerList from "./DinnerList";
 
 const { width, height } = Dimensions.get("window");
 
@@ -46,6 +48,12 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
   const [event, setEvent] = useState();
   const [confPeople, setConfPeople] = useState([]);
   const [data, setData] = useState();
+  const [dinner, setDinner] = useState({
+    firstDish: [],
+    secondDish: [],
+    side: [],
+  });
+  const [dishes, setDishes] = useState({ first: "", second: "", side: "" });
 
   const hideDialog = () => setVisible((prev) => !prev);
 
@@ -128,6 +136,10 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
     } else {
       alert("No people confirmed or not event optionable!");
     }
+  };
+
+  const handleUpdateDinner = (type, filterList) => {
+    setDinner((prev) => ({ ...prev, [type]: filterList }));
   };
 
   return (
@@ -333,41 +345,88 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
               onPress={() => setIsModalDinner(!isModalDinner)}
               style={styles.buttonClose}
             ></Button>
-            {/* <Dropdown
-              style={[
-                styles.dropdown,
-                isFocus && { borderColor: "dodgerblue" },
-              ]}
-              placeholderStyle={styles.placeholderStyle}
-              selectedTextStyle={styles.selectedTextStyle}
-              inputSearchStyle={styles.inputSearchStyle}
-              iconStyle={styles.iconStyle}
-              data={dataPrograms()}
-              search
-              maxHeight={300}
-              labelField="label"
-              valueField="value"
-              placeholder={!isFocus ? "Select Program" : "..."}
-              searchPlaceholder="Search..."
-              value={value}
-              onFocus={() => setIsFocus(true)}
-              onBlur={() => {
-                setIsFocus(false);
-              }}
-              onChange={(item) => {
-                console.log("Selecetd:", item.value);
-                setValue(item.value);
-                setIsFocus(false);
-              }}
-              renderLeftIcon={() => (
-                <AntDesign
-                  style={styles.icon}
-                  color={isFocus ? "dodgerblue" : "black"}
-                  name="Safety"
-                  size={20}
+
+            <TextInput
+              label="First Dish"
+              value={dishes.first}
+              onChangeText={(text) =>
+                setDishes((prev) => ({ ...prev, first: text }))
+              }
+              right={
+                <TextInput.Icon
+                  onPress={() =>
+                    setDinner((prev) => ({
+                      ...prev,
+                      firstDish: [...prev.firstDish, dishes.first],
+                    }))
+                  }
+                  icon="plus-circle"
+                  iconColor="lightskyblue"
                 />
-              )}
-            /> */}
+              }
+              style={styles.dinnerInput}
+            />
+            {dinner.firstDish.length > 0 && (
+              <DinnerList
+                data={dinner.firstDish}
+                handleUpdateDinner={handleUpdateDinner}
+                type="firstDish"
+              />
+            )}
+            <TextInput
+              label="Second Dish"
+              value={dishes.second}
+              onChangeText={(text) =>
+                setDishes((prev) => ({ ...prev, second: text }))
+              }
+              right={
+                <TextInput.Icon
+                  onPress={() =>
+                    setDinner((prev) => ({
+                      ...prev,
+                      secondDish: [...prev.secondDish, dishes.second],
+                    }))
+                  }
+                  icon="plus-circle"
+                  iconColor="lightskyblue"
+                />
+              }
+              style={styles.dinnerInput}
+            />
+            {dinner.secondDish.length > 0 && (
+              <DinnerList
+                data={dinner.secondDish}
+                handleUpdateDinner={handleUpdateDinner}
+                type="secondDish"
+              />
+            )}
+            <TextInput
+              label="Side"
+              value={dishes.side}
+              onChangeText={(text) =>
+                setDishes((prev) => ({ ...prev, side: text }))
+              }
+              right={
+                <TextInput.Icon
+                  onPress={() =>
+                    setDinner((prev) => ({
+                      ...prev,
+                      side: [...prev.side, dishes.side],
+                    }))
+                  }
+                  icon="plus-circle"
+                  iconColor="lightskyblue"
+                />
+              }
+              style={styles.dinnerInput}
+            />
+            {dinner.side.length > 0 && (
+              <DinnerList
+                data={dinner.side}
+                handleUpdateDinner={handleUpdateDinner}
+                type="side"
+              />
+            )}
             <Button
               icon={"food-fork-drink"}
               mode="elevated"
@@ -490,6 +549,11 @@ const styles = StyleSheet.create({
     width: (width * 80) / 100,
     height: height / 2,
   },
+  dinnerInput: {
+    width: (width * 70) / 100,
+    backgroundColor: "aliceblue",
+  },
+  dinnerList: {},
 });
 
 export default CalendarAdmin;

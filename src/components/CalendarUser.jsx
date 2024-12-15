@@ -9,7 +9,7 @@ import {
   Alert,
 } from "react-native";
 import { Agenda } from "react-native-calendars";
-
+import Loader from "./Loader";
 import AgendaItem from "./AgendaItem";
 import { useContext } from "react";
 import { ContextData } from "../context/ContextDataProvider";
@@ -87,11 +87,7 @@ function CalendarUser(props) {
   const [saved, setSaved] = useState(false);
 
   if (loading) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size={"large"} color={"dodgerblue"} />
-      </View>
-    );
+    return <Loader />;
   }
 
   const handleSave = async () => {

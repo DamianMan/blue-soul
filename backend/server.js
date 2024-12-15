@@ -752,6 +752,33 @@ app.post("/api/deleteEvent", async (req, res) => {
   }
 });
 
+// Post Dinner in Date
+app.post("/api/postDinner", async (req, res) => {
+  const { idGroup, date, dinner } = req.body;
+  try {
+    query = {
+      _id: idGroup,
+    };
+
+    const updatedGroup = await Schools.findOneAndUpdate(
+      query,
+      {
+        $set: {
+          [`program.${date}`]: [...`program.${date}`, dinner],
+        },
+      },
+      { new: true }
+    );
+    console.log("Updated Group with dinner:", updatedGroup);
+    res.json({
+      status: "Success",
+      message: "Succesfully posted dinner to group!",
+    });
+  } catch (error) {
+    res.json({ status: "Failed", message: "No group matched to post dinner!" });
+  }
+});
+
 // Post User Device Push Token
 app.post("/api/postToken", async (req, res) => {
   const { token, userEmail } = req.body;
