@@ -7,6 +7,7 @@ import {
   Dimensions,
   ActivityIndicator,
   Alert,
+  Modal,
 } from "react-native";
 import { Agenda } from "react-native-calendars";
 import Loader from "./Loader";
@@ -14,7 +15,7 @@ import AgendaItem from "./AgendaItem";
 import { useContext } from "react";
 import { ContextData } from "../context/ContextDataProvider";
 import auth from "@react-native-firebase/auth";
-import { Button } from "react-native-paper";
+import { Button, IconButton, SegmentedButtons } from "react-native-paper";
 import axios from "axios";
 
 const { height, width } = Dimensions.get("window");
@@ -69,15 +70,17 @@ function CalendarUser(props) {
   const user = auth().currentUser;
   const { email } = user;
   const userDb = users.find((item) => item.email === user.email);
-  console.log("USER PROGRAM:", userDb.program);
 
   const currentGroup = groups.find(
     (item) => item.tokenGroup === userDb.tokenGroup
   );
   const idGroup = currentGroup?.tokenGroup;
 
-  const { program } = currentGroup;
+  const { program, dinner } = currentGroup;
+
   const [date, setDate] = useState(formattedDate);
+  console.log("Dinner :", currentGroup.dinner[date]);
+
   const [items, setItems] = useState(
     ITEMS(programs, userDb.program || program)
   );
@@ -85,10 +88,25 @@ function CalendarUser(props) {
   const [noOption, setNoOption] = useState(false);
   const [selected, setSelected] = useState([]);
   const [saved, setSaved] = useState(false);
+  const [dinnerModal, setDinnerModal] = useState(false);
+  const [firstDinnerBtn, setFirstDinnerBtn] = useState([]);
+  const [secondDinnerBtn, setSecondDinnerBtn] = useState([]);
+  const [sideDinnerBtn, setSideDinnerBtn] = useState([]);
+
+  const [dinnerConfirm, setDinnerConfirm] = useState({
+    firstDish: "",
+    secondDish: "",
+    side: "",
+  });
 
   if (loading) {
     return <Loader />;
   }
+
+  const createDinnerBtnsValues = (obj, type) => {
+    const newList = obj[type].map((item) => ({ value: item, label: item }));
+    return newList;
+  };
 
   const handleSave = async () => {
     console.log("VALUES:", value);
@@ -113,6 +131,47 @@ function CalendarUser(props) {
       alert("Error making request to update program by user!");
     }
   };
+
+  const toogleDinnerModal = () => {
+    setDinnerModal((prev) => !prev);
+  };
+
+  const createListSegmentsBtn = (date, type) => {
+    const newList = currentGroup.dinner[date][type].map((item) => ({
+      value: item,
+      label: item,
+    }));
+    return newList;
+  };
+
+  const handleSaveDinner = async () => {
+    const idUser = userDb._id;
+    try {
+      await axios
+        .post(
+          "https://blue-soul-app.onrender.com/api/postUserDinner",
+          {
+            idUser,
+            date,
+            dinnerConfirm,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((res) => {
+          Alert.alert(res.data.status, res.data.message);
+        })
+        .catch((res) => {
+          Alert.alert(res.data.status, res.data.message);
+        });
+    } catch (error) {
+      alert("Error making request posting user dinner!");
+    }
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, width }}>
       <Agenda
@@ -140,6 +199,15 @@ function CalendarUser(props) {
           );
           setNoOption(noOptionItems);
           setValue([]);
+          if (currentGroup.dinner.hasOwnProperty(day.dateString)) {
+            setFirstDinnerBtn(
+              createListSegmentsBtn(day.dateString, "firstDish")
+            );
+            setSecondDinnerBtn(
+              createListSegmentsBtn(day.dateString, "secondDish")
+            );
+            setSideDinnerBtn(createListSegmentsBtn(day.dateString, "side"));
+          }
         }}
         renderEmptyData={() => {
           return (
@@ -181,10 +249,99 @@ function CalendarUser(props) {
           mode="elevated"
           buttonColor="#fff"
           style={styles.saveButton}
-          onPress={handleSave}
+          onPress={toogleDinnerModal}
         >
           Pick You Dinner
         </Button>
+        {/* // Dinner Modal */}
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={dinnerModal}
+          onRequestClose={toogleDinnerModal}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <IconButton
+                icon={"close"}
+                iconColor="red"
+                style={styles.closeBtn}
+                onPress={toogleDinnerModal}
+              />
+
+              {/* FIRST DISHES */}
+              <Text style={styles.titleDishes}>First Dishes</Text>
+
+              <SegmentedButtons
+                value={dinnerConfirm.firstDish}
+                onValueChange={(value) =>
+                  setDinnerConfirm((prev) => ({ ...prev, firstDish: value }))
+                }
+                buttons={firstDinnerBtn}
+                style={{
+                  paddingVertical: 20,
+                  width: (width * 90) / 100,
+                }}
+              />
+              {dinnerConfirm.firstDish !== "" && (
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <IconButton icon={"check"} iconColor="limegreen" />
+                  <Text>{dinnerConfirm.firstDish}</Text>
+                </View>
+              )}
+              {/* SECOND DISHES */}
+              <Text style={styles.titleDishes}>Second Dishes</Text>
+
+              <SegmentedButtons
+                value={dinnerConfirm.secondDish}
+                onValueChange={(value) =>
+                  setDinnerConfirm((prev) => ({ ...prev, secondDish: value }))
+                }
+                buttons={secondDinnerBtn}
+                style={{
+                  paddingVertical: 20,
+                  width: (width * 90) / 100,
+                }}
+              />
+              {dinnerConfirm.secondDish !== "" && (
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <IconButton icon={"check"} iconColor="limegreen" />
+                  <Text>{dinnerConfirm.secondDish}</Text>
+                </View>
+              )}
+              {/* SIDE DISHES */}
+              <Text style={styles.titleDishes}>Side Dishes</Text>
+
+              <SegmentedButtons
+                value={dinnerConfirm.side}
+                onValueChange={(value) =>
+                  setDinnerConfirm((prev) => ({ ...prev, side: value }))
+                }
+                buttons={sideDinnerBtn}
+                style={{
+                  paddingVertical: 20,
+                  width: (width * 90) / 100,
+                }}
+              />
+              {dinnerConfirm.side !== "" && (
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <IconButton icon={"check"} iconColor="limegreen" />
+                  <Text>{dinnerConfirm.side}</Text>
+                </View>
+              )}
+              <Button
+                icon={"database-plus-outline"}
+                buttonColor="dodgerblue"
+                textColor="aliceblue"
+                mode="elevated"
+                style={styles.saveBtn}
+                onPress={handleSaveDinner}
+              >
+                Save
+              </Button>
+            </View>
+          </View>
+        </Modal>
       </View>
     </SafeAreaView>
   );
@@ -205,6 +362,41 @@ const styles = StyleSheet.create({
   saveButton: {
     height: 60,
     justifyContent: "center",
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalView: {
+    width: (width * 95) / 100,
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  closeBtn: {
+    position: "absolute",
+    right: 0,
+    top: 0,
+  },
+  titleDishes: {
+    color: "dodgerblue",
+    fontWeight: "bold",
+    fontSize: 18,
+    alignSelf: "flex-start",
+  },
+  saveBtn: {
+    marginTop: 20,
   },
 });
 

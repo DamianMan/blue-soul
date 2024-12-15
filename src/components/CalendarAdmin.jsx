@@ -30,6 +30,19 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
   const usersFilterdeByGroup = users.filter(
     (item) => item.tokenGroup === currenGroup.tokenGroup
   );
+  const today = new Date();
+
+  const [date, setDate] = useState(today);
+
+  useEffect(() => {
+    setDinner(
+      currenGroup.dinner[date] || {
+        firstDish: [],
+        secondDish: [],
+        side: [],
+      }
+    );
+  }, [dinner, date]);
 
   useEffect(() => {
     const dataPrograms = () => {
@@ -41,8 +54,6 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
     };
     setData(dataPrograms());
   }, [data]);
-  const today = new Date();
-  const [date, setDate] = useState(today);
   const [isModal, setIsModal] = useState(false);
   const [isModalDinner, setIsModalDinner] = useState(false);
 
@@ -55,16 +66,18 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
   const [event, setEvent] = useState();
   const [confPeople, setConfPeople] = useState([]);
   const [data, setData] = useState();
-  const [dinner, setDinner] = useState({
-    firstDish: [],
-    secondDish: [],
-    side: [],
-  });
+  const [dinner, setDinner] = useState(
+    currenGroup?.dinner[date] || {
+      firstDish: [],
+      secondDish: [],
+      side: [],
+    }
+  );
+  console.log("DINNER IN DB:", dinner);
+
   const [dishes, setDishes] = useState({ first: "", second: "", side: "" });
 
   const hideDialog = () => setVisible((prev) => !prev);
-
-  console.log("Agenda LISt in Calendar:", agendaList);
 
   // Save Program
   const handleSaveProgram = () => {
@@ -129,7 +142,7 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
     try {
       await axios
         .post(
-          "https://blue-soul-app.onrender.com/api/postDinner",
+          "https://blue-soul-app.onrender.com/api/postAdminDinner",
           {
             idGroup,
             date,
@@ -241,7 +254,9 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
             mode="elevated"
             textColor="dodgerblue"
             style={styles.buttonCalendar}
-            onPress={() => setIsModalDinner(!isModalDinner)}
+            onPress={() => {
+              setIsModalDinner(!isModalDinner);
+            }}
           >
             Dinner
           </Button>

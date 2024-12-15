@@ -752,8 +752,8 @@ app.post("/api/deleteEvent", async (req, res) => {
   }
 });
 
-// Post Dinner in Date
-app.post("/api/postDinner", async (req, res) => {
+// Post Admin Dinner in Date
+app.post("/api/postAdminDinner", async (req, res) => {
   const { idGroup, date, dinner } = req.body;
   const { firstDish, secondDish, side } = dinner;
   try {
@@ -777,6 +777,36 @@ app.post("/api/postDinner", async (req, res) => {
     });
   } catch (error) {
     res.json({ status: "Failed", message: "No group matched to post dinner!" });
+  }
+});
+
+// Post User Dinner
+app.post("//api/postUserDinner", async (req, res) => {
+  const { idUser, date, dinnerConfirm } = req.body;
+  try {
+    query = {
+      _id: idUser,
+    };
+    const updatedUser = await Users.findOneAndUpdate(
+      query,
+      {
+        $set: {
+          [`dinner.${date}`]: dinnerConfirm,
+        },
+      },
+      { new: true }
+    );
+
+    console.log("Updated user with confirmed dinner:", updatedUser);
+    res.json({
+      status: "Succes",
+      message: "Succesfully added dinner choices to user.",
+    });
+  } catch (error) {
+    res.json({
+      status: "Failed",
+      message: "No user found or error server side!",
+    });
   }
 });
 

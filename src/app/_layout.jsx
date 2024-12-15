@@ -9,11 +9,12 @@ const theme = {
   roundness: 2,
   colors: {
     ...DefaultTheme.colors,
-    primary: "dodgerblue",
-    accent: "#f1c40f",
-    surface: "aliceblue",
-    text: "blue",
-    placeholder: "dodgerblue",
+    primary: "dodgerblue", // Active button color
+    surface: "aliceblue", // Background color for buttons
+    text: "blue", // Text color
+    placeholder: "dodgerblue", // Placeholder color (if used)
+    primaryContainer: "lightskyblue", // Background for active button
+    secondaryContainer: "lightskyblue", // Optionally define for inactive button
   },
 };
 export default function Main() {
