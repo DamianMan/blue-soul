@@ -781,7 +781,7 @@ app.post("/api/postAdminDinner", async (req, res) => {
 });
 
 // Post User Dinner
-app.post("//api/postUserDinner", async (req, res) => {
+app.post("/api/postUserDinner", async (req, res) => {
   const { idUser, date, dinnerConfirm } = req.body;
   try {
     query = {

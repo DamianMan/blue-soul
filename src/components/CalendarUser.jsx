@@ -163,6 +163,7 @@ function CalendarUser(props) {
         )
         .then((res) => {
           Alert.alert(res.data.status, res.data.message);
+          fetchData();
         })
         .catch((res) => {
           Alert.alert(res.data.status, res.data.message);
