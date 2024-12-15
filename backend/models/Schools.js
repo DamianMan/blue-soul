@@ -40,6 +40,9 @@ const schoolModel = new mongoose.Schema(
     program: {
       type: Object,
     },
+    dinner: {
+      type: Object,
+    },
     hotel: {
       type: String,
     },

@@ -47,6 +47,9 @@ const userModel = new mongoose.Schema(
     program: {
       type: Object,
     },
+    dinner: {
+      type: Object,
+    },
   },
   { timestamps: true }
 );

@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text } from "react-native";
 import { IconButton } from "react-native-paper";
+
 function DinnerListItem({ item, data, handleUpdateDinner, type }) {
   return (
     <View
@@ -8,9 +9,24 @@ function DinnerListItem({ item, data, handleUpdateDinner, type }) {
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "row",
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 1,
+        },
+        shadowOpacity: 0.22,
+        shadowRadius: 2.22,
+
+        elevation: 3,
+        height: 50,
+        marginVertical: 50,
+        marginHorizontal: 10,
+        borderRadius: 20,
+        padding: 5,
+        backgroundColor: "lightseagreen",
       }}
     >
-      <Text>{item}</Text>
+      <Text style={{ marginLeft: 15, color: "aliceblue" }}>{item}</Text>
       <IconButton
         icon="close-circle-outline"
         iconColor="red"

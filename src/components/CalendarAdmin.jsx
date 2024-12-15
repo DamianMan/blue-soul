@@ -19,11 +19,18 @@ import axios from "axios";
 import ModalDraggable from "./ModalDraggable";
 import DialogCountPeople from "./DialogCountPeople";
 import DinnerList from "./DinnerList";
+import Loader from "./Loader";
 
 const { width, height } = Dimensions.get("window");
 
 function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
-  const { programs, groups, loading, users } = useContext(ContextData);
+  const { programs, groups, loading, users, fetchData } =
+    useContext(ContextData);
+  const currenGroup = groups.find((item) => item._id === idGroup);
+  const usersFilterdeByGroup = users.filter(
+    (item) => item.tokenGroup === currenGroup.tokenGroup
+  );
+
   useEffect(() => {
     const dataPrograms = () => {
       const newArray = programs.map((item) => ({
@@ -57,12 +64,9 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
 
   const hideDialog = () => setVisible((prev) => !prev);
 
-  const currenGroup = groups.find((item) => item._id === idGroup);
-  const usersFilterdeByGroup = users.filter(
-    (item) => item.tokenGroup === currenGroup.tokenGroup
-  );
   console.log("Agenda LISt in Calendar:", agendaList);
 
+  // Save Program
   const handleSaveProgram = () => {
     if (value) {
       setIsDraggableModal(!isDraggableModal);
@@ -81,30 +85,7 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
     }
   };
 
-  const handleAddProgram = async () => {
-    try {
-      await axios
-        .post(
-          "https://blue-soul-app.onrender.com/api/addProgramDay",
-          {
-            idGroup,
-            date,
-            value,
-          },
-          {
-            headers: { "Content-Type": "application/json" },
-          }
-        )
-        .then((res) => {
-          setReload();
-          setIsModal(!isModal);
-        })
-        .catch((err) => Alert.alert(err.data.status, err.data.message));
-    } catch (error) {
-      alert("Error adding request!");
-    }
-  };
-
+  // Count People optional event
   const handlePeople = () => {
     console.log("users:", usersFilterdeByGroup);
     let count = 0;
@@ -141,6 +122,44 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
   const handleUpdateDinner = (type, filterList) => {
     setDinner((prev) => ({ ...prev, [type]: filterList }));
   };
+
+  const saveDinner = async () => {
+    const idGroup = currenGroup._id;
+
+    try {
+      await axios
+        .post(
+          "https://blue-soul-app.onrender.com/api/postDinner",
+          {
+            idGroup,
+            date,
+            dinner,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((res) => {
+          fetchData();
+          Alert.alert(res.data.status, res.data.message);
+          setDinner({
+            firstDish: [],
+            secondDish: [],
+            side: [],
+          });
+          setIsModalDinner((prev) => !prev);
+        })
+        .catch((res) => Alert.alert(res.data.status, res.data.message));
+    } catch (error) {
+      alert("Error request posting dinner!");
+    }
+  };
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <View style={{ flex: 1, width, paddingTop: 50 }}>
@@ -354,12 +373,13 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
               }
               right={
                 <TextInput.Icon
-                  onPress={() =>
+                  onPress={() => {
                     setDinner((prev) => ({
                       ...prev,
                       firstDish: [...prev.firstDish, dishes.first],
-                    }))
-                  }
+                    }));
+                    setDishes((prev) => ({ ...prev, first: "" }));
+                  }}
                   icon="plus-circle"
                   iconColor="lightskyblue"
                 />
@@ -381,12 +401,13 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
               }
               right={
                 <TextInput.Icon
-                  onPress={() =>
+                  onPress={() => {
                     setDinner((prev) => ({
                       ...prev,
                       secondDish: [...prev.secondDish, dishes.second],
-                    }))
-                  }
+                    }));
+                    setDishes((prev) => ({ ...prev, second: "" }));
+                  }}
                   icon="plus-circle"
                   iconColor="lightskyblue"
                 />
@@ -408,12 +429,13 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
               }
               right={
                 <TextInput.Icon
-                  onPress={() =>
+                  onPress={() => {
                     setDinner((prev) => ({
                       ...prev,
                       side: [...prev.side, dishes.side],
-                    }))
-                  }
+                    }));
+                    setDishes((prev) => ({ ...prev, side: "" }));
+                  }}
                   icon="plus-circle"
                   iconColor="lightskyblue"
                 />
@@ -432,7 +454,7 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
               mode="elevated"
               buttonColor="dodgerblue"
               textColor="aliceblue"
-              onPress={() => alert("Dinner Saved!")}
+              onPress={saveDinner}
               style={{ marginTop: 20 }}
             >
               Save Dinner

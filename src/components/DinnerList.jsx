@@ -1,7 +1,8 @@
 import React from "react";
-import { FlatList } from "react-native";
+import { FlatList, Dimensions } from "react-native";
 import DinnerListItem from "./DinnerListItem";
 
+const { width } = Dimensions.get("window");
 function DinnerList({ data, handleUpdateDinner, type }) {
   return (
     <FlatList
