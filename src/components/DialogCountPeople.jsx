@@ -33,11 +33,13 @@ function DialogCountPeople({
           <Text>
             {count}/{total}
           </Text>
-          <PdfButton
-            currentUsers={peopleList}
-            textBtn={"People Pdf List"}
-            event={event}
-          />
+          <View style={{ marginTop: 20 }}>
+            <PdfButton
+              currentUsers={peopleList}
+              textBtn={"Confirmed People PDF"}
+              event={event}
+            />
+          </View>
         </View>
       </View>
     </Modal>

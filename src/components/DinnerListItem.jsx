@@ -18,10 +18,9 @@ function DinnerListItem({ item, data, handleUpdateDinner, type }) {
         shadowRadius: 2.22,
 
         elevation: 3,
-        height: 50,
-        marginVertical: 50,
-        marginHorizontal: 10,
-        borderRadius: 20,
+        height: 35,
+        marginLeft: 5,
+        borderRadius: 12,
         padding: 5,
         backgroundColor: "lightseagreen",
       }}

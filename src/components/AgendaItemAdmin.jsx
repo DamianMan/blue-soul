@@ -141,6 +141,8 @@ function AgendaItemAdmin({ item, idGroup, date, setReload }) {
           right: -20,
         }}
       ></Button>
+      {item.isOptional && <Text style={styles.optional}>Optional</Text>}
+
       <View style={{ justifyContent: "flex-start", alignItems: "flex-start" }}>
         <Text style={styles.itemTitleText}>{item.hour}</Text>
         <Text style={styles.itemDurationText}>{item.title}</Text>
@@ -408,6 +410,20 @@ const styles = StyleSheet.create({
   containerStyle: {
     width: (width * 80) / 100,
     height: height / 2,
+  },
+  optional: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    backgroundColor: "lightseagreen",
+    color: "aliceblue",
+    marginLeft: 15,
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 3,
+
+    fontSize: 9,
   },
 });
 

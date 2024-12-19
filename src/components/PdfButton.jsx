@@ -28,7 +28,7 @@ function PdfButton({
               </style>
             </head>
             <body>
-              <h1>Documents Users ${event}</h1>
+              <h1>Documents ${event} Users</h1>
               <table>
                 <tr>
                     <th>Name</th>
@@ -119,7 +119,6 @@ function PdfButton({
       onPress={generatePDF}
       buttonColor="lightseagreen"
       textColor="aliceblue"
-      style={{ margin: 30 }}
     >
       {textBtn}
     </Button>

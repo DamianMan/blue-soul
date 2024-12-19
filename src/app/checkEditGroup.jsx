@@ -203,7 +203,7 @@ function checkEditGroup(props) {
             <Button
               icon={"calendar"}
               mode="outlined"
-              textColor="#2185D5"
+              textColor="lightseagreen"
               onPress={() => setModalVisible(!modalVisible)}
               style={styles.programBtn}
             >
@@ -261,7 +261,18 @@ function checkEditGroup(props) {
                   data={searchedStudent}
                 />
               )}
-              <PdfButton currentUsers={user} />
+              <View
+                style={{
+                  marginTop: 40,
+                  marginBottom: 20,
+                  marginHorizontal: 20,
+                }}
+              >
+                <PdfButton
+                  currentUsers={user}
+                  textBtn="Generate Group PDF Documents"
+                />
+              </View>
             </View>
           </>
         )}
@@ -309,9 +320,8 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
   },
   programBtn: {
-    borderColor: "dodgerblue",
-    marginBottom: 20,
-    alignSelf: "center",
+    borderColor: "lightseagreen",
+    margin: 20,
   },
 });
 

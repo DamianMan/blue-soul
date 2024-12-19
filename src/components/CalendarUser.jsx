@@ -15,7 +15,12 @@ import AgendaItem from "./AgendaItem";
 import { useContext } from "react";
 import { ContextData } from "../context/ContextDataProvider";
 import auth from "@react-native-firebase/auth";
-import { Button, IconButton, SegmentedButtons } from "react-native-paper";
+import {
+  Button,
+  Divider,
+  IconButton,
+  SegmentedButtons,
+} from "react-native-paper";
 import axios from "axios";
 
 const { height, width } = Dimensions.get("window");
@@ -79,7 +84,6 @@ function CalendarUser(props) {
   const { program, dinner } = currentGroup;
 
   const [date, setDate] = useState(formattedDate);
-  console.log("Dinner :", currentGroup.dinner[date]);
 
   const [items, setItems] = useState(
     ITEMS(programs, userDb.program || program)
@@ -92,7 +96,7 @@ function CalendarUser(props) {
   const [firstDinnerBtn, setFirstDinnerBtn] = useState([]);
   const [secondDinnerBtn, setSecondDinnerBtn] = useState([]);
   const [sideDinnerBtn, setSideDinnerBtn] = useState([]);
-
+  const [noDinnerChoice, setNoDinnerChoice] = useState(false);
   const [dinnerConfirm, setDinnerConfirm] = useState({
     firstDish: "",
     secondDish: "",
@@ -103,9 +107,14 @@ function CalendarUser(props) {
     return <Loader />;
   }
 
-  const createDinnerBtnsValues = (obj, type) => {
-    const newList = obj[type].map((item) => ({ value: item, label: item }));
-    return newList;
+  const handleSaveNoDinner = () => {
+    setNoDinnerChoice((prev) => !prev);
+    const noDinner = {
+      firstDish: "I don't want any first dish.",
+      secondDish: "I don't want any second dish.",
+      side: "I don't want any any side.",
+    };
+    setDinnerConfirm(noDinner);
   };
 
   const handleSave = async () => {
@@ -244,16 +253,18 @@ function CalendarUser(props) {
             Save Program
           </Button>
         )}
-        <Button
-          icon={"food-fork-drink"}
-          textColor="dodgerblue"
-          mode="elevated"
-          buttonColor="#fff"
-          style={styles.saveButton}
-          onPress={toogleDinnerModal}
-        >
-          Pick You Dinner
-        </Button>
+        {currentGroup.dinner[date] && (
+          <Button
+            icon={"food-fork-drink"}
+            textColor="dodgerblue"
+            mode="elevated"
+            buttonColor="#fff"
+            style={styles.saveButton}
+            onPress={toogleDinnerModal}
+          >
+            Pick You Dinner
+          </Button>
+        )}
         {/* // Dinner Modal */}
         <Modal
           animationType="fade"
@@ -269,77 +280,150 @@ function CalendarUser(props) {
                 style={styles.closeBtn}
                 onPress={toogleDinnerModal}
               />
+              {userDb.dinner === undefined ? (
+                <View>
+                  <Text style={styles.titleMenu}>Menu of the day</Text>
+                  {/* FIRST DISHES */}
+                  <Text style={styles.titleDishes}>First Dishes</Text>
 
-              {/* FIRST DISHES */}
-              <Text style={styles.titleDishes}>First Dishes</Text>
+                  <SegmentedButtons
+                    value={dinnerConfirm.firstDish}
+                    onValueChange={(value) => {
+                      setNoDinnerChoice(false);
+                      setDinnerConfirm((prev) => ({
+                        ...prev,
+                        firstDish: value,
+                      }));
+                    }}
+                    buttons={firstDinnerBtn}
+                    style={{
+                      paddingVertical: 20,
+                      width: (width * 90) / 100,
+                    }}
+                  />
+                  {dinnerConfirm.firstDish !== "" && (
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <IconButton icon={"check"} iconColor="limegreen" />
+                      <Text>{dinnerConfirm.firstDish}</Text>
+                    </View>
+                  )}
+                  {/* SECOND DISHES */}
+                  <Text style={styles.titleDishes}>Second Dishes</Text>
 
-              <SegmentedButtons
-                value={dinnerConfirm.firstDish}
-                onValueChange={(value) =>
-                  setDinnerConfirm((prev) => ({ ...prev, firstDish: value }))
-                }
-                buttons={firstDinnerBtn}
-                style={{
-                  paddingVertical: 20,
-                  width: (width * 90) / 100,
-                }}
-              />
-              {dinnerConfirm.firstDish !== "" && (
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  <IconButton icon={"check"} iconColor="limegreen" />
-                  <Text>{dinnerConfirm.firstDish}</Text>
+                  <SegmentedButtons
+                    value={dinnerConfirm.secondDish}
+                    onValueChange={(value) => {
+                      setNoDinnerChoice(false);
+                      setDinnerConfirm((prev) => ({
+                        ...prev,
+                        secondDish: value,
+                      }));
+                    }}
+                    buttons={secondDinnerBtn}
+                    style={{
+                      paddingVertical: 20,
+                      width: (width * 90) / 100,
+                    }}
+                  />
+                  {dinnerConfirm.secondDish !== "" && (
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <IconButton icon={"check"} iconColor="limegreen" />
+                      <Text>{dinnerConfirm.secondDish}</Text>
+                    </View>
+                  )}
+                  {/* SIDE DISHES */}
+                  <Text style={styles.titleDishes}>Side Dishes</Text>
+
+                  <SegmentedButtons
+                    value={dinnerConfirm.side}
+                    onValueChange={(value) => {
+                      setNoDinnerChoice(false);
+                      setDinnerConfirm((prev) => ({ ...prev, side: value }));
+                    }}
+                    buttons={sideDinnerBtn}
+                    style={{
+                      paddingVertical: 20,
+                      width: (width * 90) / 100,
+                    }}
+                  />
+                  {dinnerConfirm.side !== "" && (
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <IconButton icon={"check"} iconColor="limegreen" />
+                      <Text>{dinnerConfirm.side}</Text>
+                    </View>
+                  )}
+                  <Button
+                    icon={"database-plus-outline"}
+                    buttonColor="dodgerblue"
+                    textColor="aliceblue"
+                    mode="elevated"
+                    style={styles.saveBtn}
+                    onPress={handleSaveDinner}
+                  >
+                    Save
+                  </Button>
+                  {!noDinnerChoice && (
+                    <Button
+                      icon={"food-drumstick-off-outline"}
+                      buttonColor="red"
+                      textColor="aliceblue"
+                      mode="elevated"
+                      style={styles.saveBtn}
+                      onPress={handleSaveNoDinner}
+                    >
+                      I don't want anything
+                    </Button>
+                  )}
+                </View>
+              ) : (
+                <View>
+                  <View
+                    style={{ justifyContent: "center", alignItems: "center" }}
+                  >
+                    <IconButton
+                      icon={"check"}
+                      iconColor="limegreen"
+                      style={{ backgroundColor: "aliceblue" }}
+                    />
+
+                    <Text>Dinner Already Saved!</Text>
+                  </View>
+                  <Divider style={{ marginVertical: 20 }} />
+
+                  <View style={styles.dinnerChoices}>
+                    <View>
+                      <Text style={styles.titleChoice}>First Dish</Text>
+                      <Text>
+                        {userDb.dinner[date] === undefined
+                          ? null
+                          : userDb.dinner[date].firstDish}
+                      </Text>
+                    </View>
+                    <View>
+                      <Text style={styles.titleChoice}>Second Dish</Text>
+                      <Text>
+                        {userDb.dinner[date] === undefined
+                          ? null
+                          : userDb.dinner[date].secondDish}
+                      </Text>
+                    </View>
+                    <View>
+                      <Text style={styles.titleChoice}>Side Dish</Text>
+                      <Text>
+                        {userDb.dinner[date] === undefined
+                          ? null
+                          : userDb.dinner[date].side}
+                      </Text>
+                    </View>
+                  </View>
                 </View>
               )}
-              {/* SECOND DISHES */}
-              <Text style={styles.titleDishes}>Second Dishes</Text>
-
-              <SegmentedButtons
-                value={dinnerConfirm.secondDish}
-                onValueChange={(value) =>
-                  setDinnerConfirm((prev) => ({ ...prev, secondDish: value }))
-                }
-                buttons={secondDinnerBtn}
-                style={{
-                  paddingVertical: 20,
-                  width: (width * 90) / 100,
-                }}
-              />
-              {dinnerConfirm.secondDish !== "" && (
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  <IconButton icon={"check"} iconColor="limegreen" />
-                  <Text>{dinnerConfirm.secondDish}</Text>
-                </View>
-              )}
-              {/* SIDE DISHES */}
-              <Text style={styles.titleDishes}>Side Dishes</Text>
-
-              <SegmentedButtons
-                value={dinnerConfirm.side}
-                onValueChange={(value) =>
-                  setDinnerConfirm((prev) => ({ ...prev, side: value }))
-                }
-                buttons={sideDinnerBtn}
-                style={{
-                  paddingVertical: 20,
-                  width: (width * 90) / 100,
-                }}
-              />
-              {dinnerConfirm.side !== "" && (
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  <IconButton icon={"check"} iconColor="limegreen" />
-                  <Text>{dinnerConfirm.side}</Text>
-                </View>
-              )}
-              <Button
-                icon={"database-plus-outline"}
-                buttonColor="dodgerblue"
-                textColor="aliceblue"
-                mode="elevated"
-                style={styles.saveBtn}
-                onPress={handleSaveDinner}
-              >
-                Save
-              </Button>
             </View>
           </View>
         </Modal>
@@ -398,6 +482,22 @@ const styles = StyleSheet.create({
   },
   saveBtn: {
     marginTop: 20,
+  },
+  dinnerChoices: {
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+
+    width: (width * 80) / 100,
+  },
+  titleChoice: {
+    color: "dodgerblue",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  titleMenu: {
+    textAlign: "center",
+    color: "slategray",
+    fontSize: 20,
   },
 });
 

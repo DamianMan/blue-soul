@@ -10,6 +10,7 @@ function DinnerList({ data, handleUpdateDinner, type }) {
       showsHorizontalScrollIndicator={false}
       data={data}
       keyExtractor={(item) => item}
+      style={{ marginVertical: 30 }}
       renderItem={({ item }) => (
         <DinnerListItem
           item={item}

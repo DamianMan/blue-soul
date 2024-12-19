@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { Agenda } from "react-native-calendars";
 import AgendaItemAdmin from "./AgendaItemAdmin";
-import { Button, IconButton, TextInput } from "react-native-paper";
+import { Button, Divider, IconButton, TextInput } from "react-native-paper";
 import { Dropdown } from "react-native-element-dropdown";
 import { ContextData } from "../context/ContextDataProvider";
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -20,6 +20,8 @@ import ModalDraggable from "./ModalDraggable";
 import DialogCountPeople from "./DialogCountPeople";
 import DinnerList from "./DinnerList";
 import Loader from "./Loader";
+import PdfButton from "./PdfButton";
+import DinnerPdfButton from "./DinnerPdfButton";
 
 const { width, height } = Dimensions.get("window");
 
@@ -71,11 +73,21 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
       firstDish: [],
       secondDish: [],
       side: [],
+      isDeadline: false,
+      hours: 0,
+      min: 0,
     }
   );
   console.log("DINNER IN DB:", dinner);
 
-  const [dishes, setDishes] = useState({ first: "", second: "", side: "" });
+  const [dishes, setDishes] = useState({
+    first: "",
+    second: "",
+    side: "",
+    isDeadline: false,
+    hours: 0,
+    min: 0,
+  });
 
   const hideDialog = () => setVisible((prev) => !prev);
 
@@ -138,6 +150,12 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
 
   const saveDinner = async () => {
     const idGroup = currenGroup._id;
+    const dinnerDeadline = {
+      ...dinner,
+      hours: dishes.hours,
+      min: dishes.min,
+      isDeadline: dishes.hours > 0 || dishes.min > 0 ? true : false,
+    };
 
     try {
       await axios
@@ -146,7 +164,7 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
           {
             idGroup,
             date,
-            dinner,
+            dinnerDeadline,
           },
           {
             headers: {
@@ -178,16 +196,29 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
     <View style={{ flex: 1, width, paddingTop: 50 }}>
       <View
         style={{
-          justifyContent: "flex-end",
-          alignItems: "flex-end",
-          marginRight: 10,
+          justifyContent: currenGroup.dinner.hasOwnProperty(date)
+            ? "space-between"
+            : "flex-end",
+          alignItems: "center",
+          marginHorizontal: 10,
+          flexDirection: "row",
         }}
       >
+        {currenGroup.dinner.hasOwnProperty(date) && (
+          <DinnerPdfButton
+            currentUsers={usersFilterdeByGroup}
+            textBtn="Dinner Pdf"
+            event="Dinner"
+            date={date}
+          />
+        )}
+
         <Button
           icon={"close"}
           textColor="red"
           mode="outlined"
           onPress={() => setModalVisible(false)}
+          style={{ borderColor: "red" }}
         >
           Close
         </Button>
@@ -216,6 +247,14 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
         }}
         onDayPress={(day) => {
           console.log("DAY:", day.dateString);
+          setDishes({
+            first: "",
+            second: "",
+            side: "",
+            isDeadline: false,
+            hours: 0,
+            min: 0,
+          });
           setDate((prev) => day.dateString); // Updates state with the selected date
         }}
         renderEmptyData={() => {
@@ -373,6 +412,7 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
+            <Text style={styles.titleMenu}>Set Menu Of the Day</Text>
             <Button
               icon="close"
               textColor="red"
@@ -464,13 +504,50 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
                 type="side"
               />
             )}
+
+            <Divider />
+            <Text style={styles.titleMenu}>Set Deadline</Text>
+
+            <View style={styles.deadline}>
+              <TextInput
+                mode="outlined"
+                keyboardType="numeric"
+                label="Hours"
+                value={dishes.hours}
+                onChangeText={(text) =>
+                  setDishes((prev) => ({ ...prev, hours: parseInt(text) }))
+                }
+              />
+
+              <TextInput
+                mode="outlined"
+                keyboardType="numeric"
+                label={dishes.min > 60 ? "Max 60" : "Minutes"}
+                value={dishes.min}
+                error={dishes.min > 60}
+                onChangeText={(text) =>
+                  setDishes((prev) => ({ ...prev, min: parseInt(text) }))
+                }
+              />
+              {dinner.isDeadline && (
+                <View>
+                  <IconButton
+                    icon={"check"}
+                    iconColor="limegreen"
+                    style={{ backgroundColor: "aliceblue" }}
+                  />
+                  <Text>Deadline active</Text>
+                </View>
+              )}
+            </View>
+
             <Button
               icon={"food-fork-drink"}
               mode="elevated"
               buttonColor="dodgerblue"
               textColor="aliceblue"
               onPress={saveDinner}
-              style={{ marginTop: 20 }}
+              style={{ marginVertical: 20, alignSelf: "center" }}
             >
               Save Dinner
             </Button>
@@ -484,14 +561,13 @@ const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center",
   },
   modalView: {
     margin: 20,
     backgroundColor: "white",
     borderRadius: 20,
-    padding: 45,
-    alignItems: "center",
+    padding: 15,
+    alignItems: "flex-start",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -590,7 +666,18 @@ const styles = StyleSheet.create({
     width: (width * 70) / 100,
     backgroundColor: "aliceblue",
   },
-  dinnerList: {},
+  titleMenu: {
+    color: "dodgerblue",
+    fontSize: 20,
+    paddingVertical: 20,
+    fontWeight: "bold",
+  },
+  deadline: {
+    justifyContent: "center",
+    flexDirection: "row",
+    backgroundColor: "aliceblue",
+    padding: 20,
+  },
 });
 
 export default CalendarAdmin;

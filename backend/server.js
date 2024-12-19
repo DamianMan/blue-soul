@@ -754,8 +754,7 @@ app.post("/api/deleteEvent", async (req, res) => {
 
 // Post Admin Dinner in Date
 app.post("/api/postAdminDinner", async (req, res) => {
-  const { idGroup, date, dinner } = req.body;
-  const { firstDish, secondDish, side } = dinner;
+  const { idGroup, date, dinnerDeadline } = req.body;
   try {
     query = {
       _id: idGroup,
@@ -765,7 +764,7 @@ app.post("/api/postAdminDinner", async (req, res) => {
       query,
       {
         $set: {
-          [`dinner.${date}`]: { firstDish, secondDish, side },
+          [`dinner.${date}`]: dinnerDeadline,
         },
       },
       { new: true }
