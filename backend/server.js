@@ -366,14 +366,14 @@ app.post("/api/postGroup", async (req, res) => {
 
 // Edit Group
 app.post("/api/editGroup", async (req, res) => {
-  const { idGroup, ediGroupForm } = req.body;
+  const { idGroup, editGroupForm } = req.body;
   const [
     { value: fullNameTeacher },
     { value: email },
     { value: phone },
     { value: city },
     { value: people },
-  ] = ediGroupForm;
+  ] = editGroupForm;
 
   const peopleCount = parseInt(people);
   try {

@@ -59,8 +59,7 @@ export default function RootLayout() {
           },
 
           headerRight: () => <LogoutBtn />,
-          headerLeft: () =>
-            user.email === "admin@mail.com" && <PushNotificationBtn />,
+          headerLeft: () => <PushNotificationBtn />,
         }}
       />
       <Stack.Screen
