@@ -367,7 +367,15 @@ app.post("/api/postGroup", async (req, res) => {
 // Edit Group
 app.post("/api/editGroup", async (req, res) => {
   const { idGroup, ediGroupForm } = req.body;
-  const { fullNameTeacher, email, phone, city, people } = ediGroupForm;
+  const [
+    { value: fullNameTeacher },
+    { value: email },
+    { value: phone },
+    { value: city },
+    { value: people },
+  ] = ediGroupForm;
+
+  const peopleCount = parseInt(people);
   try {
     query = {
       _id: idGroup,
@@ -380,7 +388,7 @@ app.post("/api/editGroup", async (req, res) => {
           email,
           phone,
           city,
-          peopleCount: parseInt(people),
+          peopleCount,
         },
       },
       { new: true }
