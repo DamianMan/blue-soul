@@ -29,7 +29,7 @@ export default function RootLayout() {
     const inAuthGroup = segments[0] === "(tabs)";
     console.log("IN AUTH GROUP:", inAuthGroup);
     if (user && !inAuthGroup) {
-      if (user.email === "admin@mail.com") {
+      if (user.email === "admin@mail.com" || user.email === "staff@mail.com") {
         router.replace("/admin");
       } else {
         router.replace("/(tabs)/homeUser");
@@ -59,7 +59,8 @@ export default function RootLayout() {
           },
 
           headerRight: () => <LogoutBtn />,
-          headerLeft: () => <PushNotificationBtn />,
+          headerLeft: () =>
+            user.email === "admin@mail.com" && <PushNotificationBtn />,
         }}
       />
       <Stack.Screen

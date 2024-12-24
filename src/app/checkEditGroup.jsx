@@ -20,17 +20,18 @@ import PdfButton from "../components/PdfButton";
 import FilterDatesForm from "../components/FilterDatesForm";
 import CalendarAdmin from "../components/CalendarAdmin";
 import SearchStudent from "../components/SearchStudent";
+import auth from "@react-native-firebase/auth";
 
 const { height } = Dimensions.get("window");
 
 function checkEditGroup(props) {
-  const { getUsers, getGroups, users, loading, programs, groups } =
-    useContext(ContextData);
+  const { users, loading, programs, groups } = useContext(ContextData);
+  const isAdmin = auth().currentUser.email === "admin@mail.com";
+
   const [filteredGroups, setFilteredGroups] = useState([]);
   const [group, setGroup] = useState();
   const [user, setUser] = useState([]);
   const [groupToken, setGroupToken] = useState("");
-  const [reload, setReload] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [agendaList, setAgendaList] = useState();
   const [date, setDate] = useState(undefined);
@@ -62,31 +63,31 @@ function checkEditGroup(props) {
     console.log("FilteredGroups state updated:");
   }, [filteredGroups]);
 
-  useEffect(() => {
-    const loadAndHandlePress = async () => {
-      try {
-        // Fetch data first
-        await getUsers();
-        await getGroups();
+  // useEffect(() => {
+  //   const loadAndHandlePress = async () => {
+  //     try {
+  //       // Fetch data first
+  //       await getUsers();
+  //       await getGroups();
 
-        // Then handle the group processing
-        if (groupToken !== "") {
-          // handlePress(groupToken, filteredGroups); // Trigger handlePress after data is loaded
-          console.log("Reloading!!!");
-        }
-      } catch (error) {
-        console.error("Error during load and handlePress:", error);
-      }
-    };
+  //       // Then handle the group processing
+  //       if (groupToken !== "") {
+  //         // handlePress(groupToken, filteredGroups); // Trigger handlePress after data is loaded
+  //         console.log("Reloading!!!");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error during load and handlePress:", error);
+  //     }
+  //   };
 
-    loadAndHandlePress();
-  }, [reload]); // Triggered when reload changes
+  //   loadAndHandlePress();
+  // }, [reload]); // Triggered when reload changes
 
-  const toogleReload = async () => {
-    setReload((prevReload) => !prevReload); // Ensures state consistency
+  // const  = async () => {
+  //   setReload((prevReload) => !prevReload); // Ensures state consistency
 
-    console.log("Reload toggled!");
-  };
+  //   console.log("Reload toggled!");
+  // };
   const ITEMS = (programs, data) => {
     const transformedData = {}; // New object to store transformed values
 
@@ -222,13 +223,13 @@ function checkEditGroup(props) {
                 agendaList={agendaList}
                 setModalVisible={setModalVisible}
                 idGroup={group._id}
-                setReload={toogleReload}
               />
             </Modal>
             <Text style={[styles.titleText, { color: "#2185D5" }]}>
               TEACHER
             </Text>
             <TeacherCardItem
+              idGroup={group._id}
               teacher={group.fullNameTeacher}
               email={group.email}
               phone={group.phone}
@@ -256,7 +257,6 @@ function checkEditGroup(props) {
               />
               {searchedStudent && (
                 <StudentChipItem
-                  toogleReload={toogleReload}
                   key={searchedStudent.tokenGroup + searchedStudent.fullName}
                   data={searchedStudent}
                 />
@@ -268,10 +268,12 @@ function checkEditGroup(props) {
                   marginHorizontal: 20,
                 }}
               >
-                <PdfButton
-                  currentUsers={user}
-                  textBtn="Generate Group PDF Documents"
-                />
+                {isAdmin && (
+                  <PdfButton
+                    currentUsers={user}
+                    textBtn="Generate Group PDF Documents"
+                  />
+                )}
               </View>
             </View>
           </>

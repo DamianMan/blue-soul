@@ -69,7 +69,11 @@ export default function LoginForm(props) {
         mode="contained"
         icon={({ size, color }) => (
           <Icon
-            name={email === "admin@mail.com" ? "lock" : "account"}
+            name={
+              email === "admin@mail.com" || email === "staff@mail.com"
+                ? "lock"
+                : "account"
+            }
             size={30}
             color="#0099FF"
           /> // Custom icon color
@@ -77,10 +81,16 @@ export default function LoginForm(props) {
         labelStyle={{ color: "#0099FF", fontSize: 20 }}
         style={styles.iconLogin}
       >
-        {email === "admin@mail.com" ? "ADMIN" : "USER"}
+        {email === "admin@mail.com" || email === "staff@mail.com"
+          ? "ADMIN"
+          : "USER"}
       </Button>
       <TextInput
-        label={email === "admin@mail.com" ? "Admin" : "Email"}
+        label={
+          email === "admin@mail.com" || email === "staff@mail.com"
+            ? "Admin"
+            : "Email"
+        }
         value={email}
         mode="outlined"
         keyboardType="email-address"
@@ -113,7 +123,9 @@ export default function LoginForm(props) {
           onPress={handleSubmit}
           style={styles.submitBtn}
         >
-          {email === "admin@mail.com" ? "Get Admin Panel" : "Login"}
+          {email === "admin@mail.com" || email === "staff@mail.com"
+            ? "Get Admin Panel"
+            : "Login"}
         </Button>
       </View>
     </View>

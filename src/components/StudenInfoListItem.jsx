@@ -19,8 +19,8 @@ import { ContextData } from "../context/ContextDataProvider";
 
 const { height } = Dimensions.get("window");
 
-function StudenInfoListItem({ data, toogleReload }) {
-  const { users, getUsers } = useContext(ContextData);
+function StudenInfoListItem({ data }) {
+  const { fetchData } = useContext(ContextData);
   const [isDisabled, setIsDisabled] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -61,7 +61,7 @@ function StudenInfoListItem({ data, toogleReload }) {
         .then((response) => {
           Alert.alert("Success", response.data.message);
           setIsDisabled(!isDisabled);
-          toogleReload();
+          fetchData();
         })
         .catch((err) => console.error("Error posting data:", err));
     } catch (error) {

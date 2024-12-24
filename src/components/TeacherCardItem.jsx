@@ -1,7 +1,9 @@
-import { Avatar, Chip } from "react-native-paper";
+import { Avatar, Chip, IconButton } from "react-native-paper";
 import { View, StyleSheet, Dimensions, Text } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import * as Clipboard from "expo-clipboard";
+import { useState } from "react";
+import GroupEditModal from "./GroupEditModal";
 const { width } = Dimensions.get("window");
 
 function TeacherCardItem({
@@ -13,7 +15,9 @@ function TeacherCardItem({
   numOfPeople,
   startDate,
   endDate,
+  idGroup,
 }) {
+  const [modalVisible, setModalVisible] = useState(false);
   const copyToClipboard = async () => {
     await Clipboard.setStringAsync(token);
   };
@@ -21,18 +25,32 @@ function TeacherCardItem({
   const startFormatDate = new Date(startDate);
   const endFormatDate = new Date(endDate);
 
+  const toggleModal = () => {
+    setModalVisible((prev) => !prev);
+  };
   return (
     <View style={styles.teacherView}>
+      <IconButton
+        icon={"pencil"}
+        iconColor="aliceblue"
+        onPress={toggleModal}
+        style={styles.editGroupBtn}
+      />
+      <GroupEditModal
+        toggleModal={toggleModal}
+        modalVisible={modalVisible}
+        idGroup={idGroup}
+      />
       <View
         style={{
           justifyContent: "space-between",
           alignItems: "center",
           flexDirection: "row",
-          padding: 5,
+          paddingVertical: 15,
         }}
       >
         <View style={{ flexDirection: "column" }}>
-          <Text style={styles.chipText}>From</Text>
+          <Text style={styles.chipTextBold}>From</Text>
           <Text style={styles.chipText}>
             {startFormatDate.toLocaleDateString("de-DE")}
           </Text>
@@ -46,7 +64,7 @@ function TeacherCardItem({
           style={{ backgroundColor: "lightcyan" }}
         />
         <View style={{ flexDirection: "column" }}>
-          <Text style={styles.chipText}>To</Text>
+          <Text style={styles.chipTextBold}>To</Text>
           <Text style={styles.chipText}>
             {endFormatDate.toLocaleDateString("de-DE")}
           </Text>
@@ -152,7 +170,7 @@ function TeacherCardItem({
 
 const styles = StyleSheet.create({
   teacherView: {
-    padding: 10,
+    padding: 20,
     backgroundColor: "#3FA2F6",
     shadowColor: "#3A4750",
     shadowOffset: {
@@ -179,6 +197,15 @@ const styles = StyleSheet.create({
   chipText: {
     color: "#fff",
     fontSize: 16,
+  },
+  chipTextBold: {
+    fontWeight: "bold",
+    color: "#fff",
+  },
+  editGroupBtn: {
+    position: "absolute",
+    right: 0,
+    top: 0,
   },
 });
 export default TeacherCardItem;

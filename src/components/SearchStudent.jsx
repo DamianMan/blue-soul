@@ -8,7 +8,9 @@ function SearchStudent({
   setSearchedStudent,
 }) {
   const handleChange = (text) => {
-    const currentUser = user.find((item) => item.fullName === text);
+    const currentUser = user.find(
+      (item) => item.fullName.toLowerCase() === text.toLowerCase()
+    );
     if (currentUser) setSearchedStudent(currentUser);
     else setSearchedStudent();
     setSearchQuery(text);

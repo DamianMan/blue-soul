@@ -14,6 +14,7 @@ import { IconButton } from "react-native-paper";
 import axios from "axios";
 import { ContextData } from "../context/ContextDataProvider";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import auth from "@react-native-firebase/auth";
 
 const { width } = Dimensions.get("window");
 
@@ -37,6 +38,7 @@ const CustomCarousel = ({
   setUsers,
   setFilteredGroups,
 }) => {
+  const isAdmin = auth().currentUser.email === "admin@mail.com";
   const { removeItemComplexArray } = useContext(ContextData);
   const [group, setGroup] = useState(data);
 
@@ -86,7 +88,6 @@ const CustomCarousel = ({
               },
               shadowOpacity: 0.25,
               shadowRadius: 1.84,
-
               elevation: 5,
             }}
             onPress={() => {
@@ -105,19 +106,21 @@ const CustomCarousel = ({
                 uri: "https://img.freepik.com/free-vector/watercolor-painted-malaga-skyline_52683-71499.jpg?ga=GA1.1.609292962.1726606020&semt=ais_hybrid",
               }}
             >
-              <IconButton
-                icon="delete-forever"
-                iconColor={"red"}
-                mode="outlined"
-                size={35}
-                onPress={() => handleDeleteGroup(item._id, item.email)}
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  right: 10,
-                  zIndex: 10,
-                }}
-              />
+              {isAdmin && (
+                <IconButton
+                  icon="delete-forever"
+                  iconColor={"red"}
+                  mode="outlined"
+                  size={35}
+                  onPress={() => handleDeleteGroup(item._id, item.email)}
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    right: 10,
+                    zIndex: 10,
+                  }}
+                />
+              )}
 
               <BlurView
                 intensity={30}

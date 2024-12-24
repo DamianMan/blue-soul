@@ -6,8 +6,6 @@ import * as Print from "expo-print";
 import { shareAsync } from "expo-sharing";
 
 function DinnerPdfButton({ currentUsers, textBtn, event, date }) {
-  console.log("Filtered dinner users:", currentUsers);
-  console.log("date:", date);
   const [selectedPrinter, setSelectedPrinter] = useState();
 
   const generateUserHTML = (users) => {

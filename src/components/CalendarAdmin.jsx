@@ -22,15 +22,20 @@ import DinnerList from "./DinnerList";
 import Loader from "./Loader";
 import PdfButton from "./PdfButton";
 import DinnerPdfButton from "./DinnerPdfButton";
+import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
+import CountDownItem from "./CountDownItem";
+import auth from "@react-native-firebase/auth";
 
 const { width, height } = Dimensions.get("window");
 
-function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
+function CalendarAdmin({ agendaList, setModalVisible, idGroup }) {
+  const isAdmin = auth().currentUser.email === "admin@mail.com";
+
   const { programs, groups, loading, users, fetchData } =
     useContext(ContextData);
-  const currenGroup = groups.find((item) => item._id === idGroup);
+  const currentGroup = groups.find((item) => item._id === idGroup);
   const usersFilterdeByGroup = users.filter(
-    (item) => item.tokenGroup === currenGroup.tokenGroup
+    (item) => item.tokenGroup === currentGroup.tokenGroup
   );
   const today = new Date();
 
@@ -38,7 +43,7 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
 
   useEffect(() => {
     setDinner(
-      currenGroup.dinner[date] || {
+      currentGroup.dinner[date] || {
         firstDish: [],
         secondDish: [],
         side: [],
@@ -68,8 +73,9 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
   const [event, setEvent] = useState();
   const [confPeople, setConfPeople] = useState([]);
   const [data, setData] = useState();
+  const [timeoutTime, setTimeoutTime] = useState(true);
   const [dinner, setDinner] = useState(
-    currenGroup?.dinner[date] || {
+    currentGroup?.dinner[date] || {
       firstDish: [],
       secondDish: [],
       side: [],
@@ -78,7 +84,11 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
       min: 0,
     }
   );
-  console.log("DINNER IN DB:", dinner);
+
+  let remaining =
+    (new Date(currentGroup.dinner[date]?.deadline).getTime() -
+      new Date().getTime()) /
+    1000;
 
   const [dishes, setDishes] = useState({
     first: "",
@@ -95,7 +105,7 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
   const handleSaveProgram = () => {
     if (value) {
       setIsDraggableModal(!isDraggableModal);
-      const newDragList = [...currenGroup.program[date], value];
+      const newDragList = [...currentGroup.program[date], value];
       // const convertedList = newDragList.map((item) => {
       //   const obj = programs.find((i) => i._id === item.id);
       //   if (obj) {
@@ -148,13 +158,18 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
     setDinner((prev) => ({ ...prev, [type]: filterList }));
   };
 
-  const saveDinner = async () => {
-    const idGroup = currenGroup._id;
+  const saveDinner = async (hours, min) => {
+    const now = new Date();
+    const idGroup = currentGroup._id;
     const dinnerDeadline = {
       ...dinner,
-      hours: dishes.hours,
-      min: dishes.min,
-      isDeadline: dishes.hours > 0 || dishes.min > 0 ? true : false,
+      hours: hours,
+      min: min,
+      isDeadline: hours > 0 || min > 0 ? true : false,
+      deadline:
+        hours > 0 || min > 0
+          ? new Date(now.getTime() + (hours * 60 + min) * 60 * 1000)
+          : null,
     };
 
     try {
@@ -174,6 +189,7 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
         )
         .then((res) => {
           fetchData();
+
           Alert.alert(res.data.status, res.data.message);
           setDinner({
             firstDish: [],
@@ -188,6 +204,27 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
     }
   };
 
+  const handleSaveDinner = async () => {
+    try {
+      // Save the initial dinner
+      await saveDinner(dishes.hours, dishes.min);
+
+      // console.log("Time in DB:", new Date(currentGroup.dinner[date]?.deadline));
+
+      // if (dishes.hours > 0 || dishes.min > 0) {
+      //   // Wait for the remaining time
+      //   const timer = dishes.hours * 3600000 + dishes.min * 60000;
+      //   setTimeout(async () => {
+      //     await saveDinner(0, 0);
+      //   }, timer);
+      //   console.log("Timeout TRIGGERED!");
+      // }
+    } catch (error) {
+      console.error("Error in handleSaveDinner:", error.message);
+      Alert.alert("Error", "Error in handling dinner save!");
+    }
+  };
+
   if (loading) {
     return <Loader />;
   }
@@ -196,15 +233,16 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
     <View style={{ flex: 1, width, paddingTop: 50 }}>
       <View
         style={{
-          justifyContent: currenGroup.dinner.hasOwnProperty(date)
-            ? "space-between"
-            : "flex-end",
+          justifyContent:
+            currentGroup.dinner.hasOwnProperty(date) && isAdmin
+              ? "space-between"
+              : "flex-end",
           alignItems: "center",
           marginHorizontal: 10,
           flexDirection: "row",
         }}
       >
-        {currenGroup.dinner.hasOwnProperty(date) && (
+        {currentGroup.dinner.hasOwnProperty(date) && isAdmin && (
           <DinnerPdfButton
             currentUsers={usersFilterdeByGroup}
             textBtn="Dinner Pdf"
@@ -232,18 +270,7 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
         showOnlySelectedDayItems={true}
         keyExtractor={(item, index) => item._id + date + index}
         renderItem={(item) => {
-          return (
-            <AgendaItemAdmin
-              item={item}
-              idGroup={idGroup}
-              date={date}
-              setReload={setReload}
-            />
-          );
-        }}
-        loadItemsForMonth={(month) => {
-          console.log("Loading items for month:", month);
-          // Optionally load more items dynamically based on `month`
+          return <AgendaItemAdmin item={item} idGroup={idGroup} date={date} />;
         }}
         onDayPress={(day) => {
           console.log("DAY:", day.dateString);
@@ -271,7 +298,7 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
           );
         }}
       />
-      {Object.keys(agendaList).includes(date) && (
+      {Object.keys(agendaList).includes(date) && isAdmin && (
         <View
           style={{
             justifyContent: "space-between",
@@ -312,7 +339,7 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
             visible={visible}
             hideDialog={hideDialog}
             count={count}
-            total={currenGroup.peopleCount}
+            total={currentGroup.peopleCount}
             event={event}
             peopleList={confPeople}
           />
@@ -387,7 +414,7 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
               isDraggableModal={isDraggableModal}
               draggableList={draggableList}
               idGroup={idGroup}
-              tokenGroup={currenGroup.tokenGroup}
+              tokenGroup={currentGroup.tokenGroup}
               date={date}
               setReload={setReload}
               setIsModal={setIsModal}
@@ -512,7 +539,7 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
               <TextInput
                 mode="outlined"
                 keyboardType="numeric"
-                label="Hours"
+                label={"Hours"}
                 value={dishes.hours}
                 onChangeText={(text) =>
                   setDishes((prev) => ({ ...prev, hours: parseInt(text) }))
@@ -530,13 +557,37 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
                 }
               />
               {dinner.isDeadline && (
-                <View>
-                  <IconButton
-                    icon={"check"}
-                    iconColor="limegreen"
-                    style={{ backgroundColor: "aliceblue" }}
-                  />
-                  <Text>Deadline active</Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    marginHorizontal: 10,
+                  }}
+                >
+                  <View style={styles.timer}>
+                    <CountdownCircleTimer
+                      isPlaying
+                      duration={remaining}
+                      colors={["#074799", "#009990", "#ECE852", "#FB4141"]}
+                      colorsTime={[remaining, remaining / 3, remaining / 2, 0]}
+                      size={50}
+                      strokeWidth={4}
+                    >
+                      {({ remainingTime }) => (
+                        <CountDownItem remainingTime={remainingTime} />
+                      )}
+                    </CountdownCircleTimer>
+                  </View>
+
+                  <View>
+                    <Text>Deadline active for</Text>
+                    {dinner.deadline && (
+                      <Text style={{ color: "dodgerblue" }}>
+                        {dinner.hours} h - {dinner.min} m
+                      </Text>
+                    )}
+                  </View>
                 </View>
               )}
             </View>
@@ -546,7 +597,7 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup, setReload }) {
               mode="elevated"
               buttonColor="dodgerblue"
               textColor="aliceblue"
-              onPress={saveDinner}
+              onPress={handleSaveDinner}
               style={{ marginVertical: 20, alignSelf: "center" }}
             >
               Save Dinner
@@ -677,6 +728,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: "aliceblue",
     padding: 20,
+  },
+  timer: {
+    position: "absolute",
+    top: -50,
+    right: -10,
   },
 });
 

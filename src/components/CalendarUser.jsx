@@ -22,6 +22,8 @@ import {
   SegmentedButtons,
 } from "react-native-paper";
 import axios from "axios";
+import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
+import CountDownItem from "./CountDownItem";
 
 const { height, width } = Dimensions.get("window");
 
@@ -85,6 +87,13 @@ function CalendarUser(props) {
 
   const [date, setDate] = useState(formattedDate);
 
+  const remaining =
+    currentGroup.dinner.hasOwnProperty(date) &&
+    (new Date(currentGroup.dinner[date].deadline).getTime() -
+      new Date().getTime()) /
+      1000;
+  console.log("Remaining time:", remaining);
+
   const [items, setItems] = useState(
     ITEMS(programs, userDb.program || program)
   );
@@ -101,19 +110,30 @@ function CalendarUser(props) {
     firstDish: "",
     secondDish: "",
     side: "",
+    isDinnerConfirmed: false,
   });
+  const [isDinnerBtn, setIsDinnerBtn] = useState(false);
 
   if (loading) {
     return <Loader />;
   }
 
+  const noDinner = {
+    firstDish: "I don't want any first dish.",
+    secondDish: "I don't want any second dish.",
+    side: "I don't want any side.",
+    isDinnerConfirmed: true,
+  };
+
+  const timeUpNoDinner = {
+    firstDish: "Didn't select any first dish.",
+    secondDish: "Didn't select any second dish.",
+    side: "Didn't select any side.",
+    isDinnerConfirmed: true,
+  };
   const handleSaveNoDinner = () => {
     setNoDinnerChoice((prev) => !prev);
-    const noDinner = {
-      firstDish: "I don't want any first dish.",
-      secondDish: "I don't want any second dish.",
-      side: "I don't want any any side.",
-    };
+
     setDinnerConfirm(noDinner);
   };
 
@@ -153,7 +173,7 @@ function CalendarUser(props) {
     return newList;
   };
 
-  const handleSaveDinner = async () => {
+  const handleSaveDinner = async (dinner) => {
     const idUser = userDb._id;
     try {
       await axios
@@ -162,7 +182,7 @@ function CalendarUser(props) {
           {
             idUser,
             date,
-            dinnerConfirm,
+            dinnerConfirm: { ...dinner, isDinnerConfirmed: true },
           },
           {
             headers: {
@@ -179,6 +199,15 @@ function CalendarUser(props) {
         });
     } catch (error) {
       alert("Error making request posting user dinner!");
+    }
+  };
+
+  const handleCompleteTimer = async () => {
+    if (userDb.dinner === undefined) {
+      await handleSaveDinner(timeUpNoDinner);
+      alert("Dinner timer is up!Sorry, You didn't select anything");
+    } else {
+      Alert.alert("Timer", "Dinner timer is up!");
     }
   };
 
@@ -254,16 +283,46 @@ function CalendarUser(props) {
           </Button>
         )}
         {currentGroup.dinner[date] && (
-          <Button
-            icon={"food-fork-drink"}
-            textColor="dodgerblue"
-            mode="elevated"
-            buttonColor="#fff"
-            style={styles.saveButton}
-            onPress={toogleDinnerModal}
+          <View
+            style={{
+              flexDirection: "row",
+            }}
           >
-            Pick You Dinner
-          </Button>
+            {!userDb.dinner?.[date].isDinnerConfirmed && (
+              <View
+                style={{
+                  position: "absolute",
+                  top: -40,
+                  right: -25,
+                  zIndex: 10,
+                }}
+              >
+                <CountdownCircleTimer
+                  isPlaying
+                  duration={remaining}
+                  colors={["#074799", "#009990", "#ECE852", "#FB4141"]}
+                  colorsTime={[remaining, remaining / 3, remaining / 2, 0]}
+                  size={50}
+                  strokeWidth={4}
+                  onComplete={handleCompleteTimer}
+                >
+                  {({ remainingTime }) => (
+                    <CountDownItem remainingTime={remainingTime} />
+                  )}
+                </CountdownCircleTimer>
+              </View>
+            )}
+            <Button
+              icon={"food-fork-drink"}
+              textColor="dodgerblue"
+              mode="elevated"
+              buttonColor="#fff"
+              onPress={toogleDinnerModal}
+              style={{ alignItems: "center" }}
+            >
+              <Text>Your Dinner</Text>
+            </Button>
+          </View>
         )}
         {/* // Dinner Modal */}
         <Modal
@@ -289,22 +348,24 @@ function CalendarUser(props) {
                   <SegmentedButtons
                     value={dinnerConfirm.firstDish}
                     onValueChange={(value) => {
-                      setNoDinnerChoice(false);
-                      setDinnerConfirm((prev) => ({
-                        ...prev,
-                        firstDish: value,
-                      }));
+                      if (value === dinnerConfirm.firstDish) {
+                        setNoDinnerChoice(true);
+                        setDinnerConfirm((prev) => ({
+                          ...prev,
+                          firstDish: "",
+                        }));
+                      } else {
+                        setDinnerConfirm((prev) => ({
+                          ...prev,
+                          firstDish: value,
+                        }));
+                      }
                     }}
                     buttons={firstDinnerBtn}
-                    style={{
-                      paddingVertical: 20,
-                      width: (width * 90) / 100,
-                    }}
+                    style={styles.segmentsBtn}
                   />
                   {dinnerConfirm.firstDish !== "" && (
-                    <View
-                      style={{ flexDirection: "row", alignItems: "center" }}
-                    >
+                    <View style={styles.textConfirmDishes}>
                       <IconButton icon={"check"} iconColor="limegreen" />
                       <Text>{dinnerConfirm.firstDish}</Text>
                     </View>
@@ -315,22 +376,23 @@ function CalendarUser(props) {
                   <SegmentedButtons
                     value={dinnerConfirm.secondDish}
                     onValueChange={(value) => {
-                      setNoDinnerChoice(false);
-                      setDinnerConfirm((prev) => ({
-                        ...prev,
-                        secondDish: value,
-                      }));
+                      if (value === dinnerConfirm.secondDish) {
+                        setDinnerConfirm((prev) => ({
+                          ...prev,
+                          secondDish: "",
+                        }));
+                      } else {
+                        setDinnerConfirm((prev) => ({
+                          ...prev,
+                          secondDish: value,
+                        }));
+                      }
                     }}
                     buttons={secondDinnerBtn}
-                    style={{
-                      paddingVertical: 20,
-                      width: (width * 90) / 100,
-                    }}
+                    style={styles.segmentsBtn}
                   />
                   {dinnerConfirm.secondDish !== "" && (
-                    <View
-                      style={{ flexDirection: "row", alignItems: "center" }}
-                    >
+                    <View style={styles.textConfirmDishes}>
                       <IconButton icon={"check"} iconColor="limegreen" />
                       <Text>{dinnerConfirm.secondDish}</Text>
                     </View>
@@ -341,19 +403,17 @@ function CalendarUser(props) {
                   <SegmentedButtons
                     value={dinnerConfirm.side}
                     onValueChange={(value) => {
-                      setNoDinnerChoice(false);
-                      setDinnerConfirm((prev) => ({ ...prev, side: value }));
+                      if (value === dinnerConfirm.side) {
+                        setDinnerConfirm((prev) => ({ ...prev, side: "" }));
+                      } else {
+                        setDinnerConfirm((prev) => ({ ...prev, side: value }));
+                      }
                     }}
                     buttons={sideDinnerBtn}
-                    style={{
-                      paddingVertical: 20,
-                      width: (width * 90) / 100,
-                    }}
+                    style={styles.segmentsBtn}
                   />
                   {dinnerConfirm.side !== "" && (
-                    <View
-                      style={{ flexDirection: "row", alignItems: "center" }}
-                    >
+                    <View style={styles.textConfirmDishes}>
                       <IconButton icon={"check"} iconColor="limegreen" />
                       <Text>{dinnerConfirm.side}</Text>
                     </View>
@@ -364,22 +424,21 @@ function CalendarUser(props) {
                     textColor="aliceblue"
                     mode="elevated"
                     style={styles.saveBtn}
-                    onPress={handleSaveDinner}
+                    onPress={() => handleSaveDinner(dinnerConfirm)}
                   >
                     Save
                   </Button>
-                  {!noDinnerChoice && (
-                    <Button
-                      icon={"food-drumstick-off-outline"}
-                      buttonColor="red"
-                      textColor="aliceblue"
-                      mode="elevated"
-                      style={styles.saveBtn}
-                      onPress={handleSaveNoDinner}
-                    >
-                      I don't want anything
-                    </Button>
-                  )}
+
+                  <Button
+                    icon={"food-drumstick-off-outline"}
+                    buttonColor="red"
+                    textColor="aliceblue"
+                    mode="elevated"
+                    style={styles.saveBtn}
+                    onPress={handleSaveNoDinner}
+                  >
+                    I don't want anything
+                  </Button>
                 </View>
               ) : (
                 <View>
@@ -392,34 +451,22 @@ function CalendarUser(props) {
                       style={{ backgroundColor: "aliceblue" }}
                     />
 
-                    <Text>Dinner Already Saved!</Text>
+                    <Text>Dinner Saved!</Text>
                   </View>
                   <Divider style={{ marginVertical: 20 }} />
 
                   <View style={styles.dinnerChoices}>
                     <View>
                       <Text style={styles.titleChoice}>First Dish</Text>
-                      <Text>
-                        {userDb.dinner[date] === undefined
-                          ? null
-                          : userDb.dinner[date].firstDish}
-                      </Text>
+                      <Text>{userDb.dinner[date]?.firstDish}</Text>
                     </View>
                     <View>
                       <Text style={styles.titleChoice}>Second Dish</Text>
-                      <Text>
-                        {userDb.dinner[date] === undefined
-                          ? null
-                          : userDb.dinner[date].secondDish}
-                      </Text>
+                      <Text>{userDb.dinner[date]?.secondDish}</Text>
                     </View>
                     <View>
                       <Text style={styles.titleChoice}>Side Dish</Text>
-                      <Text>
-                        {userDb.dinner[date] === undefined
-                          ? null
-                          : userDb.dinner[date].side}
-                      </Text>
+                      <Text>{userDb.dinner[date]?.side}</Text>
                     </View>
                   </View>
                 </View>
@@ -498,6 +545,15 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "slategray",
     fontSize: 20,
+  },
+  textConfirmDishes: {
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "center",
+  },
+  segmentsBtn: {
+    marginVertical: 10,
+    width: (width * 90) / 100,
   },
 });
 

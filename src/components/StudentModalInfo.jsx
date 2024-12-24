@@ -14,12 +14,7 @@ import {
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import StudenInfoListItem from "./StudenInfoListItem";
 const { width, height } = Dimensions.get("window");
-function StudentModalInfo({
-  modalVisible,
-  setModalVisible,
-  data,
-  toogleReload,
-}) {
+function StudentModalInfo({ modalVisible, setModalVisible, data }) {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : height}
@@ -39,7 +34,6 @@ function StudentModalInfo({
                 style={{ position: "absolute", right: 10, top: 5 }}
                 onPress={() => {
                   setModalVisible();
-                  toogleReload();
                 }}
               >
                 <Text style={styles.textStyle}>
@@ -50,7 +44,7 @@ function StudentModalInfo({
                   />
                 </Text>
               </Pressable>
-              <StudenInfoListItem data={data} toogleReload={toogleReload} />
+              <StudenInfoListItem data={data} />
             </View>
           </View>
         </Modal>

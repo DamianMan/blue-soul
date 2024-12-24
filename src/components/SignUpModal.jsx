@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Alert,
   Modal,
@@ -18,13 +18,15 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Divider, TextInput } from "react-native-paper";
 import auth from "@react-native-firebase/auth";
 import axios from "axios";
+import { ContextData } from "../context/ContextDataProvider";
+import Loader from "./Loader";
 
 const { width, height } = Dimensions.get("window");
 
 function SignUpModal({ isModalVisibile, toggleModal }) {
+  const { loading } = useContext(ContextData);
   const [isHide, setIsHide] = useState(true);
   const [isValid, setIsValid] = useState(true);
-  const [loading, setLoading] = useState(false);
 
   const [infoUser, setInfoUser] = useState({
     fullName: "",
@@ -97,6 +99,10 @@ function SignUpModal({ isModalVisibile, toggleModal }) {
     setInfoUser((prev) => ({ ...prev, email: text }));
     validateEmail(text);
   };
+
+  if (loading) {
+    return <Loader />;
+  }
   return (
     <Modal
       animationType="slide"

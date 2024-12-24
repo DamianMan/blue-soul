@@ -9,7 +9,7 @@ function ContextDataProvider({ children }) {
   const [groups, setGroups] = useState([]);
   const [isNotification, setIsNotfication] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [user, setUser] = useState("damaino");
+  const [user, setUser] = useState("damiano");
   const [programs, setPrograms] = useState([]);
 
   const fetchData = async () => {
@@ -136,9 +136,6 @@ function ContextDataProvider({ children }) {
   };
 
   // Set USER authenthication
-  const addUserAuth = (user) => {
-    setUser(user);
-  };
 
   // Remove USR Auth
   const removeUserAuth = () => {
@@ -148,7 +145,6 @@ function ContextDataProvider({ children }) {
   const appValues = {
     fetchData,
     user,
-    addUserAuth,
     removeUserAuth,
     users,
     services,

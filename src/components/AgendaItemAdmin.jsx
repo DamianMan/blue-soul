@@ -15,16 +15,18 @@ import { Dropdown } from "react-native-element-dropdown";
 import { ContextData } from "../context/ContextDataProvider";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import axios from "axios";
+import auth from "@react-native-firebase/auth";
 
 const { width, height } = Dimensions.get("window");
 
-function AgendaItemAdmin({ item, idGroup, date, setReload }) {
-  console.log("ITEM RENDERED:", item);
+function AgendaItemAdmin({ item, idGroup, date }) {
+  const isAdmin = auth().currentUser.email === "admin@mail.com";
+
   const [modalVisible, setModalVisible] = useState(false);
   const [value, setValue] = useState();
   const [dateValue, setDateValue] = useState();
 
-  const { programs, groups, loading } = useContext(ContextData);
+  const { programs, groups, loading, fetchData } = useContext(ContextData);
   const [isFocus, setIsFocus] = useState(false);
   const [isFocusDate, setIsFocusDate] = useState(false);
 
@@ -41,7 +43,6 @@ function AgendaItemAdmin({ item, idGroup, date, setReload }) {
   const datesProgram = () => {
     let displyDates = [];
     Object.entries(currenGroup.program).forEach(([key, value]) => {
-      console.log(key);
       displyDates.push(key);
     });
     const newDates = displyDates.map((elem) => ({
@@ -83,7 +84,7 @@ function AgendaItemAdmin({ item, idGroup, date, setReload }) {
           }
         )
         .then((res) => {
-          setReload();
+          fetchData();
           setModalVisible(!modalVisible);
         })
         .catch((err) => Alert.alert(err.data.status, err.data.message));
@@ -131,16 +132,18 @@ function AgendaItemAdmin({ item, idGroup, date, setReload }) {
   };
   return (
     <TouchableOpacity onPress={itemPressed} style={styles.item}>
-      <Button
-        icon={"delete"}
-        textColor="red"
-        onPress={handleDelete}
-        style={{
-          position: "absolute",
-          top: -10,
-          right: -20,
-        }}
-      ></Button>
+      {isAdmin && (
+        <Button
+          icon={"delete"}
+          textColor="red"
+          onPress={handleDelete}
+          style={{
+            position: "absolute",
+            top: -10,
+            right: -20,
+          }}
+        ></Button>
+      )}
       {item.isOptional && <Text style={styles.optional}>Optional</Text>}
 
       <View style={{ justifyContent: "flex-start", alignItems: "flex-start" }}>
@@ -148,15 +151,17 @@ function AgendaItemAdmin({ item, idGroup, date, setReload }) {
         <Text style={styles.itemDurationText}>{item.title}</Text>
       </View>
       <View style={styles.itemButtonContainer}>
-        <Button
-          icon={"file-document-edit-outline"}
-          mode="outlined"
-          textColor="dodgerblue"
-          buttonColor="#fff"
-          onPress={handleEdit}
-        >
-          Edit
-        </Button>
+        {isAdmin && (
+          <Button
+            icon={"file-document-edit-outline"}
+            mode="outlined"
+            textColor="dodgerblue"
+            buttonColor="#fff"
+            onPress={handleEdit}
+          >
+            Edit
+          </Button>
+        )}
       </View>
 
       <Modal

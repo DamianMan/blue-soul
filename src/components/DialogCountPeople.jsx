@@ -10,7 +10,6 @@ function DialogCountPeople({
   event,
   peopleList,
 }) {
-  console.log("visibile:", visible);
   return (
     <Modal
       animationType="fade"

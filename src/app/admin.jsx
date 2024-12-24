@@ -10,7 +10,7 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import TaskItem from "../components/TaskItem";
 import auth from "@react-native-firebase/auth";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ContextData } from "../context/ContextDataProvider";
 import Loader from "../components/Loader";
 const Tasks = [
@@ -18,6 +18,7 @@ const Tasks = [
     name: "Add New Group",
     url: "addNewGroup",
     icon: "plus-square",
+    isAccessible: false,
     image:
       "https://images.unsplash.com/photo-1536869338989-e7ffd2297454?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHN0dWRlbnRzJTIwc2VhfGVufDB8fDB8fHww",
   },
@@ -25,6 +26,7 @@ const Tasks = [
     name: "Add Program Event",
     url: "events",
     icon: "plus-square",
+    isAccessible: false,
     image:
       "https://images.unsplash.com/photo-1484981184820-2e84ea0af397?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
@@ -32,6 +34,7 @@ const Tasks = [
     name: "Check & Edit Group",
     url: "checkEditGroup",
     icon: "edit",
+    isAccessible: true,
     image:
       "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDExfHx8ZW58MHx8fHx8",
   },
@@ -39,6 +42,7 @@ const Tasks = [
     name: "Edit All Services",
     url: "editActivities",
     icon: "list-alt",
+    isAccessible: false,
     image:
       "https://images.unsplash.com/photo-1444210971048-6130cf0c46cf?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDEzfHx8ZW58MHx8fHx8",
   },
@@ -47,6 +51,15 @@ const Tasks = [
 const { width, height } = Dimensions.get("window");
 
 function AdminPanel(props) {
+  useEffect(() => {
+    const isAdmin = auth().currentUser.email === "admin@mail.com";
+    isAdmin
+      ? setOptions(Tasks)
+      : setOptions(Tasks.filter((item) => item.isAccessible === true));
+    setAdmin(isAdmin);
+  }, [admin, options]);
+  const [admin, setAdmin] = useState(false);
+  const [options, setOptions] = useState();
   const { loading } = useContext(ContextData);
   if (loading) {
     return <Loader />;
@@ -67,7 +80,7 @@ function AdminPanel(props) {
       </ImageBackground>
       <FlatList
         horizontal
-        data={Tasks}
+        data={options}
         renderItem={({ item }) => (
           <TaskItem
             text={item.name}

@@ -364,6 +364,35 @@ app.post("/api/postGroup", async (req, res) => {
   }
 });
 
+// Edit Group
+app.post("/api/editGroup", async (req, res) => {
+  const { idGroup, ediGroupForm } = req.body;
+  const { fullNameTeacher, email, phone, city, people } = ediGroupForm;
+  try {
+    query = {
+      _id: idGroup,
+    };
+    const updatedGRoup = await Schools.findOneAndUpdate(
+      query,
+      {
+        $set: {
+          fullNameTeacher,
+          email,
+          phone,
+          city,
+          peopleCount: parseInt(people),
+        },
+      },
+      { new: true }
+    );
+    console.log("Updated Group:", updatedGRoup);
+
+    res.json({ status: "Success", message: "Succesfully updated group." });
+  } catch (error) {
+    res.json({ status: "Failed", message: "Error updating group!" });
+  }
+});
+
 // Edit Service From Admin
 
 app.post("/api/editService", async (req, res) => {

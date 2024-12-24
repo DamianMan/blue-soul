@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   Pressable,
   StyleSheet,
@@ -9,10 +9,13 @@ import {
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Link } from "expo-router";
 import { BlurView } from "expo-blur";
+import { ContextData } from "../context/ContextDataProvider";
+import auth from "@react-native-firebase/auth";
 
 const { width, height } = Dimensions.get("window");
 
 function TaskItem({ text, img, icon, url }) {
+  const isAdmin = auth().currentUser.email === "admin@mail.com";
   return (
     <Link href={`/${url}`} asChild>
       <Pressable style={styles.container}>
@@ -24,10 +27,13 @@ function TaskItem({ text, img, icon, url }) {
         >
           <BlurView
             intensity={8}
-            style={styles.blurContainer}
+            style={[
+              styles.blurContainer,
+              { width: !isAdmin ? (width * 90) / 100 : (width * 70) / 100 },
+            ]}
             experimentalBlurMethod={true}
           >
-            <Text style={styles.text}>{text}</Text>
+            <Text style={styles.text}>{isAdmin ? text : "Check Groups"}</Text>
             <FontAwesome
               name={icon}
               size={45}
@@ -56,8 +62,6 @@ function TaskItem({ text, img, icon, url }) {
     </Link>
   );
 }
-
-export default TaskItem;
 
 const styles = StyleSheet.create({
   container: {
@@ -109,3 +113,4 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
 });
+export default TaskItem;

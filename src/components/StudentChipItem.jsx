@@ -5,7 +5,7 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import StudentModalInfo from "./StudentModalInfo";
 const { width } = Dimensions.get("window");
 
-function StudentChipItem({ data, toogleReload }) {
+function StudentChipItem({ data }) {
   const [modalVisible, setModalVisible] = useState(false);
 
   const toggleModal = () => {
@@ -48,7 +48,6 @@ function StudentChipItem({ data, toogleReload }) {
         modalVisible={modalVisible}
         setModalVisible={toggleModal}
         data={data}
-        toogleReload={toogleReload}
       />
     </View>
   );
