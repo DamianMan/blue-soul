@@ -368,10 +368,12 @@ app.post("/api/postGroup", async (req, res) => {
 app.post("/api/editGroup", async (req, res) => {
   const { idGroup, editGroupForm } = req.body;
   const [
+    { value: nameGroup },
     { value: fullNameTeacher },
     { value: email },
     { value: phone },
     { value: city },
+    { value: hotel },
     { value: people },
   ] = editGroupForm;
 
@@ -384,10 +386,12 @@ app.post("/api/editGroup", async (req, res) => {
       query,
       {
         $set: {
+          nameGroup,
           fullNameTeacher,
           email,
           phone,
           city,
+          hotel,
           peopleCount,
         },
       },
@@ -398,6 +402,45 @@ app.post("/api/editGroup", async (req, res) => {
     res.json({ status: "Success", message: "Succesfully updated group." });
   } catch (error) {
     res.json({ status: "Failed", message: "Error updating group!" });
+  }
+});
+
+// Delete Group
+app.post("/api/deleteGroup", async (req, res) => {
+  const { id, email } = req.body;
+  let firebaseId;
+  await admin
+    .auth()
+    .getUserByEmail(email)
+    .then((userRecord) => {
+      // See the UserRecord reference doc for the contents of userRecord.
+      console.log(`Successfully fetched user data: ${userRecord.uid}`);
+      firebaseId = userRecord.uid;
+    })
+    .catch((error) => {
+      console.log("Error fetching user data:", error);
+    });
+  console.log("UID:", firebaseId);
+
+  try {
+    const deletedGroup = await Schools.deleteOne({ _id: id });
+    const deleteUser = await Users.deleteOne({ email });
+    console.log("Deleted group:", deletedGroup);
+    console.log("Deleted user:", deleteUser);
+
+    admin
+      .auth()
+      .deleteUser(firebaseId)
+      .then(() => {
+        console.log("Successfully deleted Firebase user");
+      })
+      .catch((error) => {
+        console.log("Error deleting user:", error);
+      });
+
+    res.json({ message: "Group Deleted Succesfully", status: "Success" });
+  } catch (error) {
+    res.json({ message: "No Group Found!", status: "Error" });
   }
 });
 
@@ -957,41 +1000,6 @@ app.post("/api/postTripMeal", async (req, res) => {
   }
 });
 
-// Delete Group
-app.post("/api/deleteGroup", async (req, res) => {
-  const { id, email } = req.body;
-  let firebaseId;
-  await admin
-    .auth()
-    .getUserByEmail(email)
-    .then((userRecord) => {
-      // See the UserRecord reference doc for the contents of userRecord.
-      console.log(`Successfully fetched user data: ${userRecord.uid}`);
-      firebaseId = userRecord.uid;
-    })
-    .catch((error) => {
-      console.log("Error fetching user data:", error);
-    });
-  console.log("UID:", firebaseId);
-
-  try {
-    const deletedGroup = await Schools.deleteOne({ _id: id });
-    console.log("Deleted group:", deletedGroup);
-    admin
-      .auth()
-      .deleteUser(firebaseId)
-      .then(() => {
-        console.log("Successfully deleted Firebase user");
-      })
-      .catch((error) => {
-        console.log("Error deleting user:", error);
-      });
-
-    res.json({ message: "Group Deleted Succesfully", status: "Success" });
-  } catch (error) {
-    res.json({ message: "No Group Found!", status: "Error" });
-  }
-});
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });

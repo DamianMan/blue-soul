@@ -16,13 +16,19 @@ const { width } = Dimensions.get("window");
 function GroupEditModal({ toggleModal, modalVisible, idGroup }) {
   const { groups, fetchData } = useContext(ContextData);
   const currentGroup = groups.find((item) => item._id === idGroup);
-  const { fullNameTeacher, city, email, phone, peopleCount } = currentGroup;
+  const { fullNameTeacher, city, email, phone, peopleCount, nameGroup, hotel } =
+    currentGroup;
   console.log("current group:", currentGroup);
   const [editGroupForm, setEditGroupForm] = useState([
+    {
+      id: "nameGroup",
+      value: nameGroup,
+    },
     {
       id: "fullName",
       value: fullNameTeacher,
     },
+
     {
       id: "email",
       value: email,
@@ -35,7 +41,10 @@ function GroupEditModal({ toggleModal, modalVisible, idGroup }) {
       id: "city",
       value: city,
     },
-
+    {
+      id: "hotel",
+      value: hotel,
+    },
     {
       id: "people",
       value: String(peopleCount),

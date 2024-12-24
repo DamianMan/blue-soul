@@ -21,6 +21,7 @@ import FilterDatesForm from "../components/FilterDatesForm";
 import CalendarAdmin from "../components/CalendarAdmin";
 import SearchStudent from "../components/SearchStudent";
 import auth from "@react-native-firebase/auth";
+import Loader from "../components/Loader";
 
 const { height } = Dimensions.get("window");
 
@@ -133,17 +134,7 @@ function checkEditGroup(props) {
   };
 
   if (loading) {
-    return (
-      <View
-        style={{
-          justifyContent: "center",
-          alignItems: "center",
-          flex: 1,
-        }}
-      >
-        <ActivityIndicator size={"large"} color={"#2185D5"} />
-      </View>
-    );
+    return <Loader />;
   }
   return (
     <ScrollView style={styles.container}>
