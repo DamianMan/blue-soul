@@ -752,7 +752,7 @@ app.post("/api/deleteProgramDay", async (req, res) => {
       { tokenGroup },
       {
         $pull: {
-          [fieldPath]: itemId,
+          [fieldPath]: { _id: itemId },
         },
       }
     );
