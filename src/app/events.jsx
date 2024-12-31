@@ -34,7 +34,12 @@ function events(props) {
           data={programs}
           keyExtractor={(item) => item._id}
           renderItem={({ item }) => (
-            <EventItem title={item.title} hour={item.hour} id={item._id} />
+            <EventItem
+              title={item.title}
+              hour={item.hour}
+              id={item._id}
+              description={item.description}
+            />
           )}
         />
       </SafeAreaView>
@@ -57,8 +62,8 @@ function events(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
+    justifyContent: "center",
+    alignItems: "center",
     width,
     backgroundColor: "aliceblue",
   },

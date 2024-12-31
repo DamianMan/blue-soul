@@ -26,7 +26,7 @@ function TaskItem({ text, img, icon, url }) {
           imageStyle={{ borderRadius: 10 }}
         >
           <BlurView
-            intensity={8}
+            intensity={16}
             style={[
               styles.blurContainer,
               { width: !isAdmin ? (width * 90) / 100 : (width * 70) / 100 },

@@ -24,7 +24,7 @@ import Loader from "./Loader";
 const { width, height } = Dimensions.get("window");
 
 function SignUpModal({ isModalVisibile, toggleModal }) {
-  const { loading } = useContext(ContextData);
+  const { loading, fetchData } = useContext(ContextData);
   const [isHide, setIsHide] = useState(true);
   const [isValid, setIsValid] = useState(true);
 
@@ -65,9 +65,9 @@ function SignUpModal({ isModalVisibile, toggleModal }) {
         )
         .then((res) => {
           if (res.data.isIn) {
-            // firebaseSign();
             Alert.alert(res.data.status, res.data.message);
             toggleModal(isModalVisibile);
+            fetchData();
           } else {
             alert(res.data.message);
           }
@@ -78,7 +78,7 @@ function SignUpModal({ isModalVisibile, toggleModal }) {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (
       (infoUser.email === "") | (infoUser.password === "") ||
       infoUser.fullName === ""
@@ -87,7 +87,7 @@ function SignUpModal({ isModalVisibile, toggleModal }) {
     } else if (!isValid) {
       Alert.alert("Error", "Invalid email format");
     } else {
-      signUp();
+      await signUp();
     }
   };
   const validateEmail = (text) => {
@@ -124,85 +124,76 @@ function SignUpModal({ isModalVisibile, toggleModal }) {
         <Pressable style={{ alignItems: "flex-end" }} onPress={handleToggle}>
           <MaterialCommunityIcons name="close-box" size={24} color="red" />
         </Pressable>
-        {!loading ? (
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={{ flex: 1 }}
-          >
-            <ScrollView contentContainerStyle={styles.formContainer}>
-              <View style={styles.centeredView}>
-                <FontAwesome
-                  name="user-circle-o"
-                  size={24}
-                  color="#48CFCB"
-                  style={{ alignSelf: "center" }}
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ flex: 1 }}
+        >
+          <ScrollView contentContainerStyle={styles.formContainer}>
+            <View style={styles.centeredView}>
+              <FontAwesome
+                name="user-circle-o"
+                size={24}
+                color="#48CFCB"
+                style={{ alignSelf: "center" }}
+              />
+
+              <Text style={styles.modalText}>Registration User</Text>
+              <Divider />
+
+              <View style={{ paddingVertical: 40, paddingHorizontal: 10 }}>
+                <TextInput
+                  label="Full Name"
+                  value={infoUser}
+                  textColor="#303841"
+                  activeOutlineColor="#2185D5"
+                  style={styles.userInput}
+                  mode="outlined"
+                  onChangeText={(text) =>
+                    setInfoUser((prev) => ({ ...prev, fullName: text }))
+                  }
                 />
 
-                <Text style={styles.modalText}>Registration User</Text>
-                <Divider />
-
-                <View style={{ paddingVertical: 40, paddingHorizontal: 10 }}>
-                  <TextInput
-                    label="Full Name"
-                    autoCapitalize="none"
-                    value={infoUser}
-                    textColor="#303841"
-                    activeOutlineColor="#2185D5"
-                    style={styles.userInput}
-                    mode="outlined"
-                    onChangeText={(text) =>
-                      setInfoUser((prev) => ({ ...prev, fullName: text }))
-                    }
-                  />
-
-                  <TextInput
-                    label="Email"
-                    autoCapitalize="none"
-                    keyboardType="email-address"
-                    value={infoUser}
-                    textColor="#303841"
-                    error={!isValid}
-                    activeOutlineColor="#2185D5"
-                    style={styles.userInput}
-                    mode="outlined"
-                    onChangeText={handleEmail}
-                  />
-                  <TextInput
-                    label="Password"
-                    autoCapitalize="none"
-                    value={infoUser}
-                    textColor="#303841"
-                    activeOutlineColor="#2185D5"
-                    style={styles.userInput}
-                    mode="outlined"
-                    right={
-                      <TextInput.Icon
-                        icon="eye"
-                        onPress={() => setIsHide(!isHide)}
-                      />
-                    }
-                    secureTextEntry={isHide}
-                    onChangeText={(text) =>
-                      setInfoUser((prev) => ({ ...prev, password: text }))
-                    }
-                  />
-                </View>
-                <Pressable
-                  style={[styles.button, styles.buttonSubmit]}
-                  onPress={handleSubmit}
-                >
-                  <Text style={styles.textStyle}>Sign Up</Text>
-                </Pressable>
+                <TextInput
+                  label="Email"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  value={infoUser}
+                  textColor="#303841"
+                  error={!isValid}
+                  activeOutlineColor="#2185D5"
+                  style={styles.userInput}
+                  mode="outlined"
+                  onChangeText={handleEmail}
+                />
+                <TextInput
+                  label="Password"
+                  autoCapitalize="none"
+                  value={infoUser}
+                  textColor="#303841"
+                  activeOutlineColor="#2185D5"
+                  style={styles.userInput}
+                  mode="outlined"
+                  right={
+                    <TextInput.Icon
+                      icon="eye"
+                      onPress={() => setIsHide(!isHide)}
+                    />
+                  }
+                  secureTextEntry={isHide}
+                  onChangeText={(text) =>
+                    setInfoUser((prev) => ({ ...prev, password: text }))
+                  }
+                />
               </View>
-            </ScrollView>
-          </KeyboardAvoidingView>
-        ) : (
-          <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-          >
-            <ActivityIndicator color={"#0000ff"} size={"large"} />
-          </View>
-        )}
+              <Pressable
+                style={[styles.button, styles.buttonSubmit]}
+                onPress={handleSubmit}
+              >
+                <Text style={styles.textStyle}>Sign Up</Text>
+              </Pressable>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
       </View>
     </Modal>
   );

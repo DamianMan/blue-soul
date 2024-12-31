@@ -105,6 +105,7 @@ function GroupEditModal({ toggleModal, modalVisible, idGroup }) {
             onPress={toggleModal}
             style={styles.buttonClose}
           />
+          <Text style={styles.title}>Edit Group</Text>
           <FlatList
             data={editGroupForm}
             keyExtractor={(item) => item.id}
@@ -158,6 +159,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+  },
+  title: {
+    fontSize: 20,
+    color: "dodgerblue",
+    paddingBottom: 20,
   },
   button: {
     borderRadius: 20,

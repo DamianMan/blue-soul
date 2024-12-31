@@ -20,6 +20,7 @@ import {
   Divider,
   IconButton,
   SegmentedButtons,
+  RadioButton,
 } from "react-native-paper";
 import axios from "axios";
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
@@ -52,25 +53,29 @@ const { height, width } = Dimensions.get("window");
 //   }
 //   return transformedData;
 // };
-const ITEMS = (programs, data) => {
-  transformedData = {};
-  // let data = {
-  //   "2024-11-19": ["673b5ad113a096ad05640ca9", "673b5e2b13a096ad05640cb2"],
-  //   "2024-11-20": ["673b5d6a13a096ad05640cad", "673b5e7b13a096ad05640cb3"],
-  //   "2024-11-21": ["673b5b3a13a096ad05640caa", "673b5ead13a096ad05640cb4"],
-  //   "2024-11-22": ["673b5b3a13a096ad05640caa", "673b5e2b13a096ad05640cb2"],
-  //   "2024-11-23": ["673b5cd713a096ad05640cab", "673b5ead13a096ad05640cb4"],
-  //   "2024-11-24": ["673b5d6a13a096ad05640cad"],
-  // };
-  for (const [key, value] of Object.entries(data)) {
-    transformedData[key] = value;
-  }
-  return transformedData;
-};
 
 function CalendarUser(props) {
-  const { programs, groups, users, getGroups, getUsers, loading, fetchData } =
+  const { programs, groups, users, loading, fetchData } =
     useContext(ContextData);
+
+  useEffect(() => {
+    const ITEMS = (programs, data) => {
+      transformedData = {};
+      // let data = {
+      //   "2024-11-19": ["673b5ad113a096ad05640ca9", "673b5e2b13a096ad05640cb2"],
+      //   "2024-11-20": ["673b5d6a13a096ad05640cad", "673b5e7b13a096ad05640cb3"],
+      //   "2024-11-21": ["673b5b3a13a096ad05640caa", "673b5ead13a096ad05640cb4"],
+      //   "2024-11-22": ["673b5b3a13a096ad05640caa", "673b5e2b13a096ad05640cb2"],
+      //   "2024-11-23": ["673b5cd713a096ad05640cab", "673b5ead13a096ad05640cb4"],
+      //   "2024-11-24": ["673b5d6a13a096ad05640cad"],
+      // };
+      for (const [key, value] of Object.entries(data)) {
+        transformedData[key] = value;
+      }
+      setItems(transformedData);
+    };
+    ITEMS(programs, userDb.program || program);
+  }, [items]);
 
   const today = new Date();
   const formattedDate = today.toISOString().split("T")[0];
@@ -88,15 +93,12 @@ function CalendarUser(props) {
   const [date, setDate] = useState(formattedDate);
 
   const remaining =
-    currentGroup.dinner.hasOwnProperty(date) &&
+    currentGroup.dinner?.hasOwnProperty(date) &&
     (new Date(currentGroup.dinner[date].deadline).getTime() -
       new Date().getTime()) /
       1000;
-  console.log("Remaining time:", remaining);
 
-  const [items, setItems] = useState(
-    ITEMS(programs, userDb.program || program)
-  );
+  const [items, setItems] = useState();
   const [value, setValue] = useState([]);
   const [noOption, setNoOption] = useState(false);
   const [selected, setSelected] = useState([]);
@@ -137,27 +139,48 @@ function CalendarUser(props) {
     setDinnerConfirm(noDinner);
   };
 
-  const handleSave = async () => {
-    console.log("VALUES:", value);
-    try {
-      await axios
-        .post(
-          "https://blue-soul-app.onrender.com/api/postDailyProgramByUser",
-          { email, date, value },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        )
-        .then((res) => {
-          Alert.alert(res.data.status, res.data.message);
-          setSaved((prev) => !prev);
-          fetchData();
-        })
-        .catch((err) => Alert.alert(err.data.status, err.data.message));
-    } catch (error) {
-      alert("Error making request to update program by user!");
+  const handleSaveProgram = async () => {
+    const checkOptional = value.filter((elem) => elem.isOptional === true);
+    const filterItemsNoOptional = items[date].filter(
+      (elem) => elem.isOptional === false
+    );
+    const newValues = [...value, ...filterItemsNoOptional];
+    const sortedArray = newValues.sort((a, b) => {
+      const [hoursA, minutesA] = a.hour.split(":").map(Number);
+      const [hoursB, minutesB] = b.hour.split(":").map(Number);
+
+      const floatA = hoursA + minutesA / 60;
+      const floatB = hoursB + minutesB / 60;
+
+      return floatA - floatB; // Ascending order
+    });
+    if (checkOptional.length > 1) {
+      alert("Please select just ONE event!");
+      return;
+    }
+    if (checkOptional.length > 0) {
+      try {
+        await axios
+          .post(
+            "https://blue-soul-app.onrender.com/api/postDailyProgramByUser",
+            { email, date, value: sortedArray },
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          )
+          .then((res) => {
+            Alert.alert(res.data.status, res.data.message);
+            setSaved((prev) => !prev);
+            fetchData();
+          })
+          .catch((err) => Alert.alert(err.data.status, err.data.message));
+      } catch (error) {
+        alert("Error making request to update program by user!");
+      }
+    } else {
+      alert("Please select an event!");
     }
   };
 
@@ -204,8 +227,10 @@ function CalendarUser(props) {
 
   const handleCompleteTimer = async () => {
     if (userDb.dinner === undefined) {
+      alert(
+        `Dinner timer over in date ${date}!Sorry, You didn't select anything`
+      );
       await handleSaveDinner(timeUpNoDinner);
-      alert("Dinner timer is up!Sorry, You didn't select anything");
     } else {
       Alert.alert("Timer", "Dinner timer is up!");
     }
@@ -238,7 +263,7 @@ function CalendarUser(props) {
           );
           setNoOption(noOptionItems);
           setValue([]);
-          if (currentGroup.dinner.hasOwnProperty(day.dateString)) {
+          if (currentGroup.dinner?.hasOwnProperty(day.dateString)) {
             setFirstDinnerBtn(
               createListSegmentsBtn(day.dateString, "firstDish")
             );
@@ -276,51 +301,50 @@ function CalendarUser(props) {
             textColor="dodgerblue"
             mode="elevated"
             buttonColor="#fff"
-            style={styles.saveButton}
-            onPress={handleSave}
+            onPress={handleSaveProgram}
           >
             Save Program
           </Button>
         )}
-        {currentGroup.dinner[date] && (
+        {currentGroup.dinner?.[date] && (
           <View
             style={{
               flexDirection: "row",
             }}
           >
-            {!userDb.dinner?.[date].isDinnerConfirmed && (
-              <View
-                style={{
-                  position: "absolute",
-                  top: -40,
-                  right: -25,
-                  zIndex: 10,
-                }}
-              >
-                <CountdownCircleTimer
-                  isPlaying
-                  duration={remaining}
-                  colors={["#074799", "#009990", "#ECE852", "#FB4141"]}
-                  colorsTime={[remaining, remaining / 3, remaining / 2, 0]}
-                  size={50}
-                  strokeWidth={4}
-                  onComplete={handleCompleteTimer}
+            {!userDb.dinner?.[date].isDinnerConfirmed &&
+              currentGroup.dinner?.[date].deadline !== null && (
+                <View
+                  style={{
+                    position: "absolute",
+                    top: -40,
+                    right: -25,
+                    zIndex: 10,
+                  }}
                 >
-                  {({ remainingTime }) => (
-                    <CountDownItem remainingTime={remainingTime} />
-                  )}
-                </CountdownCircleTimer>
-              </View>
-            )}
+                  <CountdownCircleTimer
+                    isPlaying
+                    duration={remaining}
+                    colors={["#074799", "#009990", "#ECE852", "#FB4141"]}
+                    colorsTime={[remaining, remaining / 3, remaining / 2, 0]}
+                    size={50}
+                    strokeWidth={4}
+                    onComplete={handleCompleteTimer}
+                  >
+                    {({ remainingTime }) => (
+                      <CountDownItem remainingTime={remainingTime} />
+                    )}
+                  </CountdownCircleTimer>
+                </View>
+              )}
             <Button
               icon={"food-fork-drink"}
               textColor="dodgerblue"
               mode="elevated"
               buttonColor="#fff"
               onPress={toogleDinnerModal}
-              style={{ alignItems: "center" }}
             >
-              <Text>Your Dinner</Text>
+              Your Dinner
             </Button>
           </View>
         )}
@@ -503,7 +527,7 @@ const styles = StyleSheet.create({
   modalView: {
     width: (width * 95) / 100,
     margin: 20,
-    backgroundColor: "white",
+    backgroundColor: "aliceblue",
     borderRadius: 20,
     padding: 35,
     alignItems: "center",

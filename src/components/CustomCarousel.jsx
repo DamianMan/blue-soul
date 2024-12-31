@@ -39,7 +39,7 @@ const CustomCarousel = ({
   setFilteredGroups,
 }) => {
   const isAdmin = auth().currentUser.email === "admin@mail.com";
-  const { removeItemComplexArray } = useContext(ContextData);
+  const { removeItemComplexArray, fetchData } = useContext(ContextData);
   const [group, setGroup] = useState(data);
 
   const handleDeleteGroup = async (id, email) => {
@@ -56,6 +56,7 @@ const CustomCarousel = ({
           setTeacher();
           setUsers([]);
           setFilteredGroups([]);
+          fetchData();
         })
         .catch((err) => Alert.alert(err.data.status, err.data.message));
     } catch (error) {

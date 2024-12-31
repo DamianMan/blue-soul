@@ -51,7 +51,7 @@ export default function App() {
                 Don't you have an account?
                 <Text style={styles.link} onPress={toggleModal}>
                   {" "}
-                  Please Sign Up.
+                  Sign Up.
                 </Text>
               </Text>
               <Divider

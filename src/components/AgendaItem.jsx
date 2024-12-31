@@ -1,8 +1,9 @@
-import React, { memo } from "react";
+import React, { memo, useContext } from "react";
 import { StyleSheet, Alert, View, Text, TouchableOpacity } from "react-native";
 import { Button, RadioButton } from "react-native-paper";
 import { useState } from "react";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { ContextData } from "../context/ContextDataProvider";
 
 function AgendaItem({
   item,
@@ -14,58 +15,31 @@ function AgendaItem({
   selected,
   saved,
 }) {
-  const [checked, setChecked] = useState(selected?.includes(item._id) || false);
+  const [checked, setChecked] = useState(false);
   const [editedItem, setEditedItem] = useState(item);
-  const [disabled, setDisabled] = useState(false);
+  const { programs } = useContext(ContextData);
+  const currentEvent = programs.find((elem) => elem._id === item._id);
 
   const itemPressed = () => {
-    Alert.alert(item.title);
+    Alert.alert(item.title, currentEvent.description);
   };
   const buttonPressed = () => {
     Alert.alert("Show me more");
   };
   const handlePress = () => {
-    console.log("First Edited Item:", editedItem);
-
-    const newEditItem = {
-      ...editedItem,
-      isOptional: !editedItem.isOptional,
-    };
-    console.log("Second Edited Item:", newEditItem);
-
-    setEditedItem(newEditItem);
-    setSelected((prev) => {
-      if (!checked) {
-        return [...prev, item._id];
-      } else {
-        return prev.filter((elem) => elem === item._id);
-      }
-    });
     setChecked((prev) => !prev);
 
-    const filteredChoiceArray = items[date].filter(
-      (elem) => elem.isOptional === true
-    );
-    let newValue = [];
-    let userChoiseElem = [];
     if (!checked) {
-      userChoiseElem = filteredChoiceArray.find(
-        (elem) => elem._id === item._id
-      );
-      console.log("userChoiseElem:", userChoiseElem);
+      setValue((prev) => [...prev, { ...item, isConfirmed: true }]);
 
-      newValue.push({ ...userChoiseElem, isConfirmed: true });
+      // newValue.push({ ...item, isConfirmed: true });
     } else {
-      newValue.filter((elem) => elem._id === item._id);
+      setValue((prev) => prev.filter((elem) => elem._id !== item._id));
+      // newValue.filter((elem) => elem._id === item._id);
     }
 
-    const filterNoChoice = items[date].filter(
-      (elem) => elem.isOptional === false
-    );
-
-    filterNoChoice.length > 0 && newValue.push(filterNoChoice);
-    console.log("EDITED VALUES:", newValue);
-    setValue(newValue);
+    // console.log("EDITED VALUES:", newValue);
+    // setValue(newValue);
   };
 
   return (
@@ -88,9 +62,7 @@ function AgendaItem({
             </RadioButton>
           </View>
 
-          <Text style={styles.itemRadioText}>
-            Tap to confirm or leave blank to denie your presence.
-          </Text>
+          <Text style={styles.itemRadioText}>Tap to confirm</Text>
         </View>
       )}
     </TouchableOpacity>

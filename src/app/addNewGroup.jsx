@@ -24,13 +24,14 @@ import { DatePickerModal } from "react-native-paper-dates";
 import { de, registerTranslation } from "react-native-paper-dates";
 import SelectProgramItem from "../components/SelectProgramItem";
 import SetProgramsModal from "../components/SetProgramsModal";
+import Loader from "../components/Loader";
 registerTranslation("de", de);
 
 const { width, height } = Dimensions.get("window");
 
 function addNewGroup(props) {
   const user = auth().currentUser;
-  const { getGroups } = useContext(ContextData);
+  const { getGroups, fetchData, loading } = useContext(ContextData);
 
   const [isValidEmail, setIsValidEmail] = useState(true);
   const validateEmail = (text) => {
@@ -48,8 +49,6 @@ function addNewGroup(props) {
     numOfPeople: 0,
     hotel: "",
   });
-
-  const [loading, setLoading] = useState(false);
 
   // Date Picker   const [range, setRange] = React.useState({ startDate: undefined, endDate: undefined });
   const [range, setRange] = useState({
@@ -116,7 +115,6 @@ function addNewGroup(props) {
     const { name, fullName, email, token, city, phone, numOfPeople, hotel } =
       infoGroup;
     const { startDate, endDate } = range;
-    setLoading(true);
     if (infoGroup.token === "" || infoGroup.email === "") {
       Alert.alert("Error", "Please fill all field");
     } else if (!isValidEmail) {
@@ -159,10 +157,8 @@ function addNewGroup(props) {
               }));
               setRange({ startDate: undefined, endDate: undefined });
               setProgramGroup([]);
-              getGroups();
               setRangeSelected();
-
-              setLoading(false);
+              fetchData();
             })
             .catch((err) => alert(err));
         } else {
@@ -180,11 +176,7 @@ function addNewGroup(props) {
   };
 
   if (loading) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size={"large"} color="dodgerblue" />
-      </View>
-    );
+    return <Loader />;
   }
   return (
     <KeyboardAvoidingView
@@ -209,7 +201,6 @@ function addNewGroup(props) {
             mode="outlined"
             textColor="#3A4750"
             activeOutlineColor="#2185D5"
-            autoCapitalize="none"
             label="Group Name"
             onChangeText={(text) => setInfoGroup({ ...infoGroup, name: text })}
             style={styles.userInput}
@@ -220,7 +211,6 @@ function addNewGroup(props) {
             textColor="#3A4750"
             activeOutlineColor="#2185D5"
             label="Full Name Teacher In Charge"
-            autoCapitalize="none"
             onChangeText={(text) =>
               setInfoGroup({ ...infoGroup, fullName: text })
             }
@@ -253,7 +243,6 @@ function addNewGroup(props) {
             mode="outlined"
             textColor="#3A4750"
             activeOutlineColor="#2185D5"
-            autoCapitalize="none"
             label="Hotel Name"
             onChangeText={(text) => setInfoGroup({ ...infoGroup, hotel: text })}
             style={styles.userInput}
@@ -392,22 +381,20 @@ function addNewGroup(props) {
                   alignSelf: "center",
                   padding: 1,
                   marginLeft: 10,
-                  marginBottom: 10,
+                  paddingBottom: 20,
                 }}
               />
-              <View>
-                <Button
-                  mode="elevated"
-                  labelStyle={{ color: "#ffff", fontSize: 15 }}
-                  icon={({ size, color }) => (
-                    <Icon name="database-plus" size={30} color="#fff" /> // Custom icon color
-                  )}
-                  style={styles.submitBtn}
-                  onPress={handleSubmit}
-                >
-                  Save
-                </Button>
-              </View>
+              <Button
+                mode="elevated"
+                labelStyle={{ color: "#ffff", fontSize: 15 }}
+                icon={({ size, color }) => (
+                  <Icon name="database-plus" size={30} color="#fff" /> // Custom icon color
+                )}
+                style={styles.submitBtn}
+                onPress={handleSubmit}
+              >
+                Save
+              </Button>
             </>
           )}
         </View>
@@ -420,7 +407,6 @@ export default addNewGroup;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     paddingTop: 10,
     backgroundColor: "#F3F3F3",
     justifyContent: "flex-start",
@@ -433,6 +419,7 @@ const styles = StyleSheet.create({
   form: {
     justifyContent: "center",
     alignItems: "center",
+    paddingBottom: 80,
   },
   userInput: {
     width: (width * 90) / 100,
@@ -442,12 +429,11 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   submitBtn: {
-    backgroundColor: "#2185D5",
+    backgroundColor: "dodgerblue",
     elevation: 10,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.6,
-    marginBottom: 60,
     padding: 5,
   },
   generateBtn: {

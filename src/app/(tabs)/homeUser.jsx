@@ -26,8 +26,6 @@ import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
 import FoodDrinkNotifModal from "../../components/FoodDrinkNotifModal";
-import { router } from "expo-router";
-
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -263,9 +261,16 @@ export default function MyCarousel() {
         </View>
         <View style={styles.viewBackground}>
           <Text style={styles.introTextSub}>
-            Here you can find everything: from sport 🏄🏼‍♂️, activities 🚴🏻 to food
-            🍝 and drinks 🥤 you will have during your days here with us! Have
-            Fun 🤩!
+            Here you can find all you need
+          </Text>
+          <Text style={styles.introTextSub}>
+            From sport 🏄🏼‍♂️, activities 🚴🏻 to food 🍝 and drinks 🥤
+          </Text>
+          <Text style={styles.introTextSub}>
+            Everything you will have during your days here with us! Have Fun 🤩!
+          </Text>
+          <Text style={styles.introTextSub}>
+            Have Fun By <Text style={{ color: "#2185D5" }}>BLUE SOUL</Text> 🤩!
           </Text>
         </View>
 

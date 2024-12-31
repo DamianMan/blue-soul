@@ -34,12 +34,13 @@ export default function RootLayout() {
       } else {
         router.replace("/(tabs)/homeUser");
       }
-    } else if (!user && inAuthGroup) {
-      router.replace("/");
-    } else if (!user && !inAuthGroup) {
-      console.log("No user No AUTH group");
-      router.replace("/");
     }
+    // } else if (!user && inAuthGroup) {
+    //   router.replace("/");
+    // } else if (!user && !inAuthGroup) {
+    //   console.log("No user No AUTH group");
+    //   router.replace("/");
+    // }
   }, [user, initializing]);
   return (
     <Stack screenOptions={{ headerShown: false }}>

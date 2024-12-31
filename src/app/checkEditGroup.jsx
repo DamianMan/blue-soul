@@ -126,6 +126,8 @@ function checkEditGroup(props) {
 
     // Update users related to the group
     const currentUsers = users.filter((item) => item.tokenGroup === token);
+    console.log("USERS:", currentUsers);
+
     if (currentUsers.length > 0) {
       setUser(currentUsers);
     } else {

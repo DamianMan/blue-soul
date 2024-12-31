@@ -21,6 +21,7 @@ import { ContextData } from "../context/ContextDataProvider";
 const { width, height } = Dimensions.get("window");
 
 function pushNotifications(props) {
+  const isNotAdmin = auth().currentUser.email !== "admin@mail.com";
   const { isNotification, getNotificationStatus } = useContext(ContextData);
   const [title, setTitle] = useState("");
   const [groupToken, setGroupToken] = useState("");
@@ -125,6 +126,7 @@ function pushNotifications(props) {
           onChangeText={(text) => setTitle(text)}
           label={"Title Msg"}
           style={styles.userInput}
+          disabled={isNotAdmin}
         />
         <TextInput
           mode="outlined"
@@ -136,6 +138,7 @@ function pushNotifications(props) {
           label={"Group Token"}
           multiline={true}
           style={styles.userInput}
+          disabled={isNotAdmin}
         />
         <TextInput
           mode="outlined"
@@ -146,6 +149,7 @@ function pushNotifications(props) {
           label={"Message"}
           multiline={true}
           style={styles.userInput}
+          disabled={isNotAdmin}
         />
         <Button
           mode="elevated"
@@ -157,6 +161,7 @@ function pushNotifications(props) {
           icon="send"
           style={styles.submitBtn}
           onPress={handleSubmit}
+          disabled={isNotAdmin}
         >
           Send
         </Button>

@@ -32,12 +32,15 @@ function DropdownItem({ item, toggleOption, itemOptional }) {
             style={{ paddingLeft: 3 }}
           />
         </Text>
-        <RadioButton
-          value={item}
-          status={checked ? "checked" : "unchecked"}
-          color="dodgerblue"
-          onPress={handlePress}
-        />
+        <View style={styles.radioBtn}>
+          <RadioButton
+            value={item}
+            status={checked ? "checked" : "unchecked"}
+            color="dodgerblue"
+            onPress={handlePress}
+            uncheckedColor="grey"
+          />
+        </View>
       </View>
     </View>
   );
@@ -61,6 +64,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignSelf: "flex-end",
     flexDirection: "row",
+  },
+  radioBtn: {
+    backgroundColor: "#fff",
+    borderRadius: 50,
+    borderColor: "dodgerblue",
+    borderWidth: 1, // Ensures the border is visible
   },
 });
 export default memo(DropdownItem);

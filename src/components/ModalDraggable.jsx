@@ -29,7 +29,6 @@ function ModalDraggable({
   idGroup,
   tokenGroup,
   date,
-  setReload,
   setIsModal,
   isModal,
   value,
@@ -53,6 +52,7 @@ function ModalDraggable({
     value && checkItemIn();
   }, [draggableList]);
 
+  const { fetchData } = useContext(ContextData);
   const [data, setData] = useState(draggableList);
   const [itemInUserAgenda, setItemInUserAgenda] = useState();
   const [dateUsetItem, setDateUSerItem] = useState();
@@ -89,9 +89,9 @@ function ModalDraggable({
           }
         )
         .then((res) => {
-          setReload();
           setIsDraggableModal(!isDraggableModal);
           setIsModal(!isModal);
+          fetchData();
         })
         .catch((err) => Alert.alert(err.data.status, err.data.message));
     } catch (error) {

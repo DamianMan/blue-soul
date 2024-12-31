@@ -9,7 +9,7 @@ import {
   Dimensions,
   ActivityIndicator,
 } from "react-native";
-import { Button, TextInput } from "react-native-paper";
+import { Button, IconButton, TextInput } from "react-native-paper";
 import { useState, useContext, memo } from "react";
 import { Dropdown } from "react-native-element-dropdown";
 import { ContextData } from "../context/ContextDataProvider";
@@ -53,7 +53,7 @@ function AgendaItemAdmin({ item, idGroup, date }) {
   };
 
   const itemPressed = () => {
-    Alert.alert(`${item._id} - ${item.hour} - ${item.title} `);
+    Alert.alert(item.title, item.description);
   };
   const handleEdit = () => {
     setModalVisible(!modalVisible);
@@ -123,7 +123,8 @@ function AgendaItemAdmin({ item, idGroup, date }) {
           }
         )
         .then((res) => {
-          setReload();
+          Alert.alert(res.data.status, res.data.message);
+          fetchData();
         })
         .catch((err) => Alert.alert(err.data.status, err.data.message));
     } catch (error) {
@@ -133,16 +134,16 @@ function AgendaItemAdmin({ item, idGroup, date }) {
   return (
     <TouchableOpacity onPress={itemPressed} style={styles.item}>
       {isAdmin && (
-        <Button
-          icon={"delete"}
-          textColor="red"
+        <IconButton
+          icon={"delete-circle-outline"}
+          iconColor="red"
           onPress={handleDelete}
           style={{
             position: "absolute",
-            top: -10,
-            right: -20,
+            top: -15,
+            right: -10,
           }}
-        ></Button>
+        />
       )}
       {item.isOptional && <Text style={styles.optional}>Optional</Text>}
 

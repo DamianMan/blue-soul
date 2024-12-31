@@ -13,8 +13,12 @@ import {
 } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import StudenInfoListItem from "./StudenInfoListItem";
+import { IconButton } from "react-native-paper";
 const { width, height } = Dimensions.get("window");
 function StudentModalInfo({ modalVisible, setModalVisible, data }) {
+  const closeModal = () => {
+    setModalVisible();
+  };
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : height}
@@ -28,22 +32,15 @@ function StudentModalInfo({ modalVisible, setModalVisible, data }) {
           onRequestClose={setModalVisible}
         >
           <View style={styles.centeredView}>
+            <IconButton
+              style={{ position: "absolute", right: 0, top: 30 }}
+              icon={"close"}
+              iconColor="red"
+              onPress={closeModal}
+            />
             <View style={styles.modalView}>
               <Text style={styles.modalText}>Info Student</Text>
-              <Pressable
-                style={{ position: "absolute", right: 10, top: 5 }}
-                onPress={() => {
-                  setModalVisible();
-                }}
-              >
-                <Text style={styles.textStyle}>
-                  <MaterialCommunityIcons
-                    name="close-box"
-                    size={24}
-                    color="red"
-                  />
-                </Text>
-              </Pressable>
+
               <StudenInfoListItem data={data} />
             </View>
           </View>
@@ -54,26 +51,15 @@ function StudentModalInfo({ modalVisible, setModalVisible, data }) {
 }
 const styles = StyleSheet.create({
   centeredView: {
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#F3F3F3",
+    backgroundColor: "aliceblue",
   },
   modalView: {
-    marginTop: height / 10,
-    width: (width * 90) / 100,
+    marginTop: 100,
+    width,
+    height,
     borderRadius: 20,
     padding: 45,
     marginVertical: 20,
-    backgroundColor: "aliceblue",
-
-    shadowColor: "blue",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
   },
   button: {
     borderRadius: 20,

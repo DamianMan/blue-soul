@@ -35,7 +35,7 @@ function StudentChipItem({ data }) {
           <IconButton
             icon={() => (
               <MaterialCommunityIcons
-                name="arrow-right"
+                name="information"
                 size={24}
                 color="#3FA2F6"
                 style={{ alignSelf: "flex-end" }}

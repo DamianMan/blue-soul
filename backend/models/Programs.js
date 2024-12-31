@@ -7,6 +7,9 @@ const ProgramsSchema = new mongoose.Schema({
   hour: {
     type: String,
   },
+  description: {
+    type: String,
+  },
   isOptional: {
     type: Boolean,
   },

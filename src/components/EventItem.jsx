@@ -1,11 +1,18 @@
 import React, { useContext } from "react";
-import { View, Text, StyleSheet, Dimensions, Alert } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  Alert,
+  Pressable,
+} from "react-native";
 import { Button } from "react-native-paper";
 import axios from "axios";
 import { ContextData } from "../context/ContextDataProvider";
 
 const { width } = Dimensions.get("window");
-function EventItem({ title, hour, id }) {
+function EventItem({ title, hour, id, description }) {
   const { fetchData } = useContext(ContextData);
   const handleDelete = async () => {
     try {
@@ -31,7 +38,10 @@ function EventItem({ title, hour, id }) {
     }
   };
   return (
-    <View style={styles.container}>
+    <Pressable
+      onPress={() => Alert.alert(title, description)}
+      style={styles.container}
+    >
       <Text>{hour}</Text>
       <Text>{title}</Text>
       <Button
@@ -39,7 +49,7 @@ function EventItem({ title, hour, id }) {
         textColor="red"
         onPress={handleDelete}
       ></Button>
-    </View>
+    </Pressable>
   );
 }
 

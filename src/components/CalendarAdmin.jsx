@@ -8,6 +8,7 @@ import {
   Text,
   Alert,
   FlatList,
+  ScrollView,
 } from "react-native";
 import { Agenda } from "react-native-calendars";
 import AgendaItemAdmin from "./AgendaItemAdmin";
@@ -40,13 +41,20 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup }) {
   const today = new Date();
 
   const [date, setDate] = useState(today);
+  const isDinnerDaySet =
+    Object.keys(currentGroup?.dinner || {}).length > 0 &&
+    currentGroup.dinner[date] &&
+    isAdmin;
 
   useEffect(() => {
     setDinner(
-      currentGroup.dinner[date] || {
+      (isDinnerDaySet && currentGroup?.dinner[date]) || {
         firstDish: [],
         secondDish: [],
         side: [],
+        isDeadline: false,
+        hours: 0,
+        min: 0,
       }
     );
   }, [dinner, date]);
@@ -70,25 +78,25 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup }) {
   const [draggableList, setDraggableList] = useState([]);
   const [visible, setVisible] = useState(false);
   const [count, setCount] = useState();
-  const [event, setEvent] = useState();
+  const [events, setEvents] = useState();
   const [confPeople, setConfPeople] = useState([]);
   const [data, setData] = useState();
   const [timeoutTime, setTimeoutTime] = useState(true);
-  const [dinner, setDinner] = useState(
-    currentGroup?.dinner[date] || {
-      firstDish: [],
-      secondDish: [],
-      side: [],
-      isDeadline: false,
-      hours: 0,
-      min: 0,
-    }
-  );
+  const [dinner, setDinner] = useState({
+    firstDish: [],
+    secondDish: [],
+    side: [],
+    isDeadline: false,
+    hours: 0,
+    min: 0,
+  });
 
   let remaining =
-    (new Date(currentGroup.dinner[date]?.deadline).getTime() -
-      new Date().getTime()) /
-    1000;
+    currentGroup.dinner !== undefined
+      ? (new Date(currentGroup.dinner[date]?.deadline).getTime() -
+          new Date().getTime()) /
+        1000
+      : 0;
 
   const [dishes, setDishes] = useState({
     first: "",
@@ -122,33 +130,35 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup }) {
 
   // Count People optional event
   const handlePeople = () => {
-    console.log("users:", usersFilterdeByGroup);
     let count = 0;
     let confirmedPeople = [];
+    let confPeople2 = {};
     usersFilterdeByGroup.forEach((elem) => {
-      console.log("Evente:", elem.program[date]);
       const nums = elem.program[date].reduce((tot, objItem) => {
         const isConf = objItem.isConfirmed ? 1 : 0;
-        console.log("Adding:", isConf);
         if (isConf === 1) {
           confirmedPeople.push(elem);
+          const title = objItem.title;
+          // Check if the title already exists in confPeople2; if not, initialize it
+          if (!confPeople2[title]) {
+            confPeople2[title] = [];
+          }
+
+          // Append the current user to the array for the title
+          confPeople2[title].push(elem);
         }
         return tot + isConf;
       }, 0);
       count += nums;
     });
-    console.log("COunt:", count);
 
-    const currentEvent = usersFilterdeByGroup[0].program[date].find(
-      (item) => item.isConfirmed
-    );
-    console.log("Info Confirmed People:", confirmedPeople);
+    const currentEvents = Object.keys(confPeople2);
 
     if (count > 0) {
       setVisible((prev) => !prev);
-      setConfPeople(confirmedPeople);
+      setConfPeople(confPeople2);
       setCount(count);
-      setEvent(currentEvent.title);
+      setEvents(currentEvents);
     } else {
       alert("No people confirmed or not event optionable!");
     }
@@ -188,15 +198,10 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup }) {
           }
         )
         .then((res) => {
-          fetchData();
-
           Alert.alert(res.data.status, res.data.message);
-          setDinner({
-            firstDish: [],
-            secondDish: [],
-            side: [],
-          });
+
           setIsModalDinner((prev) => !prev);
+          fetchData();
         })
         .catch((res) => Alert.alert(res.data.status, res.data.message));
     } catch (error) {
@@ -205,6 +210,14 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup }) {
   };
 
   const handleSaveDinner = async () => {
+    if (
+      dinner.firstDish.length === 0 ||
+      dinner.secondDish.length === 0 ||
+      dinner.side.length === 0
+    ) {
+      alert("Please fill all dinner input!");
+      return;
+    }
     try {
       // Save the initial dinner
       await saveDinner(dishes.hours, dishes.min);
@@ -234,7 +247,9 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup }) {
       <View
         style={{
           justifyContent:
-            currentGroup.dinner.hasOwnProperty(date) && isAdmin
+            Object.keys(currentGroup?.dinner || {}).length > 0 &&
+            currentGroup.dinner[date] &&
+            isAdmin
               ? "space-between"
               : "flex-end",
           alignItems: "center",
@@ -242,14 +257,16 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup }) {
           flexDirection: "row",
         }}
       >
-        {currentGroup.dinner.hasOwnProperty(date) && isAdmin && (
-          <DinnerPdfButton
-            currentUsers={usersFilterdeByGroup}
-            textBtn="Dinner Pdf"
-            event="Dinner"
-            date={date}
-          />
-        )}
+        {Object.keys(currentGroup?.dinner || {}).length > 0 &&
+          currentGroup.dinner[date] &&
+          isAdmin && (
+            <DinnerPdfButton
+              currentUsers={usersFilterdeByGroup}
+              textBtn="Dinner Pdf"
+              event="Dinner"
+              date={date}
+            />
+          )}
 
         <Button
           icon={"close"}
@@ -340,7 +357,7 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup }) {
             hideDialog={hideDialog}
             count={count}
             total={currentGroup.peopleCount}
-            event={event}
+            events={events}
             peopleList={confPeople}
           />
         </View>
@@ -358,7 +375,7 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup }) {
         }}
       >
         <View style={styles.centeredView}>
-          <View style={styles.modalView}>
+          <View style={[styles.modalView, styles.eventModal]}>
             <Button
               icon="close"
               textColor="red"
@@ -416,7 +433,6 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup }) {
               idGroup={idGroup}
               tokenGroup={currentGroup.tokenGroup}
               date={date}
-              setReload={setReload}
               setIsModal={setIsModal}
               isModal={isModal}
               value={value}
@@ -430,7 +446,7 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup }) {
 
       <Modal
         animationType="slide"
-        transparent={true}
+        presentationStyle="fullScreen"
         visible={isModalDinner}
         onRequestClose={() => {
           Alert.alert("Modal has been closed.");
@@ -438,14 +454,24 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup }) {
         }}
       >
         <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.titleMenu}>Set Menu Of the Day</Text>
-            <Button
-              icon="close"
-              textColor="red"
-              onPress={() => setIsModalDinner(!isModalDinner)}
-              style={styles.buttonClose}
-            ></Button>
+          <ScrollView contentContainerStyle={styles.modalView}>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                width,
+              }}
+            >
+              <Text style={styles.titleMenu}>Set Menu Of the Day</Text>
+
+              <IconButton
+                icon="close"
+                iconColor="red"
+                onPress={() => setIsModalDinner(!isModalDinner)}
+                style={{ marginRight: 20 }}
+              />
+            </View>
 
             <TextInput
               label="First Dish"
@@ -456,6 +482,10 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup }) {
               right={
                 <TextInput.Icon
                   onPress={() => {
+                    if (dishes.first === "") {
+                      alert("Please insert some text!");
+                      return;
+                    }
                     setDinner((prev) => ({
                       ...prev,
                       firstDish: [...prev.firstDish, dishes.first],
@@ -484,6 +514,10 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup }) {
               right={
                 <TextInput.Icon
                   onPress={() => {
+                    if (dishes.second === "") {
+                      alert("Please insert some text!");
+                      return;
+                    }
                     setDinner((prev) => ({
                       ...prev,
                       secondDish: [...prev.secondDish, dishes.second],
@@ -512,6 +546,10 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup }) {
               right={
                 <TextInput.Icon
                   onPress={() => {
+                    if (dishes.side === "") {
+                      alert("Please insert some text!");
+                      return;
+                    }
                     setDinner((prev) => ({
                       ...prev,
                       side: [...prev.side, dishes.side],
@@ -557,14 +595,7 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup }) {
                 }
               />
               {dinner.isDeadline && (
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    marginHorizontal: 10,
-                  }}
-                >
+                <View style={styles.deadlineView}>
                   <View style={styles.timer}>
                     <CountdownCircleTimer
                       isPlaying
@@ -581,10 +612,13 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup }) {
                   </View>
 
                   <View>
-                    <Text>Deadline active for</Text>
-                    {dinner.deadline && (
+                    <Text>Deadline ended up!</Text>
+                    {dinner.isDeadline && (
                       <Text style={{ color: "dodgerblue" }}>
-                        {dinner.hours} h - {dinner.min} m
+                        {dinner.hours} h - {dinner.min} m{" "}
+                        <Text style={{ fontSize: 10, color: "grey" }}>
+                          (duration)
+                        </Text>
                       </Text>
                     )}
                   </View>
@@ -598,11 +632,11 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup }) {
               buttonColor="dodgerblue"
               textColor="aliceblue"
               onPress={handleSaveDinner}
-              style={{ marginVertical: 20, alignSelf: "center" }}
+              style={{ marginTop: 30, alignSelf: "center" }}
             >
               Save Dinner
             </Button>
-          </View>
+          </ScrollView>
         </View>
       </Modal>
     </View>
@@ -614,11 +648,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   modalView: {
-    margin: 20,
     backgroundColor: "white",
     borderRadius: 20,
-    padding: 15,
+    paddingHorizontal: 15,
+    paddingVertical: 40,
     alignItems: "flex-start",
+  },
+  eventModal: {
+    margin: 20,
+    padding: 35,
+    alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -633,6 +672,7 @@ const styles = StyleSheet.create({
     right: -10,
     top: 5,
   },
+  buttonCloseDinner: { position: "absolute", top: 30, right: 0 },
   button: {
     borderRadius: 20,
     padding: 10,
@@ -714,7 +754,7 @@ const styles = StyleSheet.create({
     height: height / 2,
   },
   dinnerInput: {
-    width: (width * 70) / 100,
+    width: (width * 80) / 100,
     backgroundColor: "aliceblue",
   },
   titleMenu: {
@@ -724,10 +764,27 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   deadline: {
-    justifyContent: "center",
+    justifyContent: "flex-start",
     flexDirection: "row",
     backgroundColor: "aliceblue",
     padding: 20,
+    borderRadius: 12,
+    width: (width * 80) / 100,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
+  },
+  deadlineView: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginHorizontal: 10,
   },
   timer: {
     position: "absolute",

@@ -689,21 +689,20 @@ app.post("/api/addProgramDayDrag", async (req, res) => {
         return item;
       }
     });
-    if (newArray && dateUsetItem) {
-      const updateUsers = await Users.updateMany(
-        { tokenGroup },
-        {
-          $pull: {
-            [`program.${dateUsetItem}`]: { _id: itemInUserAgenda._id },
-          },
-          $set: {
-            [`program.${date}`]: editNewArray,
-          },
-        }
-      );
 
-      console.log("Updated Users program:", updateUsers);
-    }
+    const updateUsers = await Users.updateMany(
+      { tokenGroup },
+      {
+        $pull: {
+          [`program.${dateUsetItem}`]: { _id: itemInUserAgenda._id },
+        },
+        $set: {
+          [`program.${date}`]: editNewArray,
+        },
+      }
+    );
+
+    console.log("Updated Users program:", updateUsers);
 
     res.json({
       message: "Program Added & Ordered Succesfully!",
