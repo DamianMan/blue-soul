@@ -674,12 +674,13 @@ app.post("/api/addProgramDayDrag", async (req, res) => {
     console.log("Added & Ordered Program to Group:", updatedGRoup);
 
     // Update Users Program
+    const currentEvent = await Programs.findOne({ _id: value });
 
     const updateUsers = await Users.updateMany(
       { tokenGroup },
       {
-        $set: {
-          [`program.${date}`]: data,
+        $push: {
+          [`program.${date}`]: currentEvent,
         },
       }
     );

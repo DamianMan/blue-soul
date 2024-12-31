@@ -130,67 +130,73 @@ function SignUpModal({ isModalVisibile, toggleModal }) {
         >
           <ScrollView contentContainerStyle={styles.formContainer}>
             <View style={styles.centeredView}>
-              <FontAwesome
-                name="user-circle-o"
-                size={24}
-                color="#48CFCB"
-                style={{ alignSelf: "center" }}
-              />
+              {loading ? (
+                <Loader />
+              ) : (
+                <>
+                  <FontAwesome
+                    name="user-circle-o"
+                    size={24}
+                    color="#48CFCB"
+                    style={{ alignSelf: "center" }}
+                  />
 
-              <Text style={styles.modalText}>Registration User</Text>
-              <Divider />
+                  <Text style={styles.modalText}>Registration User</Text>
+                  <Divider />
 
-              <View style={{ paddingVertical: 40, paddingHorizontal: 10 }}>
-                <TextInput
-                  label="Full Name"
-                  value={infoUser}
-                  textColor="#303841"
-                  activeOutlineColor="#2185D5"
-                  style={styles.userInput}
-                  mode="outlined"
-                  onChangeText={(text) =>
-                    setInfoUser((prev) => ({ ...prev, fullName: text }))
-                  }
-                />
-
-                <TextInput
-                  label="Email"
-                  autoCapitalize="none"
-                  keyboardType="email-address"
-                  value={infoUser}
-                  textColor="#303841"
-                  error={!isValid}
-                  activeOutlineColor="#2185D5"
-                  style={styles.userInput}
-                  mode="outlined"
-                  onChangeText={handleEmail}
-                />
-                <TextInput
-                  label="Password"
-                  autoCapitalize="none"
-                  value={infoUser}
-                  textColor="#303841"
-                  activeOutlineColor="#2185D5"
-                  style={styles.userInput}
-                  mode="outlined"
-                  right={
-                    <TextInput.Icon
-                      icon="eye"
-                      onPress={() => setIsHide(!isHide)}
+                  <View style={{ paddingVertical: 40, paddingHorizontal: 10 }}>
+                    <TextInput
+                      label="Full Name"
+                      value={infoUser}
+                      textColor="#303841"
+                      activeOutlineColor="#2185D5"
+                      style={styles.userInput}
+                      mode="outlined"
+                      onChangeText={(text) =>
+                        setInfoUser((prev) => ({ ...prev, fullName: text }))
+                      }
                     />
-                  }
-                  secureTextEntry={isHide}
-                  onChangeText={(text) =>
-                    setInfoUser((prev) => ({ ...prev, password: text }))
-                  }
-                />
-              </View>
-              <Pressable
-                style={[styles.button, styles.buttonSubmit]}
-                onPress={handleSubmit}
-              >
-                <Text style={styles.textStyle}>Sign Up</Text>
-              </Pressable>
+
+                    <TextInput
+                      label="Email"
+                      autoCapitalize="none"
+                      keyboardType="email-address"
+                      value={infoUser}
+                      textColor="#303841"
+                      error={!isValid}
+                      activeOutlineColor="#2185D5"
+                      style={styles.userInput}
+                      mode="outlined"
+                      onChangeText={handleEmail}
+                    />
+                    <TextInput
+                      label="Password"
+                      autoCapitalize="none"
+                      value={infoUser}
+                      textColor="#303841"
+                      activeOutlineColor="#2185D5"
+                      style={styles.userInput}
+                      mode="outlined"
+                      right={
+                        <TextInput.Icon
+                          icon="eye"
+                          onPress={() => setIsHide(!isHide)}
+                        />
+                      }
+                      secureTextEntry={isHide}
+                      onChangeText={(text) =>
+                        setInfoUser((prev) => ({ ...prev, password: text }))
+                      }
+                    />
+                  </View>
+                  <Pressable
+                    style={[styles.button, styles.buttonSubmit]}
+                    onPress={handleSubmit}
+                  >
+                    <Text style={styles.textStyle}>Sign Up</Text>
+                  </Pressable>
+                </>
+              )}
             </View>
           </ScrollView>
         </KeyboardAvoidingView>
