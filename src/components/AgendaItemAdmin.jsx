@@ -98,14 +98,17 @@ function AgendaItemAdmin({ item, idGroup, date }) {
 
   const handleDelete = async () => {
     console.log("Old Program:", currenGroup.program);
-    const newProgram = currenGroup.program[date].filter((obj) => {
+    const { tokenGroup } = currenGroup;
+    const newProgramGroup = currenGroup.program[date].filter((obj) => {
       if (obj._id !== item._id) {
         return obj;
       } else {
         return value;
       }
     });
-    console.log("NEW PROGRMA:", newProgram);
+
+    console.log("NEW PROGRMA:", newProgramGroup);
+    const itemId = item._id;
 
     try {
       await axios
@@ -113,8 +116,10 @@ function AgendaItemAdmin({ item, idGroup, date }) {
           "https://blue-soul-app.onrender.com/api/deleteProgramDay",
           {
             idGroup,
+            tokenGroup,
             date,
-            newProgram,
+            newProgramGroup,
+            itemId,
           },
           {
             headers: {

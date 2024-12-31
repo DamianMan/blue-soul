@@ -678,8 +678,8 @@ app.post("/api/addProgramDayDrag", async (req, res) => {
     const updateUsers = await Users.updateMany(
       { tokenGroup },
       {
-        $push: {
-          [`program.${date}`]: value,
+        $set: {
+          [`program.${date}`]: data,
         },
       }
     );
@@ -729,7 +729,7 @@ app.post("/api/editProgramDay", async (req, res) => {
 
 // Delete Program Day
 app.post("/api/deleteProgramDay", async (req, res) => {
-  const { idGroup, date, newProgram } = req.body;
+  const { idGroup, tokenGroup, date, newProgramGroup, itemId } = req.body;
   console.log(req.body);
   try {
     const fieldPath = `program.${date}`;
@@ -741,12 +741,23 @@ app.post("/api/deleteProgramDay", async (req, res) => {
       query,
       {
         $set: {
-          [fieldPath]: newProgram,
+          [fieldPath]: newProgramGroup,
         },
       },
       { new: true }
     );
     console.log("Updated Group:", updatedGRoup);
+
+    const updateUsers = await Users.updateMany(
+      { tokenGroup },
+      {
+        $pull: {
+          [fieldPath]: itemId,
+        },
+      }
+    );
+
+    console.log("Updated users:", updateUsers);
 
     res.json({ message: "Program deleted Succesfully!", status: "Success" });
   } catch (error) {
