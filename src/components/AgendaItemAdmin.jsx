@@ -59,7 +59,7 @@ function AgendaItemAdmin({ item, idGroup, date }) {
     setModalVisible(!modalVisible);
   };
 
-  const handleSave = async () => {
+  const handleSaveEdit = async () => {
     console.log("Old Program:", currenGroup.program);
     const programToAdd = programs.find((item) => item._id === value);
     const newProgram = currenGroup.program[date].map((obj) => {
@@ -70,14 +70,19 @@ function AgendaItemAdmin({ item, idGroup, date }) {
       }
     });
     console.log("New PRogram:", newProgram);
+    const { tokenGroup } = currenGroup;
+    const filterIdValue = value;
     try {
       await axios
         .post(
           "https://blue-soul-app.onrender.com/api/editProgramDay",
           {
             idGroup,
+            tokenGroup,
             date,
             newProgram,
+            filterIdValue,
+            programToAdd,
           },
           {
             headers: { "Content-Type": "application/json" },
@@ -181,98 +186,57 @@ function AgendaItemAdmin({ item, idGroup, date }) {
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            {loading ? (
-              <ActivityIndicator size={"large"} color={"dodgerblue"} />
-            ) : (
-              <>
-                <Button
-                  icon="close"
-                  textColor="red"
-                  onPress={() => setModalVisible(!modalVisible)}
-                  style={styles.buttonClose}
-                ></Button>
-                <Dropdown
-                  style={[
-                    styles.dropdown,
-                    isFocus && { borderColor: "dodgerblue" },
-                  ]}
-                  placeholderStyle={styles.placeholderStyle}
-                  selectedTextStyle={styles.selectedTextStyle}
-                  inputSearchStyle={styles.inputSearchStyle}
-                  iconStyle={styles.iconStyle}
-                  data={dataPrograms()}
-                  maxHeight={300}
-                  labelField="label"
-                  valueField="value"
-                  placeholder={
-                    !isFocus ? `${item.hour} - ${item.title}` : "..."
-                  }
-                  searchPlaceholder="Search..."
-                  value={value}
-                  onFocus={() => setIsFocus(true)}
-                  onBlur={() => {
-                    setIsFocus(false);
-                  }}
-                  onChange={(item) => {
-                    console.log("SelecITEM:", item);
-                    setValue(item.value);
-                    setIsFocus(false);
-                  }}
-                  renderLeftIcon={() => (
-                    <AntDesign
-                      style={styles.icon}
-                      color={isFocus ? "dodgerblue" : "black"}
-                      name="Safety"
-                      size={20}
-                    />
-                  )}
+            <IconButton
+              icon="close"
+              iconColor="red"
+              onPress={() => setModalVisible(!modalVisible)}
+              style={styles.buttonClose}
+            />
+            <Dropdown
+              style={[
+                styles.dropdown,
+                isFocus && { borderColor: "dodgerblue" },
+              ]}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              inputSearchStyle={styles.inputSearchStyle}
+              iconStyle={styles.iconStyle}
+              data={dataPrograms()}
+              maxHeight={300}
+              labelField="label"
+              valueField="value"
+              placeholder={!isFocus ? `${item.hour} - ${item.title}` : "..."}
+              searchPlaceholder="Search..."
+              value={value}
+              onFocus={() => setIsFocus(true)}
+              onBlur={() => {
+                setIsFocus(false);
+              }}
+              onChange={(item) => {
+                console.log("SelecITEM:", item);
+                setValue(item.value);
+                setIsFocus(false);
+              }}
+              renderLeftIcon={() => (
+                <AntDesign
+                  style={styles.icon}
+                  color={isFocus ? "dodgerblue" : "black"}
+                  name="Safety"
+                  size={20}
                 />
-                <Dropdown
-                  style={[
-                    styles.dropdown,
-                    isFocus && { borderColor: "dodgerblue" },
-                  ]}
-                  placeholderStyle={styles.placeholderStyle}
-                  selectedTextStyle={styles.selectedTextStyle}
-                  inputSearchStyle={styles.inputSearchStyle}
-                  iconStyle={styles.iconStyle}
-                  data={datesProgram()}
-                  maxHeight={300}
-                  labelField="label"
-                  valueField="value"
-                  placeholder={!isFocusDate ? "Select item" : "..."}
-                  searchPlaceholder="Search..."
-                  value={dateValue}
-                  onFocus={() => setIsFocusDate(true)}
-                  onBlur={() => {
-                    setIsFocusDate(false);
-                  }}
-                  onChange={(item) => {
-                    console.log("SelecITEM:", item);
-                    setDateValue(item.value);
-                    setIsFocusDate(false);
-                  }}
-                  renderLeftIcon={() => (
-                    <AntDesign
-                      style={styles.icon}
-                      color={isFocusDate ? "dodgerblue" : "black"}
-                      name="Safety"
-                      size={20}
-                    />
-                  )}
-                />
-                <Button
-                  icon="file-document-edit-outline"
-                  mode="elevated"
-                  textColor="aliceblue"
-                  buttonColor="dodgerblue"
-                  style={styles.buttonSave}
-                  onPress={handleSave}
-                >
-                  Save
-                </Button>
-              </>
-            )}
+              )}
+            />
+
+            <Button
+              icon="file-document-edit-outline"
+              mode="elevated"
+              textColor="aliceblue"
+              buttonColor="dodgerblue"
+              style={styles.buttonSave}
+              onPress={handleSaveEdit}
+            >
+              Save Edit
+            </Button>
           </View>
         </View>
       </Modal>
@@ -356,8 +320,8 @@ const styles = StyleSheet.create({
   },
   buttonClose: {
     position: "absolute",
-    right: -10,
-    top: 5,
+    right: 0,
+    top: 0,
   },
   dropdown: {
     height: 50,

@@ -700,7 +700,8 @@ app.post("/api/addProgramDayDrag", async (req, res) => {
 
 // Edit Program day
 app.post("/api/editProgramDay", async (req, res) => {
-  const { idGroup, date, newProgram } = req.body;
+  const { idGroup, tokenGroup, date, newProgram, filterIdValue, programToAdd } =
+    req.body;
   console.log(req.body);
 
   try {
@@ -717,6 +718,20 @@ app.post("/api/editProgramDay", async (req, res) => {
       { new: true }
     );
     console.log("Updated Group:", updatedGRoup);
+
+    const updateUsers = await Users.updateMany(
+      { tokenGroup },
+      {
+        $pull: { [`program.${date}`]: { _id: filterIdValue } },
+      },
+      {
+        $push: {
+          [`program.${date}`]: programToAdd,
+        },
+      }
+    );
+
+    console.log("Updated editing users:", updateUsers);
 
     res.json({ message: "Program edited Succesfully!", status: "Success" });
   } catch (error) {
