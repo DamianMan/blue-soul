@@ -719,18 +719,24 @@ app.post("/api/editProgramDay", async (req, res) => {
     );
     console.log("Updated Group:", updatedGRoup);
 
-    const updateUsers = await Users.updateMany(
+    const pullInUsers = await Users.updateMany(
       { tokenGroup },
       {
         $pull: { [`program.${date}`]: { _id: itemId } },
+      }
+    );
 
+    const pushInUsers = await Users.updateMany(
+      { tokenGroup },
+      {
         $push: {
           [`program.${date}`]: programToAdd,
         },
       }
     );
 
-    console.log("Updated editing users:", updateUsers);
+    console.log("Updated pulling in users:", pullInUsers);
+    console.log("Updated psuhing in users:", pushInUsers);
 
     res.json({ message: "Program edited Succesfully!", status: "Success" });
   } catch (error) {
