@@ -723,8 +723,7 @@ app.post("/api/editProgramDay", async (req, res) => {
       { tokenGroup },
       {
         $pull: { [`program.${date}`]: { _id: filterIdValue } },
-      },
-      {
+
         $push: {
           [`program.${date}`]: programToAdd,
         },
