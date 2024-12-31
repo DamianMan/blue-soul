@@ -71,7 +71,7 @@ function AgendaItemAdmin({ item, idGroup, date }) {
     });
     console.log("New PRogram:", newProgram);
     const { tokenGroup } = currenGroup;
-    const filterIdValue = value;
+    const itemId = item._id;
     try {
       await axios
         .post(
@@ -81,7 +81,7 @@ function AgendaItemAdmin({ item, idGroup, date }) {
             tokenGroup,
             date,
             newProgram,
-            filterIdValue,
+            itemId,
             programToAdd,
           },
           {

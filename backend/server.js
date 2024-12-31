@@ -700,7 +700,7 @@ app.post("/api/addProgramDayDrag", async (req, res) => {
 
 // Edit Program day
 app.post("/api/editProgramDay", async (req, res) => {
-  const { idGroup, tokenGroup, date, newProgram, filterIdValue, programToAdd } =
+  const { idGroup, tokenGroup, date, newProgram, itemId, programToAdd } =
     req.body;
   console.log(req.body);
 
@@ -722,7 +722,7 @@ app.post("/api/editProgramDay", async (req, res) => {
     const updateUsers = await Users.updateMany(
       { tokenGroup },
       {
-        $pull: { [`program.${date}`]: { _id: filterIdValue } },
+        $pull: { [`program.${date}`]: { _id: itemId } },
 
         $push: {
           [`program.${date}`]: programToAdd,
