@@ -655,14 +655,7 @@ app.post("/api/deleteNameService", async (req, res) => {
 
 // Add Program Day
 app.post("/api/addProgramDayDrag", async (req, res) => {
-  const {
-    idGroup,
-    tokenGroup,
-    date,
-    newArray,
-    dateUsetItem,
-    itemInUserAgenda,
-  } = req.body;
+  const { idGroup, tokenGroup, date, data, value } = req.body;
   console.log(req.body);
   try {
     // Update Group Program Admin
@@ -673,7 +666,7 @@ app.post("/api/addProgramDayDrag", async (req, res) => {
       query,
       {
         $set: {
-          [`program.${date}`]: newArray,
+          [`program.${date}`]: data,
         },
       },
       { new: true }
@@ -682,22 +675,11 @@ app.post("/api/addProgramDayDrag", async (req, res) => {
 
     // Update Users Program
 
-    const editNewArray = newArray.map((item) => {
-      if (item._id === itemInUserAgenda._id) {
-        return itemInUserAgenda;
-      } else {
-        return item;
-      }
-    });
-
     const updateUsers = await Users.updateMany(
       { tokenGroup },
       {
-        $pull: {
-          [`program.${dateUsetItem}`]: { _id: itemInUserAgenda._id },
-        },
-        $set: {
-          [`program.${date}`]: editNewArray,
+        $push: {
+          [`program.${date}`]: value,
         },
       }
     );

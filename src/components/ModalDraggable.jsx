@@ -34,28 +34,29 @@ function ModalDraggable({
   value,
   usersFilterdeByGroup,
 }) {
+  console.log("Value Drag:", value);
   useEffect(() => {
     setData(draggableList);
-    const checkItemIn = () => {
-      usersFilterdeByGroup.forEach((i) => {
-        Object.entries(i.program).forEach(([key, item]) => {
-          console.log("item:", item);
-          const isValueIn = item.find((elem) => elem._id === value._id);
-          if (isValueIn) {
-            setDateUSerItem(key);
-            setItemInUserAgenda(isValueIn);
-          }
-          console.log(`Elem found in date ${key}:`, isValueIn);
-        });
-      });
-    };
-    value && checkItemIn();
+    // const checkItemIn = () => {
+    //   usersFilterdeByGroup.forEach((i) => {
+    //     Object.entries(i.program).forEach(([key, item]) => {
+    //       console.log("item:", item);
+    //       const isValueIn = item.find((elem) => elem._id === value._id);
+    //       if (isValueIn) {
+    //         setDateUSerItem(key);
+    //         setItemInUserAgenda(isValueIn);
+    //       }
+    //       console.log(`Elem found in date ${key}:`, isValueIn);
+    //     });
+    //   });
+    // };
+    // value && checkItemIn();
   }, [draggableList]);
 
   const { fetchData } = useContext(ContextData);
   const [data, setData] = useState(draggableList);
   const [itemInUserAgenda, setItemInUserAgenda] = useState();
-  const [dateUsetItem, setDateUSerItem] = useState();
+  const [dateUsetItem, setDateUSerItem] = useState(date);
 
   async function onReordered(fromIndex, toIndex) {
     const copy = [...data]; // Don't modify react data in-place
@@ -67,11 +68,9 @@ function ModalDraggable({
   }
 
   const handleDragSave = async () => {
-    const newArray = data.map((item) => item);
+    console.log(`User item in date ${dateUsetItem}`, value);
 
-    console.log(`User item in date ${dateUsetItem}`, itemInUserAgenda);
-
-    console.log(`"NEW ARRAY:" in date ${date}`, newArray);
+    console.log(`"NEW ARRAY:" in date ${date}`, tokenGroup);
     try {
       await axios
         .post(
@@ -80,9 +79,8 @@ function ModalDraggable({
             idGroup,
             tokenGroup,
             date,
-            newArray,
-            dateUsetItem,
-            itemInUserAgenda,
+            data,
+            value,
           },
           {
             headers: { "Content-Type": "application/json" },
