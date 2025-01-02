@@ -811,7 +811,7 @@ app.post("/api/moveEvent", async (req, res) => {
         [`program.${dateValue}`]: groupItemToFilter,
       },
     });
-    const currentUsers = await Users.find(tokenGroup);
+    const currentUsers = await Users.find({ tokenGroup });
     await Promise.all(
       currentUsers.map(async (user) => {
         const itemToFilter = user.program[date].find(
