@@ -820,7 +820,7 @@ app.post("/api/moveEvent", async (req, res) => {
         if (!itemToFilter) return; // Skip if no matching item is found
 
         const query = {
-          id: user._id,
+          _id: user._id,
         };
         const deletedItem = await Users.findOneAndUpdate(query, {
           $pull: { [`program.${date}`]: { _id: itemToFilter._id } },
