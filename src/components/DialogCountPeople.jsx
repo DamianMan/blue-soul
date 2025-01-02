@@ -22,7 +22,7 @@ function DialogCountPeople({
 }) {
   return (
     <Modal
-      animationType="fade"
+      animationType="slide"
       presentationStyle="fullScreen"
       visible={visible}
       onRequestClose={hideDialog}

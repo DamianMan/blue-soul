@@ -1,9 +1,7 @@
-import React, { memo, useContext } from "react";
+import React from "react";
 import { StyleSheet, Alert, View, Text, TouchableOpacity } from "react-native";
-import { Button, RadioButton } from "react-native-paper";
+import { RadioButton } from "react-native-paper";
 import { useState } from "react";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { ContextData } from "../context/ContextDataProvider";
 
 function AgendaItem({
   item,
@@ -16,16 +14,11 @@ function AgendaItem({
   saved,
 }) {
   const [checked, setChecked] = useState(false);
-  const [editedItem, setEditedItem] = useState(item);
-  const { programs } = useContext(ContextData);
-  const currentEvent = programs.find((elem) => elem._id === item._id);
 
   const itemPressed = () => {
-    Alert.alert(item.title, currentEvent.description);
+    Alert.alert(item.title, item.description);
   };
-  const buttonPressed = () => {
-    Alert.alert("Show me more");
-  };
+
   const handlePress = () => {
     setChecked((prev) => !prev);
 

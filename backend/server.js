@@ -10,6 +10,7 @@ const bcrypt = require("bcrypt");
 const Service = require("./models/Services");
 const axios = require("axios");
 const admin = require("firebase-admin");
+const User = require("./models/Users");
 
 require("dotenv").config({ path: "../.env" });
 // require("../blue-soul-9434a-firebase-adminsdk-yau4q-0a78a8df74.json");
@@ -785,6 +786,64 @@ app.post("/api/deleteProgramDay", async (req, res) => {
     res.json({
       message: "Group not found or edit not possibile!",
       status: "Failed",
+    });
+  }
+});
+
+// Move Event from date to date
+app.post("/api/moveEvent", async (req, res) => {
+  const { itemId, idGroup, tokenGroup, dateValue, date } = req.body;
+  try {
+    const currentGroup = await Schools.findOne({ _id: idGroup });
+    const groupItemToFilter = currentGroup.program[date].find(
+      (elem) => elem._id === itemId
+    );
+    const groupQuery = {
+      _id: idGroup,
+    };
+    const filterGroup = await Schools.findOneAndUpdate(groupQuery, {
+      $pull: {
+        [`program.${date}`]: { _id: groupItemToFilter._id },
+      },
+    });
+    const addToGroup = await Schools.findOneAndUpdate(groupQuery, {
+      $push: {
+        [`program.${dateValue}`]: groupItemToFilter,
+      },
+    });
+    const currentUsers = await User.find(tokenGroup);
+    await Promise.all(
+      currentUsers.map(async (user) => {
+        const itemToFilter = user.program[date].find(
+          (item) => item._id === itemId
+        );
+        const query = {
+          id: user._id,
+        };
+        const deletedItem = await Users.findOneAndUpdate(query, {
+          $pull: { [`program.${date}`]: { _id: itemToFilter._id } },
+        });
+        const addItemToNewDate = await Users.findOneAndUpdate(query, {
+          $push: {
+            [`program.${dateValue}`]: itemToFilter,
+          },
+        });
+        console.log(
+          `Edited user to delete item: ${deletedItem} - and to add item: ${addItemToNewDate} `
+        );
+      })
+    );
+
+    console.log("Updated Group:", addToGroup);
+
+    res.json({
+      status: "Success",
+      message: `Succesfully moved event in date ${dateValue}`,
+    });
+  } catch (error) {
+    res.json({
+      status: "Failed",
+      message: `Error to moving event in date ${dateValue}`,
     });
   }
 });

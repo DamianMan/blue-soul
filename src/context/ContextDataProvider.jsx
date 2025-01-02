@@ -87,22 +87,27 @@ function ContextDataProvider({ children }) {
     }
   };
 
+  // Sort Discendent
+
+  const sortedArray = (array) => {
+    array.sort((a, b) => {
+      const [hoursA, minutesA] = a.hour.split(":").map(Number);
+      const [hoursB, minutesB] = b.hour.split(":").map(Number);
+
+      const floatA = hoursA + minutesA / 60;
+      const floatB = hoursB + minutesB / 60;
+
+      return floatA - floatB; // Ascending order
+    });
+    return array;
+  };
   // Get Programs
   const getPrograms = async () => {
     try {
       await axios
         .get("https://blue-soul-app.onrender.com/api/getPrograms")
         .then((res) => {
-          const sortedArray = res.data.sort((a, b) => {
-            const [hoursA, minutesA] = a.hour.split(":").map(Number);
-            const [hoursB, minutesB] = b.hour.split(":").map(Number);
-
-            const floatA = hoursA + minutesA / 60;
-            const floatB = hoursB + minutesB / 60;
-
-            return floatA - floatB; // Ascending order
-          });
-          setPrograms(sortedArray);
+          setPrograms(sortedArray(res.data));
           setLoading(false);
         })
         .catch((err) => {
@@ -159,6 +164,7 @@ function ContextDataProvider({ children }) {
     addItem,
     removeItem,
     removeItemComplexArray,
+    sortedArray,
   };
   return (
     <ContextData.Provider value={appValues}>{children}</ContextData.Provider>

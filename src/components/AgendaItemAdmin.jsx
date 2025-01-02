@@ -20,17 +20,26 @@ import auth from "@react-native-firebase/auth";
 const { width, height } = Dimensions.get("window");
 
 function AgendaItemAdmin({ item, idGroup, date }) {
+  useEffect(() => {
+    setDataEdit(dataPrograms());
+    setDataMove(datesProgram());
+  }, []);
   const isAdmin = auth().currentUser.email === "admin@mail.com";
 
-  const [modalVisible, setModalVisible] = useState(false);
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [moveModalVisible, setMoveModalVisible] = useState(false);
+
   const [value, setValue] = useState();
+  const [dataEdit, setDataEdit] = useState();
   const [dateValue, setDateValue] = useState();
+  const [dataMove, setDataMove] = useState();
 
   const { programs, groups, loading, fetchData } = useContext(ContextData);
   const [isFocus, setIsFocus] = useState(false);
   const [isFocusDate, setIsFocusDate] = useState(false);
 
-  const currenGroup = groups.find((item) => item._id === idGroup);
+  const currentGroup = groups.find((item) => item._id === idGroup);
+  const { tokenGroup } = currentGroup;
 
   const dataPrograms = () => {
     const newArray = programs.map((item) => ({
@@ -42,7 +51,7 @@ function AgendaItemAdmin({ item, idGroup, date }) {
 
   const datesProgram = () => {
     let displyDates = [];
-    Object.entries(currenGroup.program).forEach(([key, value]) => {
+    Object.entries(currentGroup.program).forEach(([key, value]) => {
       displyDates.push(key);
     });
     const newDates = displyDates.map((elem) => ({
@@ -55,14 +64,17 @@ function AgendaItemAdmin({ item, idGroup, date }) {
   const itemPressed = () => {
     Alert.alert(item.title, item.description);
   };
-  const handleEdit = () => {
-    setModalVisible(!modalVisible);
+  const toggleEdit = () => {
+    setEditModalVisible(!editModalVisible);
+  };
+  const toggleMove = () => {
+    setMoveModalVisible(!moveModalVisible);
   };
 
   const handleSaveEdit = async () => {
-    console.log("Old Program:", currenGroup.program);
+    console.log("Old Program:", currentGroup.program);
     const programToAdd = programs.find((item) => item._id === value);
-    const newProgram = currenGroup.program[date].map((obj) => {
+    const newProgram = currentGroup.program[date].map((obj) => {
       if (obj._id === item._id) {
         return programToAdd;
       } else {
@@ -70,7 +82,6 @@ function AgendaItemAdmin({ item, idGroup, date }) {
       }
     });
     console.log("New PRogram:", newProgram);
-    const { tokenGroup } = currenGroup;
     const itemId = item._id;
     try {
       await axios
@@ -90,7 +101,7 @@ function AgendaItemAdmin({ item, idGroup, date }) {
         )
         .then((res) => {
           fetchData();
-          setModalVisible(!modalVisible);
+          setEditModalVisible(!editModalVisible);
         })
         .catch((err) => Alert.alert(err.data.status, err.data.message));
       console.log("New Program:", newProgram);
@@ -101,10 +112,52 @@ function AgendaItemAdmin({ item, idGroup, date }) {
     }
   };
 
+  const handleSaveMove = async () => {
+    if (dateValue === undefined) {
+      alert("Please select a date");
+      return;
+    }
+    if (
+      itemId === undefined ||
+      idGroup === undefined ||
+      tokenGroup === undefined ||
+      dateValue === undefined ||
+      date === undefined
+    ) {
+      alert("Failed to move event!");
+      return;
+    }
+    const itemId = item._id;
+
+    try {
+      await axios
+        .post(
+          "https://blue-soul-app.onrender.com/api/moveEvent",
+          {
+            itemId,
+            idGroup,
+            tokenGroup,
+            dateValue,
+            date,
+          },
+          {
+            headers: { "Content-Type": "application/json" },
+          }
+        )
+        .then((res) => {
+          Alert.alert(res.data.status, res.data.message);
+          setMoveModalVisible((prev) => !prev);
+          fetchData();
+        })
+        .catch((res) => Alert.alert(res.data.status, res.data.message));
+    } catch (error) {
+      alert(`Error making resquest for moving event in date ${dateValue}`);
+    }
+  };
   const handleDelete = async () => {
-    console.log("Old Program:", currenGroup.program);
-    const { tokenGroup } = currenGroup;
-    const newProgramGroup = currenGroup.program[date].filter((obj) => {
+    console.log("Old Program:", currentGroup.program);
+    const { tokenGroup } = currentGroup;
+    const newProgramGroup = currentGroup.program[date].filter((obj) => {
       if (obj._id !== item._id) {
         return obj;
       } else {
@@ -150,8 +203,8 @@ function AgendaItemAdmin({ item, idGroup, date }) {
           onPress={handleDelete}
           style={{
             position: "absolute",
-            top: -15,
-            right: -10,
+            bottom: -5,
+            right: -5,
           }}
         />
       )}
@@ -161,27 +214,41 @@ function AgendaItemAdmin({ item, idGroup, date }) {
         <Text style={styles.itemTitleText}>{item.hour}</Text>
         <Text style={styles.itemDurationText}>{item.title}</Text>
       </View>
-      <View style={styles.itemButtonContainer}>
-        {isAdmin && (
+      {isAdmin && (
+        <View style={styles.itemButtonContainer}>
           <Button
             icon={"file-document-edit-outline"}
-            mode="outlined"
+            mode="elevated"
             textColor="dodgerblue"
             buttonColor="#fff"
-            onPress={handleEdit}
+            onPress={toggleEdit}
+            style={styles.editBtn}
           >
             Edit
           </Button>
-        )}
-      </View>
 
+          {item.isOptional && (
+            <Button
+              icon={"calendar-month-outline"}
+              mode="elevated"
+              textColor="dodgerblue"
+              buttonColor="#fff"
+              onPress={toggleMove}
+              style={styles.editBtn}
+            >
+              Move
+            </Button>
+          )}
+        </View>
+      )}
+      {/* EDIT MODAL */}
       <Modal
         animationType="slide"
         transparent={true}
-        visible={modalVisible}
+        visible={editModalVisible}
         onRequestClose={() => {
           Alert.alert("Modal has been closed.");
-          setModalVisible(!modalVisible);
+          setEditModalVisible(!editModalVisible);
         }}
       >
         <View style={styles.centeredView}>
@@ -189,7 +256,7 @@ function AgendaItemAdmin({ item, idGroup, date }) {
             <IconButton
               icon="close"
               iconColor="red"
-              onPress={() => setModalVisible(!modalVisible)}
+              onPress={() => setEditModalVisible(!editModalVisible)}
               style={styles.buttonClose}
             />
             <Dropdown
@@ -201,7 +268,7 @@ function AgendaItemAdmin({ item, idGroup, date }) {
               selectedTextStyle={styles.selectedTextStyle}
               inputSearchStyle={styles.inputSearchStyle}
               iconStyle={styles.iconStyle}
-              data={dataPrograms()}
+              data={dataEdit}
               maxHeight={300}
               labelField="label"
               valueField="value"
@@ -240,12 +307,82 @@ function AgendaItemAdmin({ item, idGroup, date }) {
           </View>
         </View>
       </Modal>
+
+      {/* MOVE DATE MODAL */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={moveModalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setMoveModalVisible(!moveModalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <IconButton
+              icon="close"
+              iconColor="red"
+              onPress={() => setMoveModalVisible(!moveModalVisible)}
+              style={styles.buttonClose}
+            />
+            <Dropdown
+              style={[
+                styles.dropdown,
+                isFocus && { borderColor: "dodgerblue" },
+              ]}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              inputSearchStyle={styles.inputSearchStyle}
+              iconStyle={styles.iconStyle}
+              data={dataMove}
+              maxHeight={300}
+              labelField="label"
+              valueField="value"
+              placeholder={!isFocus ? `Select date` : "..."}
+              searchPlaceholder="Search..."
+              value={dateValue}
+              onFocus={() => setIsFocus(true)}
+              onBlur={() => {
+                setIsFocus(false);
+              }}
+              onChange={(item) => {
+                console.log("SelecITEM:", item);
+                console.log("Date value:", item.value);
+
+                setDateValue(item.value);
+                setIsFocus(false);
+              }}
+              renderLeftIcon={() => (
+                <AntDesign
+                  style={styles.icon}
+                  color={isFocus ? "dodgerblue" : "black"}
+                  name="Safety"
+                  size={20}
+                />
+              )}
+            />
+
+            <Button
+              icon="calendar-month-outline"
+              mode="elevated"
+              textColor="aliceblue"
+              buttonColor="dodgerblue"
+              style={styles.buttonSave}
+              onPress={handleSaveMove}
+            >
+              Save Move
+            </Button>
+          </View>
+        </View>
+      </Modal>
     </TouchableOpacity>
   );
 }
 const styles = StyleSheet.create({
   item: {
-    padding: 20,
+    paddingVertical: 30,
+    paddingHorizontal: 20,
     backgroundColor: "aliceblue",
     borderBottomWidth: 1,
     borderBottomColor: "lightgrey",
@@ -267,9 +404,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   itemButtonContainer: {
-    flex: 1,
-    alignItems: "flex-end",
+    position: "absolute",
+    top: 0,
+    right: 0,
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginRight: 20,
+  },
+  editBtn: {
+    marginHorizontal: 3,
   },
   emptyItem: {
     paddingLeft: 20,

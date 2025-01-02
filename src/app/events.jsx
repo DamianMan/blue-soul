@@ -17,6 +17,7 @@ const { height, width } = Dimensions.get("window");
 function events(props) {
   const { programs, loading } = useContext(ContextData);
   const [visible, setVisible] = useState(false);
+  console.log("Programs:", programs);
 
   const handlePress = () => {
     setVisible((prev) => !prev);

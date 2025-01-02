@@ -126,7 +126,7 @@ function DialogAddEvent({ visible, hideDialog }) {
                   {time.minutes < 10 ? `0${time.minutes}` : time.minutes}
                 </Text>
                 <TextInput
-                  label="Event"
+                  label="Event Title"
                   value={event}
                   style={styles.input}
                   textColor="#000"
@@ -149,7 +149,7 @@ function DialogAddEvent({ visible, hideDialog }) {
                   onPress={handleSave}
                   style={{ fontWeight: "bold", marginTop: 10 }}
                 >
-                  Save
+                  Save Event
                 </Button>
               </>
             )}

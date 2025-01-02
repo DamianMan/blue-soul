@@ -55,11 +55,11 @@ const { height, width } = Dimensions.get("window");
 // };
 
 function CalendarUser(props) {
-  const { programs, groups, users, loading, fetchData } =
+  const { programs, groups, users, loading, fetchData, sortedArray } =
     useContext(ContextData);
 
   useEffect(() => {
-    const ITEMS = (programs, data) => {
+    const ITEMS = (data) => {
       transformedData = {};
       // let data = {
       //   "2024-11-19": ["673b5ad113a096ad05640ca9", "673b5e2b13a096ad05640cb2"],
@@ -70,11 +70,12 @@ function CalendarUser(props) {
       //   "2024-11-24": ["673b5d6a13a096ad05640cad"],
       // };
       for (const [key, value] of Object.entries(data)) {
-        transformedData[key] = value;
+        sortedList = sortedArray(value);
+        transformedData[key] = sortedList;
       }
       setItems(transformedData);
     };
-    ITEMS(programs, userDb.program || program);
+    ITEMS(userDb.program || program);
   }, [items]);
 
   const today = new Date();
