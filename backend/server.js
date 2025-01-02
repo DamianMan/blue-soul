@@ -815,7 +815,7 @@ app.post("/api/moveEvent", async (req, res) => {
     await Promise.all(
       currentUsers.map(async (user) => {
         const itemToFilter = user.program[date].find(
-          (item) => item._id === itemId
+          (elem) => elem._id === itemId
         );
         if (!itemToFilter) return; // Skip if no matching item is found
 
