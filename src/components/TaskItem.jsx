@@ -15,7 +15,8 @@ import auth from "@react-native-firebase/auth";
 const { width, height } = Dimensions.get("window");
 
 function TaskItem({ text, img, icon, url }) {
-  const isAdmin = auth().currentUser.email === "admin@mail.com";
+  const currentUser = auth().currentUser;
+  const isAdmin = currentUser.email === "admin@mail.com";
   return (
     <Link href={`/${url}`} asChild>
       <Pressable style={styles.container}>
