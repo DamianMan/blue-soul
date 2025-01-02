@@ -817,20 +817,22 @@ app.post("/api/moveEvent", async (req, res) => {
         const itemToFilter = user.program[date].find(
           (item) => item._id === itemId
         );
-        const query = {
-          id: user._id,
-        };
-        const deletedItem = await Users.findOneAndUpdate(query, {
-          $pull: { [`program.${date}`]: { _id: itemToFilter._id } },
-        });
-        const addItemToNewDate = await Users.findOneAndUpdate(query, {
-          $push: {
-            [`program.${dateValue}`]: itemToFilter,
-          },
-        });
-        console.log(
-          `Edited user to delete item: ${deletedItem} - and to add item: ${addItemToNewDate} `
-        );
+        if (itemToFilter) {
+          const query = {
+            id: user._id,
+          };
+          const deletedItem = await Users.findOneAndUpdate(query, {
+            $pull: { [`program.${date}`]: { _id: itemToFilter._id } },
+          });
+          const addItemToNewDate = await Users.findOneAndUpdate(query, {
+            $push: {
+              [`program.${dateValue}`]: itemToFilter,
+            },
+          });
+          console.log(
+            `Edited user to delete item: ${deletedItem} - and to add item: ${addItemToNewDate} `
+          );
+        }
       })
     );
 

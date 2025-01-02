@@ -117,6 +117,8 @@ function AgendaItemAdmin({ item, idGroup, date }) {
       alert("Please select a date");
       return;
     }
+    const itemId = item._id;
+
     if (
       itemId === undefined ||
       idGroup === undefined ||
@@ -124,10 +126,11 @@ function AgendaItemAdmin({ item, idGroup, date }) {
       dateValue === undefined ||
       date === undefined
     ) {
-      alert("Failed to move event!");
+      alert(
+        `Failed to move event! itemID:${itemId} - idGroup:${idGroup} - tokenGroup:${tokenGroup} - dateValue:${dateValue} - date:${date}`
+      );
       return;
     }
-    const itemId = item._id;
 
     try {
       await axios
