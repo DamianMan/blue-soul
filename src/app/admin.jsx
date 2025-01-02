@@ -87,6 +87,7 @@ function AdminPanel(props) {
             img={item.image}
             icon={item.icon}
             url={item.url}
+            isAdmin={admin}
           />
         )}
         keyExtractor={(item) => item.name}

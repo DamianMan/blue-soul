@@ -811,7 +811,7 @@ app.post("/api/moveEvent", async (req, res) => {
         [`program.${dateValue}`]: groupItemToFilter,
       },
     });
-    const currentUsers = await User.find(tokenGroup);
+    const currentUsers = await Users.find(tokenGroup);
     await Promise.all(
       currentUsers.map(async (user) => {
         const itemToFilter = user.program[date].find(
@@ -845,7 +845,7 @@ app.post("/api/moveEvent", async (req, res) => {
   } catch (error) {
     res.json({
       status: "Failed",
-      message: `Error to moving event in date ${dateValue}`,
+      message: `Error to moving event in date ${dateValue} - error:${error}`,
     });
   }
 });
