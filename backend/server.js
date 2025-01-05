@@ -755,8 +755,6 @@ app.post("/api/deleteProgramDay", async (req, res) => {
   console.log(req.body);
 
   try {
-    const userBeforeUpdate = await Users.findOne({ tokenGroup });
-    console.log("User Before Update:", userBeforeUpdate);
     query = {
       _id: idGroup,
     };
@@ -771,23 +769,24 @@ app.post("/api/deleteProgramDay", async (req, res) => {
     );
     console.log("Updated Group:", updatedGRoup);
 
+    const itemIdObj = mongoose.Types.ObjectId(itemId);
+    console.log("Item ID (ObjectId):", itemIdObj);
+
     const updateUsers = await Users.updateMany(
       { tokenGroup },
       {
         $pull: {
-          [`program.${date}`]: { _id: itemId },
+          [`program.${date}`]: { _id: itemIdObj },
         },
       }
     );
 
     console.log("Updated users:", updateUsers);
-    const userAfterUpdate = await Users.findOne({ tokenGroup });
-    console.log("User After Update:", userAfterUpdate);
 
     res.json({ message: "Program deleted Succesfully!", status: "Success" });
   } catch (error) {
     res.json({
-      message: "Group not found or edit not possibile!",
+      message: error.message || "Group not found or edit not possible!",
       status: "Failed",
     });
   }
