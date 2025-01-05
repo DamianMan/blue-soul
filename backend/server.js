@@ -753,7 +753,10 @@ app.post("/api/editProgramDay", async (req, res) => {
 app.post("/api/deleteProgramDay", async (req, res) => {
   const { idGroup, tokenGroup, date, newProgramGroup, itemId } = req.body;
   console.log(req.body);
+
   try {
+    const userBeforeUpdate = await Users.findOne({ tokenGroup });
+    console.log("User Before Update:", userBeforeUpdate);
     query = {
       _id: idGroup,
     };
@@ -772,12 +775,14 @@ app.post("/api/deleteProgramDay", async (req, res) => {
       { tokenGroup },
       {
         $pull: {
-          [`program.${date}`]: { _id: itemId },
+          [`program.${date}`]: { _id: mongoose.Types.ObjectId(itemId) },
         },
       }
     );
 
     console.log("Updated users:", updateUsers);
+    const userAfterUpdate = await Users.findOne({ tokenGroup });
+    console.log("User After Update:", userAfterUpdate);
 
     res.json({ message: "Program deleted Succesfully!", status: "Success" });
   } catch (error) {
