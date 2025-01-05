@@ -775,7 +775,7 @@ app.post("/api/deleteProgramDay", async (req, res) => {
       { tokenGroup },
       {
         $pull: {
-          [`program.${date}`]: { _id: mongoose.Types.ObjectId(itemId) },
+          [`program.${date}`]: { _id: itemId },
         },
       }
     );
