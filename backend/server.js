@@ -675,13 +675,12 @@ app.post("/api/addProgramDayDrag", async (req, res) => {
     console.log("Added & Ordered Program to Group:", updatedGRoup);
 
     // Update Users Program
-    const currentEvent = await Programs.findOne({ _id: value });
 
     const updateUsers = await Users.updateMany(
       { tokenGroup },
       {
         $push: {
-          [`program.${date}`]: currentEvent,
+          [`program.${date}`]: value,
         },
       }
     );
@@ -769,14 +768,11 @@ app.post("/api/deleteProgramDay", async (req, res) => {
     );
     console.log("Updated Group:", updatedGRoup);
 
-    const itemIdObj = mongoose.Types.ObjectId(itemId);
-    console.log("Item ID (ObjectId):", itemIdObj);
-
     const updateUsers = await Users.updateMany(
       { tokenGroup },
       {
         $pull: {
-          [`program.${date}`]: { _id: itemIdObj },
+          [`program.${date}`]: { _id: itemId },
         },
       }
     );
