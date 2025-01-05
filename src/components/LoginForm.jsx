@@ -13,6 +13,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { router } from "expo-router";
 const { width } = Dimensions.get("window");
 import auth from "@react-native-firebase/auth";
+import Loader from "./Loader";
 
 export default function LoginForm(props) {
   const [email, setEmail] = useState("");
@@ -24,8 +25,12 @@ export default function LoginForm(props) {
 
   const signIn = async () => {
     try {
+      setLoading(true);
       await auth().signInWithEmailAndPassword(email, password);
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
+
       alert(error);
     }
   };
@@ -55,6 +60,9 @@ export default function LoginForm(props) {
       setPassword("");
     }
   };
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <View

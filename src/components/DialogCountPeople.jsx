@@ -59,7 +59,7 @@ function DialogCountPeople({
               </View>
             )}
           />
-          <View style={{ alignSelf: "center" }}>
+          <View style={{ alignSelf: "center", alignItems: "center" }}>
             <Text style={styles.title}>Total</Text>
             <Text>
               {count}/{total}

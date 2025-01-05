@@ -52,7 +52,8 @@ const { width, height } = Dimensions.get("window");
 
 function AdminPanel(props) {
   useEffect(() => {
-    const isAdmin = auth().currentUser.email === "admin@mail.com";
+    const currentUser = auth().currentUser;
+    const isAdmin = currentUser.email === "admin@mail.com";
     isAdmin
       ? setOptions(Tasks)
       : setOptions(Tasks.filter((item) => item.isAccessible === true));

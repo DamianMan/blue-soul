@@ -4,6 +4,7 @@ import PushNotificationBtn from "../components/PushNotificationBtn";
 import { useState, useEffect, useContext } from "react";
 import auth from "@react-native-firebase/auth";
 import { Redirect, router, useSegments } from "expo-router";
+import Loader from "../components/Loader";
 
 export default function RootLayout() {
   const segments = useSegments();
@@ -32,18 +33,30 @@ export default function RootLayout() {
       if (user.email === "admin@mail.com" || user.email === "staff@mail.com") {
         router.replace("/admin");
       } else {
-        router.replace("/(tabs)/homeUser");
+        router.replace("/homeUser");
       }
     }
-    // } else if (!user && inAuthGroup) {
+    // else if (!user && inAuthGroup) {
     //   router.replace("/");
     // } else if (!user && !inAuthGroup) {
     //   console.log("No user No AUTH group");
     //   router.replace("/");
     // }
   }, [user, initializing]);
+
   return (
-    <Stack screenOptions={{ headerShown: false }}>
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        animationEnabled: true,
+        gestureEnabled: true,
+        cardStyleInterpolator: ({ current, next, layouts }) => ({
+          cardStyle: {
+            opacity: current.progress,
+          },
+        }),
+      }}
+    >
       <Stack.Screen name="index" options={{ title: "Login" }} />
       <Stack.Screen
         name="admin"
@@ -90,7 +103,7 @@ export default function RootLayout() {
       <Stack.Screen
         name="events"
         options={{
-          title: "Add Program Event",
+          title: "Add Event",
           headerTitleAlign: "center",
 
           headerShown: true,

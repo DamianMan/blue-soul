@@ -754,8 +754,6 @@ app.post("/api/deleteProgramDay", async (req, res) => {
   const { idGroup, tokenGroup, date, newProgramGroup, itemId } = req.body;
   console.log(req.body);
   try {
-    const fieldPath = `program.${date}`;
-
     query = {
       _id: idGroup,
     };
@@ -763,7 +761,7 @@ app.post("/api/deleteProgramDay", async (req, res) => {
       query,
       {
         $set: {
-          [fieldPath]: newProgramGroup,
+          [`program.${date}`]: newProgramGroup,
         },
       },
       { new: true }
@@ -774,7 +772,7 @@ app.post("/api/deleteProgramDay", async (req, res) => {
       { tokenGroup },
       {
         $pull: {
-          [fieldPath]: { _id: itemId },
+          [`program.${date}`]: { _id: itemId },
         },
       }
     );

@@ -1,15 +1,20 @@
-import React, { useContext } from "react";
+import React, { useState } from "react";
 import { View, Text, Pressable } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import auth from "@react-native-firebase/auth";
 import { ContextData } from "../context/ContextDataProvider";
 import { router } from "expo-router";
+import Loader from "./Loader";
 
 function LogoutBtn(props) {
+  const [loading, setLoading] = useState(false);
   const signOut = async () => {
     try {
+      setLoading(true);
+
       await auth().signOut();
       router.replace("/");
+      setLoading(false);
     } catch (error) {
       alert(error);
     }
@@ -18,6 +23,9 @@ function LogoutBtn(props) {
   const handleLogout = () => {
     signOut();
   };
+  if (loading) {
+    return <Loader />;
+  }
   return (
     <Pressable
       style={{

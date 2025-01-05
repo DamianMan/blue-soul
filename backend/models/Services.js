@@ -19,6 +19,7 @@ const ServicesSchema = new mongoose.Schema({
   drinks: {
     type: Array,
   },
+  mainImage: { type: String },
   images: {
     type: Array,
   },

@@ -26,6 +26,7 @@ import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
 import FoodDrinkNotifModal from "../../components/FoodDrinkNotifModal";
+import Loader from "../../components/Loader";
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -36,10 +37,8 @@ Notifications.setNotificationHandler({
 
 const { width, height } = Dimensions.get("window");
 
-const HeightIMG = height / 2;
-
 export default function MyCarousel() {
-  const { services, users, getUsers, loading, getGroups } =
+  const { services, users, loading, fetchData, groups } =
     useContext(ContextData);
   const user = auth().currentUser;
   const scrollRef = useAnimatedRef();
@@ -52,12 +51,12 @@ export default function MyCarousel() {
   const responseListener = useRef();
   const { getNotificationStatus } = useContext(ContextData);
   useEffect(() => {
-    const loadUsers = async () => {
-      await getUsers();
-      await getGroups();
+    const loadData = async () => {
+      await fetchData();
     };
-    loadUsers();
-  }, [notification]);
+    // Check if `groups` has changed meaningfully before calling fetchData
+    loadData();
+  }, []); // if groups changes reload
 
   useEffect(() => {
     if (user) {
@@ -69,7 +68,7 @@ export default function MyCarousel() {
       }
       // setIsNotification(userFound.isNotification);
     }
-  }, [users]);
+  }, []);
   // Notification
 
   useEffect(() => {
@@ -199,6 +198,8 @@ export default function MyCarousel() {
     });
   };
   const imageAnimatedStyle = useAnimatedStyle(() => {
+    const HeightIMG = height / 2;
+
     return {
       transform: [
         {
@@ -233,7 +234,7 @@ export default function MyCarousel() {
         scrollEventThrottle={16}
         entering={FadeIn}
       >
-        <ActivityIndicator size={"large"} color={"#2185D5"} />
+        <Loader />
       </Animated.ScrollView>
     );
   }
@@ -267,7 +268,7 @@ export default function MyCarousel() {
             From sport 🏄🏼‍♂️, activities 🚴🏻 to food 🍝 and drinks 🥤
           </Text>
           <Text style={styles.introTextSub}>
-            Everything you will have during your days here with us! Have Fun 🤩!
+            Everything you will have during your days here with us!
           </Text>
           <Text style={styles.introTextSub}>
             Have Fun By <Text style={{ color: "#2185D5" }}>BLUE SOUL</Text> 🤩!
@@ -341,7 +342,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width,
-    height: HeightIMG,
+    height: height / 2,
     opacity: 0.8,
   },
   introTextSub: {

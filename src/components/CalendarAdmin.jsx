@@ -26,6 +26,7 @@ import DinnerPdfButton from "./DinnerPdfButton";
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 import CountDownItem from "./CountDownItem";
 import auth from "@react-native-firebase/auth";
+import { Platform } from "react-native";
 
 const { width, height } = Dimensions.get("window");
 
@@ -129,7 +130,7 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup }) {
   };
 
   // Count People optional event
-  const handlePeople = () => {
+  const handlePeopleCount = () => {
     let count = 0;
     let confirmedPeople = [];
     let confPeople2 = {};
@@ -243,7 +244,9 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup }) {
   }
 
   return (
-    <View style={{ flex: 1, width, paddingTop: 50 }}>
+    <View
+      style={{ flex: 1, width, paddingTop: Platform.OS === "ios" ? 50 : 10 }}
+    >
       <View
         style={{
           justifyContent:
@@ -319,8 +322,10 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup }) {
         <View
           style={{
             justifyContent: "space-between",
+            alignItems: "center",
             flexDirection: "row",
-            padding: 30,
+            padding: 20,
+            width,
           }}
         >
           <Button
@@ -348,7 +353,7 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup }) {
             mode="elevated"
             textColor="dodgerblue"
             style={styles.buttonCalendar}
-            onPress={handlePeople}
+            onPress={handlePeopleCount}
           >
             People
           </Button>

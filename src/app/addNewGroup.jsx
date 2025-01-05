@@ -188,12 +188,12 @@ function addNewGroup(props) {
           style={{
             color: "#2185D5",
             fontSize: 18,
-            paddingBottom: 10,
-            textAlign: "left",
+            letterSpacing: 1,
+            paddingVertical: 10,
             fontWeight: "bold",
           }}
         >
-          Please fill all the fields with the info group
+          Fill all fields with info group
         </Text>
         <View style={styles.form}>
           <TextInput

@@ -5,10 +5,11 @@ import {
   StyleSheet,
   Dimensions,
   SafeAreaView,
+  Text,
 } from "react-native";
 import { ContextData } from "../context/ContextDataProvider";
 import EventItem from "../components/EventItem";
-import { Button } from "react-native-paper";
+import { Button, Icon } from "react-native-paper";
 import DialogAddEvent from "../components/DialogAddEvent";
 import Loader from "../components/Loader";
 
@@ -29,6 +30,12 @@ function events(props) {
 
   return (
     <View style={styles.container}>
+      <View style={{ paddingTop: 15 }}>
+        <Icon source="playlist-edit" color={"grey"} size={30} />
+      </View>
+
+      <Text style={styles.title}>All Events List Below</Text>
+
       <SafeAreaView style={styles.list}>
         <FlatList
           showsVerticalScrollIndicator={false}
@@ -66,19 +73,25 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width,
-    backgroundColor: "aliceblue",
+    backgroundColor: "#fff",
   },
   list: {
-    padding: 15,
-
+    paddingVertical: 15,
     height: height / 1.5,
     backgroundColor: "#fff",
   },
   addButtonView: {
     flex: 1,
-    marginTop: 50,
-    justifyContent: "flex-start",
-    alignSelf: "center",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  title: {
+    color: "dodgerblue",
+    fontSize: 16,
+    letterSpacing: 1,
+    fontWeight: "bold",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

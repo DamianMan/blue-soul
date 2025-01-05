@@ -26,13 +26,6 @@ function nameServiceDetail(props) {
 
   const foodDrinkArray = [...currentService.foods, ...currentService.drinks];
 
-  useEffect(() => {
-    const loadServices = async () => {
-      getServices();
-    };
-    loadServices();
-  }, [services]);
-
   const ImageItem = ({ url }) => {
     return (
       <View style={styles.bgImage}>
@@ -89,13 +82,7 @@ function nameServiceDetail(props) {
             style={styles.imageBg}
             resizeMode="cover"
             source={{
-              uri: `${
-                params.nameActivity === "sports"
-                  ? "https://blue-soul.de/wp-content/uploads/2021/01/Cat.png"
-                  : params.nameActivity === "activities"
-                  ? "https://blue-soul.de/wp-content/uploads/2021/01/Tauchen.png"
-                  : "https://images.unsplash.com/photo-1598866594230-a7c12756260f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDV8fHxlbnwwfHx8fHw%3D"
-              }`,
+              uri: `${currentService.mainImage}`,
             }}
           />
           <BlurView intensity={60} tint="light" style={styles.introTitle}>
