@@ -7,6 +7,8 @@ import {
   Alert,
   ActivityIndicator,
   FlatList,
+  ScrollView,
+  Image,
 } from "react-native";
 import auth from "@react-native-firebase/auth";
 import Animated, {
@@ -50,26 +52,23 @@ export default function MyCarousel() {
   const notificationListener = useRef();
   const responseListener = useRef();
   const { getNotificationStatus } = useContext(ContextData);
-  useEffect(() => {
-    const loadData = async () => {
-      await fetchData();
-    };
-    // Check if `groups` has changed meaningfully before calling fetchData
-    loadData();
-  }, []); // if groups changes reload
 
-  useEffect(() => {
-    if (user) {
-      userFound = users.find((item) => item.email === user?.email);
-      if (userFound) {
-        setIsNotification(userFound.isNotification);
+  // useEffect(() => {
+  //   if (user) {
+  //     userFound = users.find((item) => item.email === user?.email);
+  //     if (userFound) {
+  //       setIsNotification(userFound.isTrip);
 
-        console.log("Current User Notif status:", userFound.isNotification);
-      }
-      // setIsNotification(userFound.isNotification);
-    }
-  }, []);
+  //       console.log("Current User Notif status:", userFound.isNotification);
+  //     }
+  //     // setIsNotification(userFound.isNotification);
+  //   }
+  // }, []);
   // Notification
+
+  const loadData = async () => {
+    await fetchData();
+  };
 
   useEffect(() => {
     registerForPushNotificationsAsync().then((token) => {
@@ -88,8 +87,14 @@ export default function MyCarousel() {
 
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
+        const notificationData = response.notification.request.content.data;
+
         console.log(response);
-        setNotification(true);
+        setIsNotification(notificationData.isTrip);
+        if (notificationData.isEdit) {
+          Alert.alert("Fecthing Data", "Loading data...");
+          loadData();
+        }
 
         // Active Status when notification is open and the function set the value to true.
         // getNotificationStatus(
@@ -190,64 +195,56 @@ export default function MyCarousel() {
       .catch((err) => console.log("Error:", err));
   }
 
-  const scrollOffset = useScrollViewOffset(scrollRef);
-  const fadeOut = () => {
-    fadeInOpacity.value = withTiming(0, {
-      duration: 1000,
-      easing: Easing.linear,
-    });
-  };
-  const imageAnimatedStyle = useAnimatedStyle(() => {
-    const HeightIMG = height / 2;
+  // const scrollOffset = useScrollViewOffset(scrollRef);
+  // const fadeOut = () => {
+  //   fadeInOpacity.value = withTiming(0, {
+  //     duration: 1000,
+  //     easing: Easing.linear,
+  //   });
+  // };
+  // const imageAnimatedStyle = useAnimatedStyle(() => {
+  //   const HeightIMG = height / 2;
 
-    return {
-      transform: [
-        {
-          translateY: interpolate(
-            scrollOffset.value,
-            [-HeightIMG, 0, HeightIMG],
-            [-HeightIMG / 2, 0, HeightIMG * 0.75]
-          ),
-        },
-        {
-          scale: interpolate(
-            scrollOffset.value,
-            [-HeightIMG, 0, HeightIMG],
-            [2, 1, 1]
-          ),
-        },
-      ],
-      opacity: interpolate(
-        scrollOffset.value,
-        [0, HeightIMG / 2, HeightIMG], // Adjust this range to control the fade-out speed
-        [0.9, 0.5, 0], // Starts fully opaque, fades out halfway, and becomes invisible
-        Extrapolation.CLAMP
-      ),
-    };
-  });
+  //   return {
+  //     transform: [
+  //       {
+  //         translateY: interpolate(
+  //           scrollOffset.value,
+  //           [-HeightIMG, 0, HeightIMG],
+  //           [-HeightIMG / 2, 0, HeightIMG * 0.75]
+  //         ),
+  //       },
+  //       {
+  //         scale: interpolate(
+  //           scrollOffset.value,
+  //           [-HeightIMG, 0, HeightIMG],
+  //           [2, 1, 1]
+  //         ),
+  //       },
+  //     ],
+  //     opacity: interpolate(
+  //       scrollOffset.value,
+  //       [0, HeightIMG / 2, HeightIMG], // Adjust this range to control the fade-out speed
+  //       [1, 0.5, 1], // Starts fully opaque, fades out halfway, and becomes invisible
+  //       Extrapolation.CLAMP
+  //     ),
+  //   };
+  // });
 
   if (loading) {
     return (
-      <Animated.ScrollView
+      <ScrollView
         contentContainerStyle={[styles.container, { justifyContent: "center" }]}
-        ref={scrollRef}
-        scrollEventThrottle={16}
-        entering={FadeIn}
       >
         <Loader />
-      </Animated.ScrollView>
+      </ScrollView>
     );
   }
 
   return (
-    <Animated.ScrollView
-      style={styles.container}
-      ref={scrollRef}
-      scrollEventThrottle={16}
-      entering={FadeIn}
-    >
-      <Animated.Image
-        style={[styles.image, imageAnimatedStyle]}
+    <ScrollView style={styles.container}>
+      <Image
+        style={[styles.image]}
         resizeMode="cover"
         source={{
           uri: "https://images.unsplash.com/photo-1725272123537-105e02c214d8?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDE0fHx8ZW58MHx8fHx8",
@@ -308,7 +305,7 @@ export default function MyCarousel() {
           />
         )}
       </View>
-    </Animated.ScrollView>
+    </ScrollView>
   );
 }
 
@@ -343,7 +340,7 @@ const styles = StyleSheet.create({
   image: {
     width,
     height: height / 2,
-    opacity: 0.8,
+    opacity: 1,
   },
   introTextSub: {
     color: "#3A4750",
@@ -391,22 +388,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.27,
     shadowRadius: 4.65,
 
-    elevation: 6,
-  },
-  shadow: {
-    justifyContent: "center",
-    alignItems: "center",
-    height: 200,
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.27,
-    shadowRadius: 4.65,
-
-    opacity: 0.7,
     elevation: 6,
   },
 });

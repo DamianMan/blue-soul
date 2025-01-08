@@ -48,13 +48,6 @@ export default function RootLayout() {
     <Stack
       screenOptions={{
         headerShown: false,
-        animationEnabled: true,
-        gestureEnabled: true,
-        cardStyleInterpolator: ({ current, next, layouts }) => ({
-          cardStyle: {
-            opacity: current.progress,
-          },
-        }),
       }}
     >
       <Stack.Screen name="index" options={{ title: "Login" }} />

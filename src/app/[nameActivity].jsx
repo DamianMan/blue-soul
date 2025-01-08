@@ -245,7 +245,6 @@ const styles = StyleSheet.create({
     shadowRadius: 4.65,
 
     elevation: 6,
-    opacity: 0.7,
   },
   introTitle: {
     overflow: "hidden",

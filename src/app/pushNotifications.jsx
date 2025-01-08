@@ -10,7 +10,7 @@ import {
   ScrollView,
   SafeAreaView,
 } from "react-native";
-import { TextInput, Divider, Button } from "react-native-paper";
+import { TextInput, Divider, Button, RadioButton } from "react-native-paper";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import axios from "axios";
 import * as Notifications from "expo-notifications";
@@ -26,8 +26,10 @@ function pushNotifications(props) {
   const [title, setTitle] = useState("");
   const [groupToken, setGroupToken] = useState("");
   const [message, setMessage] = useState("");
+  const [isTrip, setIsTrip] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
 
-  async function schedulePushNotification(title, message) {
+  async function schedulePushNotification() {
     await Notifications.scheduleNotificationAsync({
       content: {
         sound: "default",
@@ -42,12 +44,12 @@ function pushNotifications(props) {
   }
 
   const handleSubmit = async () => {
-    // schedulePushNotification(title, message);
+    alert(`Edit: ${isEdit} - Trip: ${isTrip}`);
     try {
       await axios
         .post(
           "https://blue-soul-app.onrender.com/api/sendNotifications",
-          { title, groupToken, message, isNotification },
+          { title, groupToken, message, isTrip, isEdit },
           { headers: { "Content-Type": "application/json" } }
         )
         .then((res) => {
@@ -64,6 +66,8 @@ function pushNotifications(props) {
       Alert.alert("Error Making Request", error);
     }
   };
+
+  const handleRadioGroup = (value) => {};
 
   return (
     <ScrollView
@@ -151,14 +155,32 @@ function pushNotifications(props) {
           style={styles.userInput}
           disabled={isNotAdmin}
         />
+        <View style={{ marginTop: 10 }}>
+          <Text>Trip Notification?</Text>
+          <View style={styles.radioBtn}>
+            <RadioButton
+              value="trip"
+              status={isTrip ? "checked" : "unchecked"}
+              onPress={() => setIsTrip((prev) => !prev)}
+            />
+          </View>
+
+          <Text>Edit Notification?</Text>
+          <View style={styles.radioBtn}>
+            <RadioButton
+              value="edit"
+              status={isEdit ? "checked" : "unchecked"}
+              onPress={() => setIsEdit((prev) => !prev)}
+            />
+          </View>
+        </View>
+
         <Button
-          mode="elevated"
-          labelStyle={{
-            color: "#000",
-            fontSize: 15,
-          }}
-          elevation={6}
+          mode="contained-tonal"
           icon="send"
+          buttonColor="limegreen"
+          textColor="#000"
+          elevation={10}
           style={styles.submitBtn}
           onPress={handleSubmit}
           disabled={isNotAdmin}
@@ -203,8 +225,8 @@ const styles = StyleSheet.create({
   },
   secondConteiner: {
     backgroundColor: "#fff",
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
     marginHorizontal: 20,
     marginBottom: 30,
     paddingVertical: 30,
@@ -247,7 +269,23 @@ const styles = StyleSheet.create({
   },
   submitBtn: {
     marginTop: 30,
-    backgroundColor: "limegreen",
+    alignSelf: "center",
+  },
+  radioBtn: {
+    borderRadius: 50,
+    backgroundColor: "#fff",
+    width: 40,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
+    marginVertical: 5,
+    alignItems: "center",
   },
 });
 

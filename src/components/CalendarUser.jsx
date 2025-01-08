@@ -55,7 +55,7 @@ const { height, width } = Dimensions.get("window");
 // };
 
 function CalendarUser(props) {
-  const { programs, groups, users, loading, fetchData, sortedArray } =
+  const { programs, groups, users, loading, fetchData, sortedArray, getUsers } =
     useContext(ContextData);
 
   useEffect(() => {
@@ -76,7 +76,7 @@ function CalendarUser(props) {
       setItems(transformedData);
     };
     ITEMS(userDb.program || program);
-  }, [items]);
+  }, []);
 
   const today = new Date();
   const formattedDate = today.toISOString().split("T")[0];
