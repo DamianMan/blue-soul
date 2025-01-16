@@ -27,7 +27,6 @@ function pushNotifications(props) {
   const [title, setTitle] = useState("");
   const [groupToken, setGroupToken] = useState("");
   const [message, setMessage] = useState("");
-  const [isTrip, setIsTrip] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -53,7 +52,7 @@ function pushNotifications(props) {
       await axios
         .post(
           "https://blue-soul-app.onrender.com/api/sendNotifications",
-          { title, groupToken, message, isTrip, isEdit },
+          { title, groupToken, message, isEdit },
           { headers: { "Content-Type": "application/json" } }
         )
         .then((res) => {
@@ -161,17 +160,7 @@ function pushNotifications(props) {
           style={styles.userInput}
           disabled={isNotAdmin}
         />
-        <View style={{ marginTop: 10 }}>
-          <Text>Trip Notification?</Text>
-          <View style={styles.radioBtn}>
-            <RadioButton
-              value="trip"
-              status={isTrip ? "checked" : "unchecked"}
-              onPress={() => setIsTrip((prev) => !prev)}
-              disabled={isEdit}
-            />
-          </View>
-
+        <View style={{ margin: 5, paddingTop: 10 }}>
           <Text>Edit Notification?</Text>
           <View style={styles.radioBtn}>
             <RadioButton

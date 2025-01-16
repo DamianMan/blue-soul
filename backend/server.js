@@ -992,7 +992,7 @@ app.post("/api/postToken", async (req, res) => {
 
 // Sent Notifications
 app.post("/api/sendNotifications", async (req, res) => {
-  const { message, title, groupToken, isTrip, isEdit } = req.body;
+  const { message, title, groupToken, isEdit } = req.body;
   const usersFilteredPerGroup = await Users.find({ tokenGroup: groupToken });
   const numOfUSers = usersFilteredPerGroup.filter(
     (item) => item.pushToken !== undefined
@@ -1008,7 +1008,7 @@ app.post("/api/sendNotifications", async (req, res) => {
             sound: "default",
             title: title,
             body: message,
-            data: { isTrip, isEdit }, // Custom data
+            data: { isEdit }, // Custom data
           };
 
           try {
@@ -1024,11 +1024,6 @@ app.post("/api/sendNotifications", async (req, res) => {
               }
             );
             console.log("Notification Response:", response.data);
-
-            const query = {
-              email: item.email,
-            };
-            await Users.findOneAndUpdate(query, { isTrip: true });
           } catch (error) {
             console.error(
               "Error sending notification:",

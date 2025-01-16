@@ -48,7 +48,6 @@ function DialogAddEvent({ visible, hideDialog }) {
       time.minutes < 10 ? `0${time.minutes}` : time.minutes
     }`;
     const isOptional = false;
-    alert(getHour);
     try {
       await axios
         .post(

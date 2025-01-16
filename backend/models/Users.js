@@ -38,9 +38,7 @@ const userModel = new mongoose.Schema(
     },
     role: { type: String },
     pushToken: { type: String },
-    isTrip: {
-      type: Boolean,
-    },
+
     tripFoodDrink: {
       type: Array,
     },

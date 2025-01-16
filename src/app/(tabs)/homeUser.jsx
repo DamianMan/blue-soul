@@ -47,10 +47,6 @@ export default function MyCarousel() {
 
   const scrollRef = useAnimatedRef();
 
-  const [isNotification, setIsNotification] = useState(
-    (currentUser?.isTrip !== undefined && currentUser?.isTrip) || false
-  );
-
   const [expoPushToken, setExpoPushToken] = useState("");
   const [channels, setChannels] = useState([]);
   const [notification, setNotification] = useState(undefined > undefined);
@@ -101,7 +97,6 @@ export default function MyCarousel() {
         if (notificationData.isEdit) {
           loadData(); // Reload data to see updates
         }
-        notificationData.isTrip && setIsNotification(true);
 
         // Active Status when notification is open and the function set the value to true.
         // getNotificationStatus(
@@ -305,11 +300,6 @@ export default function MyCarousel() {
             description={item.description}
           />
         ))} */}
-
-        <FoodDrinkNotifModal
-          status={isNotification}
-          setIsNotification={setIsNotification}
-        />
       </View>
     </ScrollView>
   );

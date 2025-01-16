@@ -20,13 +20,14 @@ import FabActivitiesItem from "../components/FabActivitiesItem";
 import UploadImageItem from "../components/UploadImageItem";
 import axios from "axios";
 import ServiceActivityItem from "../components/ServiceActivityItem";
+import Loader from "../components/Loader";
 
 const { height, width } = Dimensions.get("window");
 function editActivities(props) {
   const { services, getServices, addItem, removeItem, loading } =
     useContext(ContextData);
   const [display, setDisplay] = useState(false);
-  const [pressed, setPressed] = useState(false);
+  const [pressed, setPressed] = useState(true);
   const [id, setId] = useState("");
   const [name, setName] = useState("");
   const [subtitle, setSubtitle] = useState("");
@@ -172,6 +173,10 @@ function editActivities(props) {
       </ImageBackground>
     );
   };
+
+  if (loading) {
+    return <Loader />;
+  }
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : height}
@@ -203,24 +208,21 @@ function editActivities(props) {
             style={{ alignSelf: "center" }}
           />
         </View>
-        {loading ? (
-          <ActivityIndicator size={"large"} color={"#3FA2F6"} />
-        ) : (
-          <View
-            style={{
-              margin: 20,
-            }}
-          >
-            {services.map((item) => (
-              <FabActivitiesItem
-                key={item.url}
-                name={item.name}
-                url={item.url}
-                hanldePress={handlePressFAB}
-              />
-            ))}
-          </View>
-        )}
+
+        <View
+          style={{
+            margin: 20,
+          }}
+        >
+          {services.map((item) => (
+            <FabActivitiesItem
+              key={item.url}
+              name={item.name}
+              url={item.url}
+              hanldePress={handlePressFAB}
+            />
+          ))}
+        </View>
 
         {display && (
           <View style={styles.activityView}>
