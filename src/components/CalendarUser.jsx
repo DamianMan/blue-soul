@@ -227,14 +227,10 @@ function CalendarUser(props) {
   };
 
   const handleCompleteTimer = async () => {
-    if (userDb.dinner === undefined) {
-      alert(
-        `Dinner timer over in date ${date}!Sorry, You didn't select anything`
-      );
-      await handleSaveDinner(timeUpNoDinner);
-    } else {
-      Alert.alert("Timer", "Dinner timer is up!");
-    }
+    alert(
+      `Dinner timer over in date ${date}!Sorry, You didn't select anything`
+    );
+    await handleSaveDinner(timeUpNoDinner);
   };
 
   return (
@@ -313,7 +309,7 @@ function CalendarUser(props) {
               flexDirection: "row",
             }}
           >
-            {!userDb.dinner?.[date].isDinnerConfirmed &&
+            {!userDb.dinner?.[date]?.isDinnerConfirmed &&
               currentGroup.dinner?.[date].deadline !== null && (
                 <View
                   style={{

@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useState } from "react";
 import axios from "axios";
+import auth from "@react-native-firebase/auth";
 
 const ContextData = createContext();
 
@@ -9,7 +10,7 @@ function ContextDataProvider({ children }) {
   const [groups, setGroups] = useState([]);
   const [isNotification, setIsNotfication] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [user, setUser] = useState("damiano");
+  const [user, setUser] = useState("damaino");
   const [programs, setPrograms] = useState([]);
 
   const fetchData = async () => {

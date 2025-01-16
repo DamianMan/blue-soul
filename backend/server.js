@@ -876,12 +876,13 @@ app.post("/api/postDailyProgramByUser", async (req, res) => {
 
 // Add Program Event
 app.post("/api/postProgram", async (req, res) => {
-  const { getHour, event, isOptional } = req.body;
+  const { getHour, event, isOptional, description } = req.body;
   try {
     const newEvent = new Programs({
       hour: getHour,
       title: event,
       isOptional,
+      description,
     });
 
     await newEvent.save();
@@ -1061,7 +1062,7 @@ app.post("/api/postTripMeal", async (req, res) => {
       const query = { email };
       await Users.findOneAndUpdate(query, {
         tripFoodDrink: userPicks,
-        isNotification: false,
+        isTrip: false,
       });
       res.json({ message: "User Meal Succesfully Added", status: "Success" });
     } catch (error) {

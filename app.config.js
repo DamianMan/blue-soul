@@ -23,13 +23,7 @@ export default {
     },
     android: {
       permissions: ["WRITE_EXTERNAL_STORAGE", "POST_NOTIFICATIONS"],
-      splash: {
-        mdpi: "./assets/logo.png",
-        hdpi: "./assets/logo.png",
-        xhdpi: "./assets/logo.png",
-        xxhdpi: "./assets/logo.png",
-        xxxhdpi: "./assets/logo.png",
-      },
+
       adaptiveIcon: {
         foregroundImage: "./assets/logo.png",
         backgroundColor: "#ffffff",

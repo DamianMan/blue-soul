@@ -57,6 +57,7 @@ function DialogAddEvent({ visible, hideDialog }) {
             getHour,
             event,
             isOptional,
+            description,
           },
           {
             headers: {

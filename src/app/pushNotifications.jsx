@@ -17,6 +17,7 @@ import * as Notifications from "expo-notifications";
 
 import auth from "@react-native-firebase/auth";
 import { ContextData } from "../context/ContextDataProvider";
+import Loader from "../components/Loader";
 
 const { width, height } = Dimensions.get("window");
 
@@ -28,6 +29,7 @@ function pushNotifications(props) {
   const [message, setMessage] = useState("");
   const [isTrip, setIsTrip] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   async function schedulePushNotification() {
     await Notifications.scheduleNotificationAsync({
@@ -35,7 +37,7 @@ function pushNotifications(props) {
         sound: "default",
         title: title,
         body: message,
-        data: { data: "goes here", test: { test1: "more data" } },
+        data: { isTrip: true, isEdit: false },
       },
       trigger: { seconds: 5 },
     })
@@ -44,8 +46,10 @@ function pushNotifications(props) {
   }
 
   const handleSubmit = async () => {
-    alert(`Edit: ${isEdit} - Trip: ${isTrip}`);
+    // alert(`Edit: ${isEdit} - Trip: ${isTrip}`);
+
     try {
+      setLoading(true);
       await axios
         .post(
           "https://blue-soul-app.onrender.com/api/sendNotifications",
@@ -56,7 +60,7 @@ function pushNotifications(props) {
           Alert.alert(res.data.status, res.data.message);
 
           console.log("Notif Status:", res.data.notification);
-
+          setLoading(false);
           setMessage("");
           setTitle("");
           setGroupToken("");
@@ -67,7 +71,9 @@ function pushNotifications(props) {
     }
   };
 
-  const handleRadioGroup = (value) => {};
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <ScrollView
@@ -162,6 +168,7 @@ function pushNotifications(props) {
               value="trip"
               status={isTrip ? "checked" : "unchecked"}
               onPress={() => setIsTrip((prev) => !prev)}
+              disabled={isEdit}
             />
           </View>
 
@@ -171,6 +178,7 @@ function pushNotifications(props) {
               value="edit"
               status={isEdit ? "checked" : "unchecked"}
               onPress={() => setIsEdit((prev) => !prev)}
+              disabled={isTrip}
             />
           </View>
         </View>

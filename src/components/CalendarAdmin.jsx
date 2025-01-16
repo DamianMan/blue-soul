@@ -324,7 +324,9 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup }) {
             justifyContent: "space-between",
             alignItems: "center",
             flexDirection: "row",
-            padding: 20,
+            paddingVertical: Platform.OS === "ios" ? 40 : 20,
+            paddingHorizontal: Platform.OS === "ios" ? 20 : 20,
+
             width,
           }}
         >

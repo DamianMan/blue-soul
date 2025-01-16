@@ -5,7 +5,7 @@ import {
   Dimensions,
   Platform,
   Alert,
-  ActivityIndicator,
+  AppState,
   FlatList,
   ScrollView,
   Image,
@@ -43,8 +43,13 @@ export default function MyCarousel() {
   const { services, users, loading, fetchData, groups } =
     useContext(ContextData);
   const user = auth().currentUser;
+  const currentUser = users.find((item) => item.email === user?.email);
+
   const scrollRef = useAnimatedRef();
-  const [isNotification, setIsNotification] = useState(false);
+
+  const [isNotification, setIsNotification] = useState(
+    (currentUser?.isTrip !== undefined && currentUser?.isTrip) || false
+  );
 
   const [expoPushToken, setExpoPushToken] = useState("");
   const [channels, setChannels] = useState([]);
@@ -54,8 +59,10 @@ export default function MyCarousel() {
   const { getNotificationStatus } = useContext(ContextData);
 
   // useEffect(() => {
-  //   if (user) {
-  //     userFound = users.find((item) => item.email === user?.email);
+  //   const currentUser = auth().currentUser;
+
+  //   if (currentUser) {
+  //     userFound = users.find((item) => item.email === currentUser?.email);
   //     if (userFound) {
   //       setIsNotification(userFound.isTrip);
 
@@ -82,19 +89,19 @@ export default function MyCarousel() {
     }
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
+        console.log("NOTIFICATION:", notification);
         setNotification(notification);
       });
 
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
         const notificationData = response.notification.request.content.data;
+        console.log("NotificationDATA:", notificationData);
 
-        console.log(response);
-        setIsNotification(notificationData.isTrip);
         if (notificationData.isEdit) {
-          Alert.alert("Fecthing Data", "Loading data...");
-          loadData();
+          loadData(); // Reload data to see updates
         }
+        notificationData.isTrip && setIsNotification(true);
 
         // Active Status when notification is open and the function set the value to true.
         // getNotificationStatus(
@@ -298,12 +305,11 @@ export default function MyCarousel() {
             description={item.description}
           />
         ))} */}
-        {isNotification && (
-          <FoodDrinkNotifModal
-            status={isNotification}
-            text={isNotification ? "Notif True" : "Notif False"}
-          />
-        )}
+
+        <FoodDrinkNotifModal
+          status={isNotification}
+          setIsNotification={setIsNotification}
+        />
       </View>
     </ScrollView>
   );

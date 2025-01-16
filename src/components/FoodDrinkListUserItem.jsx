@@ -1,7 +1,7 @@
 import React from "react";
 import { ToggleButton, Badge } from "react-native-paper";
 import { useState } from "react";
-import { Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 function FoodDrinkListUserItem({
   name,
   type,
@@ -19,13 +19,11 @@ function FoodDrinkListUserItem({
         flexDirection: "column",
       }}
     >
-      <Badge style={{ backgroundColor: "coral" }}>{name}</Badge>
+      <Badge style={styles.badge} size={30}>
+        {name}
+      </Badge>
       <ToggleButton
-        icon={
-          type === "food"
-            ? `${name.toLowerCase()}` || "hamburger"
-            : "bottle-soda"
-        }
+        icon={type === "food" ? "silverware-fork-knife" : "bottle-soda"}
         value={name}
         status={status}
         onPress={onButtonToggle}
@@ -46,5 +44,13 @@ function FoodDrinkListUserItem({
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  badge: {
+    backgroundColor: "aliceblue",
+    paddingHorizontal: 10,
+    color: "#000",
+  },
+});
 
 export default FoodDrinkListUserItem;

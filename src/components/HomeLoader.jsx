@@ -1,4 +1,6 @@
+import { router } from "expo-router";
 import React from "react";
+import { Pressable } from "react-native";
 import {
   View,
   ActivityIndicator,
@@ -8,28 +10,42 @@ import {
   Text,
   Image,
 } from "react-native";
+import { Icon } from "react-native-paper";
 
 const { width, height } = Dimensions.get("window");
 
-function HomeLoader(props) {
+function HomeLoader({ loading }) {
+  const handlePress = () => {
+    router.navigate("login");
+  };
   return (
     <ImageBackground
       style={styles.image}
       resizeMode="cover"
-      source={{
-        uri: "https://images.unsplash.com/photo-1509641498745-13c26fd1ed89?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      }}
+      source={require("../../assets/homeLoader.png")}
     >
       <View style={styles.centered}>
-        <ActivityIndicator size={"large"} color={"lightgrey"} />
+        {loading && <ActivityIndicator size={"large"} color={"lightgrey"} />}
       </View>
-      <View style={styles.imageContainter}>
+      <Pressable
+        onPress={handlePress}
+        style={[
+          styles.imageContainter,
+          {
+            opacity: loading ? 0.8 : 1,
+            shadowOpacity: loading ? 0.25 : 4.25,
+            shadowRadius: loading ? 4.25 : 9.84,
+          },
+        ]}
+        disabled={loading}
+      >
         <Image
           source={require("../../assets/logo.png")}
           resizeMode="cover"
           style={styles.imageLogo}
         />
-      </View>
+        <Icon source="arrow-right" color={"dodgerblue"} size={30} />
+      </Pressable>
     </ImageBackground>
   );
 }
@@ -40,6 +56,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    marginTop: 200,
   },
   text: {
     color: "#303841",
@@ -51,16 +68,18 @@ const styles = StyleSheet.create({
     height: 80,
     justifyContent: "center",
     alignItems: "center",
+    flexDirection: "row",
     borderRadius: 10,
     marginBottom: 60,
     marginHorizontal: 60,
-    shadowColor: "lightblue",
+
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    shadowOpacity: 4.25,
+    shadowRadius: 9.84,
 
     elevation: 5,
   },

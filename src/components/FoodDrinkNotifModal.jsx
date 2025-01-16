@@ -18,18 +18,12 @@ import axios from "axios";
 import auth from "@react-native-firebase/auth";
 
 const { width, height } = Dimensions.get("window");
-function FoodDrinkNotifModal({ status, text }) {
+function FoodDrinkNotifModal({ status, setIsNotification }) {
   const user = auth().currentUser;
-  const { services, getServices, getUsers } = useContext(ContextData);
-  const [modalVisible, setModalVisible] = useState(status);
+  const { services, fetchData } = useContext(ContextData);
+
   const [userPicks, setUSerPicks] = useState([]);
 
-  useEffect(() => {
-    const loadServices = async () => {
-      getServices();
-    };
-    loadServices();
-  }, [services]);
   const service = services.find((item) => item.name === "Food & Drink");
 
   const storeUserPicks = (item) => {
@@ -40,6 +34,9 @@ function FoodDrinkNotifModal({ status, text }) {
     setUSerPicks((prev) => prev.filter((pick) => pick !== item));
   };
 
+  const hideModal = () => {
+    setIsNotification((prev) => !prev);
+  };
   const handleSubmit = async () => {
     if (userPicks.length < 2) {
       alert(
@@ -56,12 +53,9 @@ function FoodDrinkNotifModal({ status, text }) {
           )
           .then((res) => {
             Alert.alert(res.data.status, res.data.message);
-            setModalVisible((prev) => !prev);
-            const loadUsers = async () => {
-              await getUsers();
-            };
-            loadUsers();
+            hideModal();
 
+            fetchData();
             console.log("Getting USers after closing modal!!!");
           })
           .catch((err) => Alert.alert(err.data.status, err.data.message));
@@ -70,15 +64,16 @@ function FoodDrinkNotifModal({ status, text }) {
       }
     }
   };
+
   return (
     <SafeAreaView style={styles.centeredView}>
       <Modal
         animationType="slide"
         presentationStyle="fullScreen"
-        visible={modalVisible}
+        visible={status}
         onRequestClose={() => {
           Alert.alert("Modal has been closed.");
-          setModalVisible(!modalVisible);
+          setModal();
         }}
       >
         <View style={styles.centeredView}>
@@ -98,15 +93,15 @@ function FoodDrinkNotifModal({ status, text }) {
             }}
           />
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>Upcoming trip ahead...</Text>
+            <Text style={styles.modalText}>Upcoming trip ahead... 🎒🥾</Text>
             <Text style={styles.modalText}>
-              Please pick your daily meal and your drink.
+              Please pick your daily meal and your drink. 🍴🥤
             </Text>
-            <Text style={styles.modalText}>Have Fun!</Text>
+            <Text style={styles.modalText}>Have Fun! 🤩</Text>
             <Text
               style={[
                 styles.modalText,
-                { color: "orangered", fontSize: 24, fontWeight: "bold" },
+                { color: "dodgerblue", fontSize: 24, fontWeight: "bold" },
               ]}
             >
               Blue Soul Staff
@@ -203,7 +198,7 @@ function FoodDrinkNotifModal({ status, text }) {
               </Pressable>
               <Pressable
                 style={[styles.button, styles.buttonClose]}
-                onPress={() => setModalVisible(!modalVisible)}
+                onPress={hideModal}
               >
                 <Text style={styles.textStyle}>Close</Text>
               </Pressable>
@@ -242,7 +237,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   buttonOpen: {
-    backgroundColor: "navy",
+    backgroundColor: "dodgerblue",
   },
   buttonClose: {
     backgroundColor: "red",
@@ -254,7 +249,7 @@ const styles = StyleSheet.create({
   },
   modalText: {
     textAlign: "start",
-    color: "midnightblue",
+    color: "#000",
     fontSize: 20,
     letterSpacing: 1,
   },
