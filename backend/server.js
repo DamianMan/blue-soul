@@ -42,7 +42,7 @@ app.use(
     credentials: true,
   })
 );
-app.use(apiKeyAuth(/^REACT_APP_API_KEY/));
+app.use(apiKeyAuth(/^API_KEY_/));
 
 const port = 3000;
 
