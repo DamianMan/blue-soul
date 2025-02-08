@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 20,
-    backgroundColor: "white",
+    backgroundColor: "aliceblue",
     borderRadius: 20,
     padding: 35,
     alignItems: "center",
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
   },
 
   buttonSubmit: {
-    backgroundColor: "#3572EF",
+    backgroundColor: "dodgerblue",
     elevation: 5,
     textShadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },

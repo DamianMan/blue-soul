@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { Pressable } from "react-native";
 import {
   View,
@@ -11,10 +11,16 @@ import {
   Image,
 } from "react-native";
 import { Icon } from "react-native-paper";
+import LottieView from "lottie-react-native";
 
 const { width, height } = Dimensions.get("window");
 
 function HomeLoader({ loading }) {
+  const animationRef = useRef(null);
+
+  useEffect(() => {
+    animationRef.current?.play();
+  }, []);
   const handlePress = () => {
     router.navigate("login");
   };
@@ -25,7 +31,16 @@ function HomeLoader({ loading }) {
       source={require("../../assets/homeLoader.png")}
     >
       <View style={styles.centered}>
-        {loading && <ActivityIndicator size={"large"} color={"lightgrey"} />}
+        {/* {loading && <ActivityIndicator size={"large"} color={"lightgrey"} />} */}
+        {loading && (
+          <LottieView
+            ref={animationRef}
+            source={require("../../assets/animations/turtle.json")}
+            loop
+            autoplay
+            style={{ width: 250, height: 350 }}
+          />
+        )}
       </View>
       <Pressable
         onPress={handlePress}

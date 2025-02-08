@@ -36,9 +36,9 @@ function pushNotifications(props) {
         sound: "default",
         title: title,
         body: message,
-        data: { isTrip: true, isEdit: false },
+        data: { isEdit },
       },
-      trigger: { seconds: 5 },
+      trigger: { seconds: 3 },
     })
       .then((res) => console.log("Success:", res))
       .catch((err) => console.log("Error:", err));
@@ -167,7 +167,6 @@ function pushNotifications(props) {
               value="edit"
               status={isEdit ? "checked" : "unchecked"}
               onPress={() => setIsEdit((prev) => !prev)}
-              disabled={isTrip}
             />
           </View>
         </View>

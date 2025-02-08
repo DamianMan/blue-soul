@@ -11,6 +11,7 @@ const Service = require("./models/Services");
 const axios = require("axios");
 const admin = require("firebase-admin");
 const User = require("./models/Users");
+const { apiKeyAuth } = require("@vpriem/express-api-key-auth");
 
 require("dotenv").config({ path: "../.env" });
 // require("../blue-soul-9434a-firebase-adminsdk-yau4q-0a78a8df74.json");
@@ -41,6 +42,8 @@ app.use(
     credentials: true,
   })
 );
+app.use(apiKeyAuth(/^API_KEY_/));
+
 const port = 3000;
 
 // const servs = [

@@ -18,6 +18,7 @@ import auth from "@react-native-firebase/auth";
 import EditPAsswordModal from "../../components/EditPasswordModal";
 import { ContextData } from "../../context/ContextDataProvider";
 import axios from "axios";
+import Loader from "../../components/Loader";
 
 const { width, height } = Dimensions.get("window");
 
@@ -103,11 +104,7 @@ function profileUser(props) {
       behavior={Platform.OS === "ios" ? "padding" : height}
       style={{ flex: 1 }}
     >
-      <ScrollView
-        contentContainerStyle={{
-          flex: 1,
-        }}
-      >
+      <ScrollView>
         <ImageBackground
           source={{
             uri: "https://plus.unsplash.com/premium_photo-1683865775275-a576c7588bc8?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cHJvZmlsZSUyMHVzZXJ8ZW58MHx8MHx8fDA%3D",
@@ -257,8 +254,11 @@ function profileUser(props) {
 
               <View
                 style={{
-                  width: width,
-                  paddingHorizontal: 20,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  width: (width * 90) / 100,
+                  marginHorizontal: 20,
                   paddingTop: 30,
                 }}
               >
@@ -266,7 +266,7 @@ function profileUser(props) {
                   mode="elevated"
                   labelStyle={{ color: "#ffff", fontSize: 15 }}
                   icon={({ size, color }) => (
-                    <AntDesign name="edit" size={30} color="#fff" /> // Custom icon color
+                    <AntDesign name="edit" size={20} color="#fff" /> // Custom icon color
                   )}
                   style={styles.editPAsswordBtn}
                   onPress={() => setModalPassword(!modalPassword)}
@@ -281,7 +281,7 @@ function profileUser(props) {
                   mode="elevated"
                   labelStyle={{ color: "#ffff", fontSize: 15 }}
                   icon={({ size, color }) => (
-                    <Icon name="database-plus" size={30} color="#fff" /> // Custom icon color
+                    <Icon name="database-plus" size={25} color="#fff" /> // Custom icon color
                   )}
                   style={styles.submitBtn}
                   onPress={handleSubmit}
@@ -292,7 +292,7 @@ function profileUser(props) {
             </View>
           </View>
         ) : (
-          <ActivityIndicator />
+          <Loader />
         )}
       </ScrollView>
     </KeyboardAvoidingView>
@@ -327,24 +327,22 @@ const styles = StyleSheet.create({
     textAlign: "start",
   },
   submitBtn: {
-    backgroundColor: "#2185D5",
+    backgroundColor: "dodgerblue",
     elevation: 5,
     textShadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
     elevation: 3,
     marginVertical: 3,
-    marginHorizontal: 50,
   },
   editPAsswordBtn: {
-    backgroundColor: "orangered",
+    backgroundColor: "grey",
     elevation: 5,
     textShadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
     elevation: 3,
     marginVertical: 3,
-    marginHorizontal: 50,
   },
   userInput: {
     borderRadius: 10,
@@ -362,7 +360,7 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     alignItems: "flex-start",
     justifyContent: "flex-start",
-    backgroundColor: "lightcyan",
+    backgroundColor: "aliceblue",
     opacity: 0.8,
   },
 });
