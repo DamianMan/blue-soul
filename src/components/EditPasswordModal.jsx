@@ -4,6 +4,7 @@ import { Button, TextInput } from "react-native-paper";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import auth from "@react-native-firebase/auth";
 import axios from "axios";
+import { API_KEY_PROTECTED } from "@env";
 
 const { width, height } = Dimensions.get("window");
 
@@ -29,7 +30,10 @@ function EditPAsswordModal({ modalVisible, setModalVisible }) {
                 email,
               },
               {
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                  "Content-Type": "application/json",
+                  "x-api-key": API_KEY_PROTECTED,
+                },
               }
             )
             .then((response) => {

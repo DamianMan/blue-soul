@@ -25,6 +25,7 @@ import { de, registerTranslation } from "react-native-paper-dates";
 import SelectProgramItem from "../components/SelectProgramItem";
 import SetProgramsModal from "../components/SetProgramsModal";
 import Loader from "../components/Loader";
+import { API_KEY_PROTECTED } from "@env";
 registerTranslation("de", de);
 
 const { width, height } = Dimensions.get("window");
@@ -139,7 +140,10 @@ function addNewGroup(props) {
                 hotel,
               },
               {
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                  "Content-Type": "application/json",
+                  "x-api-key": API_KEY_PROTECTED,
+                },
               }
             )
             .then((res) => {

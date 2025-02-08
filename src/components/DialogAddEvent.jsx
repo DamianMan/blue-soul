@@ -11,6 +11,7 @@ import {
 import { TimePickerModal } from "react-native-paper-dates";
 import { de, registerTranslation } from "react-native-paper-dates";
 import { ContextData } from "../context/ContextDataProvider";
+import { API_KEY_PROTECTED } from "@env";
 registerTranslation("de", de);
 
 const { width } = Dimensions.get("window");
@@ -61,6 +62,7 @@ function DialogAddEvent({ visible, hideDialog }) {
           {
             headers: {
               "Content-Type": "application/json",
+              "x-api-key": API_KEY_PROTECTED,
             },
           }
         )

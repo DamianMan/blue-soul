@@ -19,6 +19,7 @@ import { useContext, useState, useEffect } from "react";
 import { ContextData } from "../context/ContextDataProvider";
 import DragList, { DragListRenderItemInfo } from "react-native-draglist";
 import axios from "axios";
+import { API_KEY_PROTECTED } from "@env";
 
 const { width, height } = Dimensions.get("window");
 
@@ -83,7 +84,10 @@ function ModalDraggable({
             value,
           },
           {
-            headers: { "Content-Type": "application/json" },
+            headers: {
+              "Content-Type": "application/json",
+              "x-api-key": API_KEY_PROTECTED,
+            },
           }
         )
         .then((res) => {

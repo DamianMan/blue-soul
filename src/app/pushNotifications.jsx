@@ -18,6 +18,7 @@ import * as Notifications from "expo-notifications";
 import auth from "@react-native-firebase/auth";
 import { ContextData } from "../context/ContextDataProvider";
 import Loader from "../components/Loader";
+import { API_KEY_PROTECTED } from "@env";
 
 const { width, height } = Dimensions.get("window");
 
@@ -53,7 +54,12 @@ function pushNotifications(props) {
         .post(
           "https://blue-soul-app.onrender.com/api/sendNotifications",
           { title, groupToken, message, isEdit },
-          { headers: { "Content-Type": "application/json" } }
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "x-api-key": API_KEY_PROTECTED,
+            },
+          }
         )
         .then((res) => {
           Alert.alert(res.data.status, res.data.message);

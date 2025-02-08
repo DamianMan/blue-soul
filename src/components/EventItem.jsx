@@ -10,6 +10,7 @@ import {
 import { Button } from "react-native-paper";
 import axios from "axios";
 import { ContextData } from "../context/ContextDataProvider";
+import { API_KEY_PROTECTED } from "@env";
 
 const { width } = Dimensions.get("window");
 function EventItem({ title, hour, id, description }) {
@@ -25,6 +26,7 @@ function EventItem({ title, hour, id, description }) {
           {
             headers: {
               "Content-Type": "application/json",
+              "x-api-key": API_KEY_PROTECTED,
             },
           }
         )

@@ -16,6 +16,7 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import axios from "axios";
 import { useContext } from "react";
 import { ContextData } from "../context/ContextDataProvider";
+import { API_KEY_PROTECTED } from "@env";
 
 const { height } = Dimensions.get("window");
 
@@ -54,7 +55,8 @@ function StudenInfoListItem({ data }) {
           },
           {
             headers: {
-              "Content-Type": "application/json", // Default for JSON payload
+              "Content-Type": "application/json",
+              "x-api-key": API_KEY_PROTECTED,
             },
           }
         )

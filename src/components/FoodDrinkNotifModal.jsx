@@ -16,6 +16,7 @@ import { ContextData } from "../context/ContextDataProvider";
 import FoodDrinkListUserItem from "./FoodDrinkListUserItem";
 import axios from "axios";
 import auth from "@react-native-firebase/auth";
+import { API_KEY_PROTECTED } from "@env";
 
 const { width, height } = Dimensions.get("window");
 function FoodDrinkNotifModal({ status, setIsNotification }) {
@@ -49,7 +50,12 @@ function FoodDrinkNotifModal({ status, setIsNotification }) {
           .post(
             "https://blue-soul-app.onrender.com/api/postTripMeal",
             { userPicks, email },
-            { headers: { "Content-Type": "application/json" } }
+            {
+              headers: {
+                "Content-Type": "application/json",
+                "x-api-key": API_KEY_PROTECTED,
+              },
+            }
           )
           .then((res) => {
             Alert.alert(res.data.status, res.data.message);

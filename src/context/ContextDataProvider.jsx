@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useState } from "react";
 import axios from "axios";
 import auth from "@react-native-firebase/auth";
+import { API_KEY_PROTECTED } from "@env";
 
 const ContextData = createContext();
 
@@ -38,7 +39,9 @@ function ContextDataProvider({ children }) {
 
     try {
       await axios
-        .get("https://blue-soul-app.onrender.com/api/getAllGroups")
+        .get("https://blue-soul-app.onrender.com/api/getAllGroups", {
+          headers: { "x-api-key": API_KEY_PROTECTED },
+        })
         .then((res) => {
           setGroups(res.data);
           console.log("Render context GROUPS");
@@ -58,7 +61,9 @@ function ContextDataProvider({ children }) {
 
     try {
       await axios
-        .get("https://blue-soul-app.onrender.com/api/getUsers")
+        .get("https://blue-soul-app.onrender.com/api/getUsers", {
+          headers: { "x-api-key": API_KEY_PROTECTED },
+        })
         .then((res) => {
           setUsers(res.data);
           console.log("Render context USERS");
@@ -75,7 +80,9 @@ function ContextDataProvider({ children }) {
 
     try {
       await axios
-        .get("https://blue-soul-app.onrender.com/api/getServices")
+        .get("https://blue-soul-app.onrender.com/api/getServices", {
+          headers: { "x-api-key": API_KEY_PROTECTED },
+        })
         .then((res) => {
           setServices(res.data);
           setLoading(false);
@@ -106,7 +113,9 @@ function ContextDataProvider({ children }) {
   const getPrograms = async () => {
     try {
       await axios
-        .get("https://blue-soul-app.onrender.com/api/getPrograms")
+        .get("https://blue-soul-app.onrender.com/api/getPrograms", {
+          headers: { "x-api-key": API_KEY_PROTECTED },
+        })
         .then((res) => {
           setPrograms(sortedArray(res.data));
           setLoading(false);

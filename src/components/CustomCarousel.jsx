@@ -15,6 +15,7 @@ import axios from "axios";
 import { ContextData } from "../context/ContextDataProvider";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import auth from "@react-native-firebase/auth";
+import { API_KEY_PROTECTED } from "@env";
 
 const { width } = Dimensions.get("window");
 
@@ -48,7 +49,12 @@ const CustomCarousel = ({
         .post(
           "https://blue-soul-app.onrender.com/api/deleteGroup",
           { id, email },
-          { headers: { "Content-Type": "application/json" } }
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "x-api-key": API_KEY_PROTECTED,
+            },
+          }
         )
         .then((res) => {
           Alert.alert(res.data.status, res.data.message);

@@ -21,6 +21,7 @@ import UploadImageItem from "../components/UploadImageItem";
 import axios from "axios";
 import ServiceActivityItem from "../components/ServiceActivityItem";
 import Loader from "../components/Loader";
+import { API_KEY_PROTECTED } from "@env";
 
 const { height, width } = Dimensions.get("window");
 function editActivities(props) {
@@ -129,7 +130,12 @@ function editActivities(props) {
         .post(
           "https://blue-soul-app.onrender.com/api/deleteImage",
           { idService, imageUrl },
-          { headers: { "Content-Type": "application/json" } }
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "x-api-key": API_KEY_PROTECTED,
+            },
+          }
         )
         .then((res) => Alert.alert(res.data.status, res.data.message))
         .catch((err) => Alert.alert(err.data.status, err.data.message));

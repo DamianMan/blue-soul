@@ -27,6 +27,7 @@ import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 import CountDownItem from "./CountDownItem";
 import auth from "@react-native-firebase/auth";
 import { Platform } from "react-native";
+import { API_KEY_PROTECTED } from "@env";
 
 const { width, height } = Dimensions.get("window");
 
@@ -195,6 +196,7 @@ function CalendarAdmin({ agendaList, setModalVisible, idGroup }) {
           {
             headers: {
               "Content-Type": "application/json",
+              "x-api-key": API_KEY_PROTECTED,
             },
           }
         )

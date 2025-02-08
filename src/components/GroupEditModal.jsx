@@ -11,6 +11,7 @@ import {
 import { Button, IconButton, TextInput } from "react-native-paper";
 import { ContextData } from "../context/ContextDataProvider";
 import axios from "axios";
+import { API_KEY_PROTECTED } from "@env";
 
 const { width } = Dimensions.get("window");
 function GroupEditModal({ toggleModal, modalVisible, idGroup }) {
@@ -74,6 +75,7 @@ function GroupEditModal({ toggleModal, modalVisible, idGroup }) {
           {
             headers: {
               "Content-Type": "application/json",
+              "x-api-key": API_KEY_PROTECTED,
             },
           }
         )

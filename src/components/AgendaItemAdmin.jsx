@@ -16,6 +16,7 @@ import { ContextData } from "../context/ContextDataProvider";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import axios from "axios";
 import auth from "@react-native-firebase/auth";
+import { API_KEY_PROTECTED } from "@env";
 
 const { width, height } = Dimensions.get("window");
 
@@ -96,7 +97,10 @@ function AgendaItemAdmin({ item, idGroup, date }) {
             programToAdd,
           },
           {
-            headers: { "Content-Type": "application/json" },
+            headers: {
+              "Content-Type": "application/json",
+              "x-api-key": API_KEY_PROTECTED,
+            },
           }
         )
         .then((res) => {
@@ -144,7 +148,10 @@ function AgendaItemAdmin({ item, idGroup, date }) {
             date,
           },
           {
-            headers: { "Content-Type": "application/json" },
+            headers: {
+              "Content-Type": "application/json",
+              "x-api-key": API_KEY_PROTECTED,
+            },
           }
         )
         .then((res) => {
@@ -185,6 +192,7 @@ function AgendaItemAdmin({ item, idGroup, date }) {
           {
             headers: {
               "Content-Type": "application/json",
+              "x-api-key": API_KEY_PROTECTED,
             },
           }
         )

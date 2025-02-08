@@ -20,6 +20,7 @@ import auth from "@react-native-firebase/auth";
 import axios from "axios";
 import { ContextData } from "../context/ContextDataProvider";
 import Loader from "./Loader";
+import { API_KEY_PROTECTED } from "@env";
 
 const { width, height } = Dimensions.get("window");
 
@@ -61,7 +62,12 @@ function SignUpModal({ isModalVisibile, toggleModal }) {
         .post(
           "https://blue-soul-app.onrender.com/api/signUpUser",
           { fullName, email, password },
-          { headers: { "Content-Type": "application/json" } }
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "x-api-key": API_KEY_PROTECTED,
+            },
+          }
         )
         .then((res) => {
           if (res.data.isIn) {

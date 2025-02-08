@@ -12,9 +12,9 @@ const axios = require("axios");
 const admin = require("firebase-admin");
 const User = require("./models/Users");
 const { apiKeyAuth } = require("@vpriem/express-api-key-auth");
+const path = require("path");
 
-require("dotenv").config({ path: "../.env" });
-// require("../blue-soul-9434a-firebase-adminsdk-yau4q-0a78a8df74.json");
+require("dotenv").config({ path: path.join(__dirname, "../.env") }); // require("../blue-soul-9434a-firebase-adminsdk-yau4q-0a78a8df74.json");
 const serviceAccount = JSON.parse(process.env.FIREBASE_ADMIN_SDK);
 
 admin.initializeApp({
@@ -42,7 +42,7 @@ app.use(
     credentials: true,
   })
 );
-app.use(apiKeyAuth(/^API_KEY_/));
+app.use(apiKeyAuth(/^REACT_APP_API_KEY/));
 
 const port = 3000;
 

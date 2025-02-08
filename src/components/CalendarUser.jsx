@@ -25,6 +25,7 @@ import {
 import axios from "axios";
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 import CountDownItem from "./CountDownItem";
+import { API_KEY_PROTECTED } from "@env";
 
 const { height, width } = Dimensions.get("window");
 
@@ -168,6 +169,7 @@ function CalendarUser(props) {
             {
               headers: {
                 "Content-Type": "application/json",
+                "x-api-key": API_KEY_PROTECTED,
               },
             }
           )
@@ -211,6 +213,7 @@ function CalendarUser(props) {
           {
             headers: {
               "Content-Type": "application/json",
+              "x-api-key": API_KEY_PROTECTED,
             },
           }
         )
